@@ -73,7 +73,7 @@ export class DeepLProvider extends BaseTranslationProvider {
       }
 
       return { valid: true }
-    } catch (error) {
+    } catch {
       return { valid: false, error: 'Validation failed' }
     }
   }

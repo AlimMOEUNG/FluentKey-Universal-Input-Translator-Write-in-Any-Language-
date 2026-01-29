@@ -10,6 +10,8 @@
     "build:firefox:dev": "node scripts/build-firefox.js --dev",
     "build:all": "npm run build:chrome && npm run build:firefox",
     "build:all:dev": "npm run build:chrome:dev && npm run build:firefox:dev",
+    "i18n:check": "node scripts/check-translations.js",
+    "i18n:sync": "node scripts/check-translations.js --fix",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"

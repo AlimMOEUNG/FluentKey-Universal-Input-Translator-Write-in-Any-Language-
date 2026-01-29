@@ -8,29 +8,42 @@
       class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
     >
       <h1 class="text-sm font-semibold text-gray-800 dark:text-gray-200">
-        Simple Input Translator
+        {{ t('appTitle') }}
       </h1>
 
-      <button
-        @click="cycleTheme"
-        class="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-        title="Toggle theme"
-      >
-        <component :is="themeIcon" :size="16" />
-      </button>
+      <div class="flex items-center gap-2">
+        <!-- Language Selector -->
+        <select
+          v-model="uiLocale"
+          class="px-2 py-1 text-xs bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+        >
+          <option v-for="option in availableLanguages" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+
+        <!-- Theme Toggle -->
+        <button
+          @click="cycleTheme"
+          class="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          :title="t('themeToggle')"
+        >
+          <component :is="themeIcon" :size="16" />
+        </button>
+      </div>
     </div>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col p-3 space-y-2.5">
       <!-- Source Language -->
       <div>
-        <label class="block text-xs font-medium mb-1">Source Language</label>
+        <label class="block text-xs font-medium mb-1">{{ t('sourceLanguage') }}</label>
         <select
           v-model="settings.sourceLang"
           @change="saveSettings"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
-          <option value="auto">Auto-detect</option>
+          <option value="auto">{{ t('autoDetect') }}</option>
           <option value="en">English</option>
           <option value="fr">French</option>
           <option value="es">Spanish</option>
@@ -48,7 +61,7 @@
 
       <!-- Target Language -->
       <div>
-        <label class="block text-xs font-medium mb-1">Target Language</label>
+        <label class="block text-xs font-medium mb-1">{{ t('targetLanguage') }}</label>
         <select
           v-model="settings.targetLang"
           @change="saveSettings"
@@ -71,7 +84,7 @@
 
       <!-- Provider -->
       <div>
-        <label class="block text-xs font-medium mb-1">Translation Provider</label>
+        <label class="block text-xs font-medium mb-1">{{ t('providerLabel') }}</label>
         <select
           v-model="settings.provider"
           @change="onProviderChange"
@@ -91,11 +104,11 @@
 
       <!-- DeepL API Key -->
       <div v-if="settings.provider === 'deepl'" class="space-y-1.5">
-        <label class="block text-xs font-medium">DeepL API Key</label>
+        <label class="block text-xs font-medium">{{ t('apiKeyLabelDeepL') }}</label>
         <input
           type="password"
           v-model="providerConfigs.deepl.apiKey"
-          placeholder="Enter API key"
+          :placeholder="t('apiKeyPlaceholder')"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         <button
@@ -108,7 +121,7 @@
               : 'bg-blue-600 text-white hover:bg-blue-700'
           "
         >
-          {{ validationStatus.deepl === 'loading' ? 'Validating...' : 'Validate & Save' }}
+          {{ validationStatus.deepl === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate') }}
         </button>
         <p
           v-if="validationMessage.deepl"
@@ -124,14 +137,14 @@
 
       <!-- Gemini Configuration -->
       <div v-if="settings.provider === 'gemini'" class="space-y-1.5">
-        <label class="block text-xs font-medium">Gemini API Key</label>
+        <label class="block text-xs font-medium">{{ t('apiKeyLabelGemini') }}</label>
         <input
           type="password"
           v-model="providerConfigs.gemini.apiKey"
-          placeholder="Enter API key"
+          :placeholder="t('apiKeyPlaceholder')"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <label class="block text-xs font-medium">Model</label>
+        <label class="block text-xs font-medium">{{ t('labelModel') }}</label>
         <input
           type="text"
           v-model="providerConfigs.gemini.model"
@@ -148,7 +161,7 @@
               : 'bg-blue-600 text-white hover:bg-blue-700'
           "
         >
-          {{ validationStatus.gemini === 'loading' ? 'Validating...' : 'Validate & Save' }}
+          {{ validationStatus.gemini === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate') }}
         </button>
         <p
           v-if="validationMessage.gemini"
@@ -164,14 +177,14 @@
 
       <!-- ChatGPT Configuration -->
       <div v-if="settings.provider === 'chatgpt'" class="space-y-1.5">
-        <label class="block text-xs font-medium">OpenAI API Key</label>
+        <label class="block text-xs font-medium">{{ t('apiKeyLabelOpenAI') }}</label>
         <input
           type="password"
           v-model="providerConfigs.chatgpt.apiKey"
-          placeholder="sk-..."
+          :placeholder="t('apiKeyPlaceholder')"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <label class="block text-xs font-medium">Model</label>
+        <label class="block text-xs font-medium">{{ t('labelModel') }}</label>
         <input
           type="text"
           v-model="providerConfigs.chatgpt.model"
@@ -188,7 +201,7 @@
               : 'bg-blue-600 text-white hover:bg-blue-700'
           "
         >
-          {{ validationStatus.chatgpt === 'loading' ? 'Validating...' : 'Validate & Save' }}
+          {{ validationStatus.chatgpt === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate') }}
         </button>
         <p
           v-if="validationMessage.chatgpt"
@@ -204,14 +217,14 @@
 
       <!-- Groq Configuration -->
       <div v-if="settings.provider === 'groq'" class="space-y-1.5">
-        <label class="block text-xs font-medium">Groq API Key</label>
+        <label class="block text-xs font-medium">{{ t('apiKeyLabelGroq') }}</label>
         <input
           type="password"
           v-model="providerConfigs.groq.apiKey"
-          placeholder="gsk_..."
+          :placeholder="t('apiKeyPlaceholder')"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <label class="block text-xs font-medium">Model</label>
+        <label class="block text-xs font-medium">{{ t('labelModel') }}</label>
         <input
           type="text"
           v-model="providerConfigs.groq.model"
@@ -228,7 +241,7 @@
               : 'bg-blue-600 text-white hover:bg-blue-700'
           "
         >
-          {{ validationStatus.groq === 'loading' ? 'Validating...' : 'Validate & Save' }}
+          {{ validationStatus.groq === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate') }}
         </button>
         <p
           v-if="validationMessage.groq"
@@ -244,14 +257,14 @@
 
       <!-- Ollama Configuration -->
       <div v-if="settings.provider === 'ollama'" class="space-y-1.5">
-        <label class="block text-xs font-medium">Base URL</label>
+        <label class="block text-xs font-medium">{{ t('labelBaseUrl') }}</label>
         <input
           type="text"
           v-model="providerConfigs.ollama.baseUrl"
-          placeholder="http://localhost:11434/v1"
+          :placeholder="t('placeholderBaseUrl')"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <label class="block text-xs font-medium">Model</label>
+        <label class="block text-xs font-medium">{{ t('labelModel') }}</label>
         <input
           type="text"
           v-model="providerConfigs.ollama.model"
@@ -268,7 +281,7 @@
               : 'bg-blue-600 text-white hover:bg-blue-700'
           "
         >
-          {{ validationStatus.ollama === 'loading' ? 'Validating...' : 'Validate & Save' }}
+          {{ validationStatus.ollama === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate') }}
         </button>
         <p
           v-if="validationMessage.ollama"
@@ -284,14 +297,14 @@
 
       <!-- OpenRouter Configuration -->
       <div v-if="settings.provider === 'openrouter'" class="space-y-1.5">
-        <label class="block text-xs font-medium">OpenRouter API Key</label>
+        <label class="block text-xs font-medium">{{ t('apiKeyLabelOpenRouter') }}</label>
         <input
           type="password"
           v-model="providerConfigs.openrouter.apiKey"
-          placeholder="sk-or-v1-..."
+          :placeholder="t('apiKeyPlaceholder')"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <label class="block text-xs font-medium">Model</label>
+        <label class="block text-xs font-medium">{{ t('labelModel') }}</label>
         <input
           type="text"
           v-model="providerConfigs.openrouter.model"
@@ -310,7 +323,9 @@
               : 'bg-blue-600 text-white hover:bg-blue-700'
           "
         >
-          {{ validationStatus.openrouter === 'loading' ? 'Validating...' : 'Validate & Save' }}
+          {{
+            validationStatus.openrouter === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate')
+          }}
         </button>
         <p
           v-if="validationMessage.openrouter"
@@ -326,21 +341,21 @@
 
       <!-- Custom OpenAI-compatible Configuration -->
       <div v-if="settings.provider === 'custom'" class="space-y-1.5">
-        <label class="block text-xs font-medium">Base URL</label>
+        <label class="block text-xs font-medium">{{ t('labelBaseUrl') }}</label>
         <input
           type="text"
           v-model="providerConfigs.custom.baseUrl"
-          placeholder="https://api.example.com/v1"
+          :placeholder="t('placeholderBaseUrl')"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <label class="block text-xs font-medium">API Key (Optional)</label>
+        <label class="block text-xs font-medium">{{ t('labelApiKeyOptional') }}</label>
         <input
           type="password"
           v-model="providerConfigs.custom.apiKey"
-          placeholder="Optional"
+          :placeholder="t('placeholderOptional')"
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <label class="block text-xs font-medium">Model</label>
+        <label class="block text-xs font-medium">{{ t('labelModel') }}</label>
         <input
           type="text"
           v-model="providerConfigs.custom.model"
@@ -363,7 +378,7 @@
               : 'bg-blue-600 text-white hover:bg-blue-700'
           "
         >
-          {{ validationStatus.custom === 'loading' ? 'Validating...' : 'Validate & Save' }}
+          {{ validationStatus.custom === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate') }}
         </button>
         <p
           v-if="validationMessage.custom"
@@ -379,7 +394,7 @@
 
       <!-- Keyboard Shortcut -->
       <div>
-        <label class="block text-xs font-medium mb-1">Keyboard Shortcut</label>
+        <label class="block text-xs font-medium mb-1">{{ t('keyboardShortcut') }}</label>
         <input
           v-model="settings.keyboardShortcut"
           @blur="validateAndSaveShortcut"
@@ -393,7 +408,13 @@
       <!-- Usage Instructions -->
       <div class="border-t border-gray-200 dark:border-gray-700 pt-2">
         <p class="text-[10px] text-gray-600 dark:text-gray-400">
-          Select text or focus an input, then press {{ settings.keyboardShortcut }} to translate
+          {{ t('howToUse') }}
+        </p>
+        <p class="text-[10px] text-gray-600 dark:text-gray-400 mt-1">
+          {{ t('usageSelect', { params: { shortcut: settings.keyboardShortcut } }) }}
+        </p>
+        <p class="text-[10px] text-gray-600 dark:text-gray-400 mt-0.5">
+          {{ t('usageInput', { params: { shortcut: settings.keyboardShortcut } }) }}
         </p>
       </div>
     </div>
@@ -403,7 +424,7 @@
       class="px-3 py-2 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
     >
       <p class="text-[10px] text-center text-gray-500 dark:text-gray-400">
-        Simple Input Translator • Built with Vue 3
+        {{ t('footerText') }}
       </p>
     </div>
   </div>
@@ -412,6 +433,28 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { Sun, Moon, Monitor } from 'lucide-vue-next'
+import { useI18nWrapper } from '@/composables/useI18nWrapper'
+import type { SupportedLocale } from '@/core/utils/i18n'
+
+// i18n setup
+const { t, locale, setLocale, loadLocale } = useI18nWrapper()
+
+// Language selector
+const availableLanguages = [
+  { value: 'en', label: 'English' },
+  { value: 'fr', label: 'Français' },
+  { value: 'es', label: 'Español' },
+  { value: 'de', label: 'Deutsch' },
+  { value: 'zh', label: '中文' },
+  { value: 'ja', label: '日本語' },
+]
+
+const uiLocale = computed<SupportedLocale>({
+  get: () => locale.value,
+  set: (value) => {
+    setLocale(value)
+  },
+})
 
 // Theme management
 type Theme = 'auto' | 'light' | 'dark'
@@ -505,6 +548,7 @@ const shortcutError = ref('')
 
 // Load settings on mount
 onMounted(async () => {
+  await loadLocale()
   await loadSettings()
   await loadTheme()
   await loadApiKeys()
@@ -540,7 +584,7 @@ async function loadApiKeys() {
       if (result.providerKeys.deeplApiKey) {
         providerConfigs.value.deepl.apiKey = result.providerKeys.deeplApiKey
         validationStatus.value.deepl = 'success'
-        validationMessage.value.deepl = '✓ API key configured'
+        validationMessage.value.deepl = `✓ ${t('apiKeyValidCached')}`
       }
 
       // Load Gemini
@@ -549,7 +593,7 @@ async function loadApiKeys() {
         providerConfigs.value.gemini.model =
           result.providerKeys.geminiConfig.model || 'gemini-1.5-flash'
         validationStatus.value.gemini = 'success'
-        validationMessage.value.gemini = '✓ Configuration loaded'
+        validationMessage.value.gemini = `✓ ${t('validationLoaded')}`
       }
 
       // Load ChatGPT
@@ -559,7 +603,7 @@ async function loadApiKeys() {
           ...result.providerKeys.chatgptConfig,
         }
         validationStatus.value.chatgpt = 'success'
-        validationMessage.value.chatgpt = '✓ Configuration loaded'
+        validationMessage.value.chatgpt = `✓ ${t('validationLoaded')}`
       }
 
       // Load Groq
@@ -569,7 +613,7 @@ async function loadApiKeys() {
           ...result.providerKeys.groqConfig,
         }
         validationStatus.value.groq = 'success'
-        validationMessage.value.groq = '✓ Configuration loaded'
+        validationMessage.value.groq = `✓ ${t('validationLoaded')}`
       }
 
       // Load Ollama
@@ -579,7 +623,7 @@ async function loadApiKeys() {
           ...result.providerKeys.ollamaConfig,
         }
         validationStatus.value.ollama = 'success'
-        validationMessage.value.ollama = '✓ Configuration loaded'
+        validationMessage.value.ollama = `✓ ${t('validationLoaded')}`
       }
 
       // Load OpenRouter
@@ -589,7 +633,7 @@ async function loadApiKeys() {
           ...result.providerKeys.openrouterConfig,
         }
         validationStatus.value.openrouter = 'success'
-        validationMessage.value.openrouter = '✓ Configuration loaded'
+        validationMessage.value.openrouter = `✓ ${t('validationLoaded')}`
       }
 
       // Load Custom
@@ -599,7 +643,7 @@ async function loadApiKeys() {
           ...result.providerKeys.customConfig,
         }
         validationStatus.value.custom = 'success'
-        validationMessage.value.custom = '✓ Configuration loaded'
+        validationMessage.value.custom = `✓ ${t('validationLoaded')}`
       }
     }
   } catch (error) {
@@ -696,17 +740,17 @@ async function validateProviderConfig(provider: string) {
     if (response.success) {
       validationStatus.value[provider as keyof typeof validationStatus.value] = 'success'
       validationMessage.value[provider as keyof typeof validationMessage.value] =
-        '✓ Configuration valid'
+        `✓ ${t('validationSuccess')}`
       await saveProviderConfig(provider)
     } else {
       validationStatus.value[provider as keyof typeof validationStatus.value] = 'error'
       validationMessage.value[provider as keyof typeof validationMessage.value] =
         `✗ ${response.error}`
     }
-  } catch (_error) {
+  } catch {
     validationStatus.value[provider as keyof typeof validationStatus.value] = 'error'
     validationMessage.value[provider as keyof typeof validationMessage.value] =
-      '✗ Validation failed'
+      `✗ ${t('validationFailed')}`
   }
 }
 
@@ -740,55 +784,55 @@ function checkProviderConfiguration() {
     case 'deepl':
       if (!providerConfigs.value.deepl.apiKey) {
         validationStatus.value.deepl = 'error'
-        validationMessage.value.deepl = '✗ API key required'
+        validationMessage.value.deepl = `✗ ${t('apiKeyRequired')}`
       }
       break
 
     case 'gemini':
       if (!providerConfigs.value.gemini.apiKey) {
         validationStatus.value.gemini = 'error'
-        validationMessage.value.gemini = '✗ API key required'
+        validationMessage.value.gemini = `✗ ${t('apiKeyRequired')}`
       }
       break
 
     case 'chatgpt':
       if (!providerConfigs.value.chatgpt.apiKey) {
         validationStatus.value.chatgpt = 'error'
-        validationMessage.value.chatgpt = '✗ API key required'
+        validationMessage.value.chatgpt = `✗ ${t('apiKeyRequired')}`
       }
       break
 
     case 'groq':
       if (!providerConfigs.value.groq.apiKey) {
         validationStatus.value.groq = 'error'
-        validationMessage.value.groq = '✗ API key required'
+        validationMessage.value.groq = `✗ ${t('apiKeyRequired')}`
       }
       break
 
     case 'ollama':
       if (!providerConfigs.value.ollama.model) {
         validationStatus.value.ollama = 'error'
-        validationMessage.value.ollama = '✗ Model name required'
+        validationMessage.value.ollama = `✗ ${t('modelRequired')}`
       } else if (!providerConfigs.value.ollama.baseUrl) {
         validationStatus.value.ollama = 'error'
-        validationMessage.value.ollama = '✗ Base URL required'
+        validationMessage.value.ollama = `✗ ${t('baseUrlRequired')}`
       }
       break
 
     case 'openrouter':
       if (!providerConfigs.value.openrouter.apiKey) {
         validationStatus.value.openrouter = 'error'
-        validationMessage.value.openrouter = '✗ API key required'
+        validationMessage.value.openrouter = `✗ ${t('apiKeyRequired')}`
       }
       break
 
     case 'custom':
       if (!providerConfigs.value.custom.baseUrl) {
         validationStatus.value.custom = 'error'
-        validationMessage.value.custom = '✗ Base URL required'
+        validationMessage.value.custom = `✗ ${t('baseUrlRequired')}`
       } else if (!providerConfigs.value.custom.model) {
         validationStatus.value.custom = 'error'
-        validationMessage.value.custom = '✗ Model name required'
+        validationMessage.value.custom = `✗ ${t('modelRequired')}`
       }
       break
   }

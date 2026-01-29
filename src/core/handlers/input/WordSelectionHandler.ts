@@ -104,7 +104,7 @@ export class WordSelectionHandler {
   private selectNextWordInInput(element: HTMLInputElement | HTMLTextAreaElement): void {
     const value = element.value
     let start = element.selectionStart ?? 0
-    let end = element.selectionEnd ?? 0
+    const end = element.selectionEnd ?? 0
 
     // If there's a selection, start from the end
     if (start !== end) {
@@ -112,7 +112,7 @@ export class WordSelectionHandler {
     }
 
     // Find next word boundary
-    let newEnd = this.findNextWordBoundary(value, start)
+    const newEnd = this.findNextWordBoundary(value, start)
 
     // Update selection
     element.selectionStart = start
@@ -124,7 +124,7 @@ export class WordSelectionHandler {
    */
   private selectPreviousWordInInput(element: HTMLInputElement | HTMLTextAreaElement): void {
     const value = element.value
-    let start = element.selectionStart ?? 0
+    const start = element.selectionStart ?? 0
     let end = element.selectionEnd ?? 0
 
     // If there's a selection, start from the beginning
@@ -133,7 +133,7 @@ export class WordSelectionHandler {
     }
 
     // Find previous word boundary
-    let newStart = this.findPreviousWordBoundary(value, end)
+    const newStart = this.findPreviousWordBoundary(value, end)
 
     // Update selection
     element.selectionStart = newStart
