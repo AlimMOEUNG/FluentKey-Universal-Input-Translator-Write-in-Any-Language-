@@ -844,11 +844,9 @@ function checkProviderConfiguration() {
 /* Preset Tabs (High Visibility Pills) */
 .preset-tabs-header {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.15rem;
   padding: 0.25rem 0;
   margin-bottom: 0.75rem;
-  overflow-x: auto;
-  scrollbar-width: none;
   border-bottom: 1px solid theme('colors.gray.200');
   padding-bottom: 0.5rem; /* Add space between tabs and line */
 }
@@ -858,7 +856,7 @@ function checkProviderConfiguration() {
 }
 
 .preset-tab {
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 0.3rem;
   font-size: 0.75rem;
   font-weight: 600;
   background-color: theme('colors.gray.100');
@@ -866,8 +864,8 @@ function checkProviderConfiguration() {
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  flex: 0 0 auto;
-  min-width: 60px;
+  flex: 1;
+  min-width: 0;
   max-width: 120px;
   border-radius: 0.5rem;
   border: 1px solid theme('colors.gray.200');
@@ -882,7 +880,7 @@ function checkProviderConfiguration() {
 
 .preset-tab-name {
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   display: block;
   width: 100%;
 }

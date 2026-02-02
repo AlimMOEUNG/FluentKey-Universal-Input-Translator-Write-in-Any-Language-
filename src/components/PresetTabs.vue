@@ -95,11 +95,9 @@ const providerDisplayName = computed(() => {
 /* Left side: Preset tabs */
 .preset-tabs-left {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.15rem;
   flex: 1;
   min-width: 0; /* Allow flex items to shrink */
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
 }
 
 .preset-tabs-left::-webkit-scrollbar {
@@ -107,7 +105,7 @@ const providerDisplayName = computed(() => {
 }
 
 .tab-button {
-  padding: 0.4rem 0.65rem;
+  padding: 0.4rem 0.3rem;
   font-size: 0.75rem;
   font-weight: 600;
   border-radius: 0.5rem;
@@ -120,7 +118,7 @@ const providerDisplayName = computed(() => {
   align-items: center;
   gap: 0.25rem;
   white-space: nowrap;
-  flex-shrink: 0;
+  flex: 1;
   min-width: 0;
 }
 
@@ -132,8 +130,7 @@ const providerDisplayName = computed(() => {
 
 .tab-name {
   overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 80px;
+  text-overflow: clip;
   display: block;
 }
 
@@ -170,6 +167,7 @@ const providerDisplayName = computed(() => {
   color: theme('colors.emerald.600');
   border-color: theme('colors.emerald.300');
   padding: 0.4rem 0.5rem;
+  flex: 0 0 auto;
 }
 
 :root[data-theme='dark'] .add-button {
