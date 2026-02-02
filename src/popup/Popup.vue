@@ -1,13 +1,14 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div
-    class="w-full max-w-[400px] min-w-[360px] h-auto flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+    class="w-full max-w-[400px] min-w-[360px] flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-all duration-200 ease-in-out"
+    style="height: fit-content; min-height: fit-content;"
   >
     <!-- Header -->
     <div
-      class="flex items-center justify-between px-2.5 py-1.5 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900"
+      class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900"
     >
-      <h1 class="text-xs font-bold text-gray-800 dark:text-gray-200">
+      <h1 class="text-sm font-bold text-gray-800 dark:text-gray-200">
         {{ t('appTitle') }}
       </h1>
 
@@ -15,7 +16,7 @@
         <!-- Language Selector -->
         <select
           v-model="uiLocale"
-          class="px-2 py-1 text-xs bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          class="px-2 py-0.5 text-[10px] bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
           <option v-for="option in availableLanguages" :key="option.value" :value="option.value">
             {{ option.label }}
@@ -25,32 +26,36 @@
         <!-- Theme Toggle -->
         <button
           @click="cycleTheme"
-          class="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          class="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400"
           :title="t('themeToggle')"
         >
-          <component :is="themeIcon" :size="16" />
+          <component :is="themeIcon" :size="14" />
         </button>
       </div>
     </div>
 
-    <!-- Main Navigation Tabs -->
-    <div class="main-nav-container">
-      <button
-        @click="currentView = 'presets'"
-        :class="['main-nav-tab', { active: currentView === 'presets' }]"
-      >
-        Presets
-      </button>
-      <button
-        @click="currentView = 'provider'"
-        :class="['main-nav-tab', { active: currentView === 'provider' }]"
-      >
-        Provider
-      </button>
+    <!-- Main Navigation Tabs (Segmented Control Style) -->
+    <div class="px-3 pt-3 pb-3 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+      <div class="main-nav-container p-1 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center relative">
+        <button
+          @click="currentView = 'presets'"
+          :class="['main-nav-tab', { active: currentView === 'presets' }]"
+        >
+          Presets
+        </button>
+        <!-- Vertical Separator -->
+        <div class="nav-separator h-4 w-[1px] bg-gray-300 dark:bg-gray-600 mx-0.5"></div>
+        <button
+          @click="currentView = 'provider'"
+          :class="['main-nav-tab', { active: currentView === 'provider' }]"
+        >
+          Provider
+        </button>
+      </div>
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col p-2.5">
+    <div class="flex-1 flex flex-col px-3 pb-3 bg-white dark:bg-gray-900">
       <!-- Provider View -->
       <div v-if="currentView === 'provider'" class="space-y-2">
         <div>
@@ -764,181 +769,183 @@ function checkProviderConfiguration() {
 </script>
 
 <style scoped>
-/* Main Navigation Tabs */
+/* Main Navigation Tabs (High-Contrast Segmented Control) */
 .main-nav-container {
+  background-color: theme('colors.gray.200');
+  padding: 0.25rem;
+  border-radius: 0.75rem;
   display: flex;
-  gap: 0;
-  border-bottom: 2px solid theme('colors.gray.200');
-  background-color: theme('colors.gray.50');
+  align-items: center;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 :root[data-theme='dark'] .main-nav-container {
-  border-bottom-color: theme('colors.gray-700');
   background-color: theme('colors.gray.800');
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .main-nav-tab {
   flex: 1;
-  padding: 0.625rem 1rem;
-  font-size: 0.75rem;
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background-color: transparent;
+  text-align: center;
+  border-radius: 0.5rem;
   color: theme('colors.gray.600');
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
-  border-bottom: 3px solid transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 :root[data-theme='dark'] .main-nav-tab {
   color: theme('colors.gray.400');
 }
 
-.main-nav-tab:hover {
-  background-color: theme('colors.gray.100');
+.main-nav-tab:hover:not(.active) {
   color: theme('colors.gray.900');
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
-:root[data-theme='dark'] .main-nav-tab:hover {
-  background-color: theme('colors.gray.700');
-  color: theme('colors.gray.100');
+:root[data-theme='dark'] .main-nav-tab:hover:not(.active) {
+  color: theme('colors.gray.200');
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .main-nav-tab.active {
-  background-color: theme('colors.white');
-  color: theme('colors.blue.600');
-  border-bottom-color: theme('colors.blue.600');
+  background-color: theme('colors.blue.600');
+  color: theme('colors.white');
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
 }
 
 :root[data-theme='dark'] .main-nav-tab.active {
-  background-color: theme('colors.gray.900');
-  color: theme('colors.blue.400');
-  border-bottom-color: theme('colors.blue.400');
+  background-color: theme('colors.blue.500');
+  color: theme('colors.white');
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* Preset Tabs */
+.nav-separator {
+  width: 1px;
+  height: 1.25rem;
+  background-color: theme('colors.gray.400');
+  opacity: 0.5;
+}
+
+:root[data-theme='dark'] .nav-separator {
+  background-color: theme('colors.gray.600');
+}
+
+/* Hide separator when a tab next to it is active */
+.main-nav-tab.active + .nav-separator,
+.nav-separator:has(+ .main-nav-tab.active) {
+  visibility: hidden;
+}
+
+/* Preset Tabs (High Visibility Pills) */
 .preset-tabs-header {
   display: flex;
-  gap: 0.25rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid theme('colors.gray.200');
-  overflow: hidden; /* Prevent scroll */
+  gap: 0.35rem;
+  padding: 0.25rem 0;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid theme('colors.gray.200');
+  padding-bottom: 0.5rem; /* Add space between tabs and line */
 }
 
 :root[data-theme='dark'] .preset-tabs-header {
-  border-bottom-color: theme('colors.gray.700');
+  border-bottom-color: theme('colors.gray.800');
 }
 
 .preset-tab {
-  padding: 0.4rem 0.5rem;
+  padding: 0.35rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 600;
-  border-radius: 0.5rem;
-  border: 1.5px solid theme('colors.gray.300');
-  background-color: theme('colors.white');
-  color: theme('colors.gray.700');
+  background-color: theme('colors.gray.100');
+  color: theme('colors.gray.600');
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
-  flex: 1 1 0; /* Each tab takes equal space */
-  min-width: 0; /* Allow shrinking below content size */
-  max-width: 120px; /* Max width when few tabs */
+  flex: 0 0 auto;
+  min-width: 60px;
+  max-width: 120px;
+  border-radius: 0.5rem;
+  border: 1px solid theme('colors.gray.200');
+  text-align: center;
 }
 
 :root[data-theme='dark'] .preset-tab {
   background-color: theme('colors.gray.800');
-  border-color: theme('colors.gray.600');
-  color: theme('colors.gray.300');
+  color: theme('colors.gray.400');
+  border-color: theme('colors.gray.700');
 }
 
 .preset-tab-name {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  width: 100%; /* Use all available space in tab */
+  width: 100%;
 }
 
-.preset-tab:hover {
-  background-color: theme('colors.gray.50');
-  border-color: theme('colors.gray.400');
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.preset-tab:hover:not(.active) {
+  background-color: theme('colors.gray.200');
+  color: theme('colors.gray.800');
+  border-color: theme('colors.gray.300');
 }
 
-:root[data-theme='dark'] .preset-tab:hover {
+:root[data-theme='dark'] .preset-tab:hover:not(.active) {
   background-color: theme('colors.gray.700');
-  border-color: theme('colors.gray.500');
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: theme('colors.gray.200');
+  border-color: theme('colors.gray.600');
 }
 
 .preset-tab.active {
   background-color: theme('colors.blue.600');
   color: theme('colors.white');
   border-color: theme('colors.blue.600');
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
 }
 
 :root[data-theme='dark'] .preset-tab.active {
-  background-color: theme('colors.blue.500');
+  background-color: theme('colors.blue.600');
+  color: theme('colors.white');
   border-color: theme('colors.blue.500');
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .add-tab {
-  background-color: theme('colors.emerald.50');
-  color: theme('colors.emerald.600');
-  border-color: theme('colors.emerald.300');
-  padding: 0.4rem 0.65rem;
-  font-size: 0.9rem;
-  line-height: 1;
-  flex-shrink: 0; /* Don't shrink the + button */
-  flex-grow: 0; /* Don't grow the + button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem; /* Slightly larger target */
+  padding: 0;
+  border-radius: 0.5rem;
+  border: 1.5px dashed theme('colors.gray.300');
+  background-color: transparent;
+  color: theme('colors.gray.400');
+  flex: 0 0 auto;
+  transition: all 0.2s ease;
 }
 
 :root[data-theme='dark'] .add-tab {
-  background-color: theme('colors.emerald.900');
+  border-color: theme('colors.gray.700');
+  background-color: theme('colors.gray.800');
+  color: theme('colors.gray.400');
+}
+
+.add-tab:hover:not(.disabled) {
+  background-color: theme('colors.emerald.50');
+  border-color: theme('colors.emerald.300');
+  color: theme('colors.emerald.600');
+}
+
+:root[data-theme='dark'] .add-tab:hover:not(.disabled) {
+  background-color: theme('colors.emerald.900/20');
+  border-color: theme('colors.emerald.800');
   color: theme('colors.emerald.400');
-  border-color: theme('colors.emerald.700');
-}
-
-.add-tab:hover {
-  background-color: theme('colors.emerald.100');
-  color: theme('colors.emerald.700');
-  border-color: theme('colors.emerald.400');
-}
-
-:root[data-theme='dark'] .add-tab:hover {
-  background-color: theme('colors.emerald.800');
-  color: theme('colors.emerald.300');
-  border-color: theme('colors.emerald.600');
 }
 
 .add-tab.disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
-  background-color: theme('colors.gray.100');
-  color: theme('colors.gray.400');
-  border-color: theme('colors.gray.300');
-}
-
-:root[data-theme='dark'] .add-tab.disabled {
-  background-color: theme('colors.gray.800');
-  color: theme('colors.gray.600');
-  border-color: theme('colors.gray.700');
-}
-
-.add-tab.disabled:hover {
-  background-color: theme('colors.gray.100');
-  color: theme('colors.gray.400');
-  border-color: theme('colors.gray.300');
-  transform: none;
-}
-
-:root[data-theme='dark'] .add-tab.disabled:hover {
-  background-color: theme('colors.gray.800');
-  color: theme('colors.gray.600');
-  border-color: theme('colors.gray.700');
 }
 </style>

@@ -11,15 +11,23 @@
           :placeholder="t('presetNamePlaceholder')"
           class="flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
-        <!-- Save button (only visible if changes detected) -->
-        <button
-          v-if="hasUnsavedChanges"
-          @click="savePreset"
-          class="px-2 py-1.5 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1"
-          :title="t('saveChanges')"
-        >
-          <Check :size="12" />
-        </button>
+        <!-- Save/Undo buttons (only visible if changes detected) -->
+        <template v-if="hasUnsavedChanges">
+          <button
+            @click="undoChanges"
+            class="px-2 py-1.5 text-xs rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors flex items-center gap-1"
+            :title="t('undoChanges')"
+          >
+            <RotateCcw :size="12" />
+          </button>
+          <button
+            @click="savePreset"
+            class="px-2 py-1.5 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1"
+            :title="t('saveChanges')"
+          >
+            <Check :size="12" />
+          </button>
+        </template>
       </div>
     </div>
 
@@ -100,12 +108,20 @@
       <span class="text-[10px] text-yellow-800 dark:text-yellow-200">
         {{ t('unsavedChanges') }}
       </span>
-      <button
-        @click="savePreset"
-        class="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-      >
-        {{ t('saveChanges') }}
-      </button>
+      <div class="flex gap-2">
+        <button
+          @click="undoChanges"
+          class="px-2 py-1 text-xs rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        >
+          {{ t('undo') }}
+        </button>
+        <button
+          @click="savePreset"
+          class="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+        >
+          {{ t('saveChanges') }}
+        </button>
+      </div>
     </div>
 
     <!-- Delete Button -->
@@ -133,7 +149,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { Check } from 'lucide-vue-next'
+import { Check, RotateCcw } from 'lucide-vue-next'
 import { useI18nWrapper } from '@/composables/useI18nWrapper'
 import {
   buildShortcutFromEvent,
@@ -185,6 +201,14 @@ watch(
   },
   { deep: true }
 )
+
+/**
+ * Undo changes to the local preset, reverting to the passed prop
+ */
+function undoChanges() {
+  localPreset.value = { ...props.preset }
+  shortcutError.value = ''
+}
 
 /**
  * Handle keyboard input for shortcut field
