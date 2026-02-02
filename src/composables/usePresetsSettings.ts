@@ -26,7 +26,7 @@ function generateUUID(): string {
  * Generate default keyboard shortcut for a preset index
  */
 function generateDefaultShortcut(index: number): string {
-  return index === 1 ? 'Alt+T' : `Alt+T+${index}`
+  return index === 1 ? 'Alt+T' : `Alt+${index}+T`
 }
 
 /**
@@ -222,6 +222,47 @@ export function usePresetsSettings() {
   }
 
   /**
+   * Find the next available preset number for keyboard shortcut
+   * Tests numbers in circular order: preferred, preferred+1, ..., 10, 1, 2, ..., preferred-1
+   */
+  function findAvailablePresetNumber(preferredNumber: number): number {
+    const existingShortcuts = presetsSettings.value.presets.map((p) =>
+      p.keyboardShortcut.toLowerCase().trim()
+    )
+
+    console.log('[findAvailablePresetNumber] Starting search:', {
+      preferredNumber,
+      existingShortcuts,
+      totalPresets: presetsSettings.value.presets.length,
+    })
+
+    // Test numbers in circular order using modulo
+    for (let i = 0; i < MAX_PRESETS; i++) {
+      const num = ((preferredNumber - 1 + i) % MAX_PRESETS) + 1
+      const shortcut = (num === 1 ? 'alt+t' : `alt+${num}+t`).toLowerCase()
+
+      console.log('[findAvailablePresetNumber] Testing:', {
+        iteration: i,
+        num,
+        shortcut,
+        isAvailable: !existingShortcuts.includes(shortcut),
+      })
+
+      if (!existingShortcuts.includes(shortcut)) {
+        console.log('[findAvailablePresetNumber] Found available number:', num)
+        return num
+      }
+    }
+
+    // Fallback (should never happen if MAX_PRESETS=10)
+    console.warn(
+      '[findAvailablePresetNumber] No available slot found, using preferred:',
+      preferredNumber
+    )
+    return preferredNumber
+  }
+
+  /**
    * Add a new preset with default values
    */
   function addPreset(): TranslationPreset | null {
@@ -230,8 +271,9 @@ export function usePresetsSettings() {
       return null
     }
 
-    const newIndex = presetsSettings.value.presets.length + 1
-    const newPreset = createDefaultPreset(newIndex)
+    const preferredIndex = presetsSettings.value.presets.length + 1
+    const availableNumber = findAvailablePresetNumber(preferredIndex)
+    const newPreset = createDefaultPreset(availableNumber)
 
     presetsSettings.value.presets.push(newPreset)
     presetsSettings.value.activePresetId = newPreset.id
