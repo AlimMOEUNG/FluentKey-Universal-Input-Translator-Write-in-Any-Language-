@@ -123,11 +123,20 @@
           <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
             {{ t('labelModel') }}
           </label>
-          <input
-            type="text"
+          <select
             v-model="providerConfigs.gemini.model"
-            placeholder="gemini-1.5-flash"
             class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option v-for="model in PREDEFINED_MODELS.gemini" :key="model.value" :value="model.value">
+              {{ model.label }}
+            </option>
+          </select>
+          <input
+            v-if="isCustomModel(providerConfigs.gemini.model)"
+            type="text"
+            v-model="providerConfigs.gemini.customModel"
+            :placeholder="t('placeholderCustomModel')"
+            class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 mt-1"
           />
           <button
             @click="validateProviderConfig('gemini')"
@@ -167,11 +176,20 @@
           <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
             {{ t('labelModel') }}
           </label>
-          <input
-            type="text"
+          <select
             v-model="providerConfigs.chatgpt.model"
-            placeholder="gpt-4o-mini"
             class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option v-for="model in PREDEFINED_MODELS.chatgpt" :key="model.value" :value="model.value">
+              {{ model.label }}
+            </option>
+          </select>
+          <input
+            v-if="isCustomModel(providerConfigs.chatgpt.model)"
+            type="text"
+            v-model="providerConfigs.chatgpt.customModel"
+            :placeholder="t('placeholderCustomModel')"
+            class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 mt-1"
           />
           <button
             @click="validateProviderConfig('chatgpt')"
@@ -211,11 +229,20 @@
           <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
             {{ t('labelModel') }}
           </label>
-          <input
-            type="text"
+          <select
             v-model="providerConfigs.groq.model"
-            placeholder="llama-3.3-70b-versatile"
             class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option v-for="model in PREDEFINED_MODELS.groq" :key="model.value" :value="model.value">
+              {{ model.label }}
+            </option>
+          </select>
+          <input
+            v-if="isCustomModel(providerConfigs.groq.model)"
+            type="text"
+            v-model="providerConfigs.groq.customModel"
+            :placeholder="t('placeholderCustomModel')"
+            class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 mt-1"
           />
           <button
             @click="validateProviderConfig('groq')"
@@ -255,11 +282,20 @@
           <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
             {{ t('labelModel') }}
           </label>
-          <input
-            type="text"
+          <select
             v-model="providerConfigs.ollama.model"
-            placeholder="llama3.2"
             class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option v-for="model in PREDEFINED_MODELS.ollama" :key="model.value" :value="model.value">
+              {{ model.label }}
+            </option>
+          </select>
+          <input
+            v-if="isCustomModel(providerConfigs.ollama.model)"
+            type="text"
+            v-model="providerConfigs.ollama.customModel"
+            :placeholder="t('placeholderCustomModel')"
+            class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 mt-1"
           />
           <button
             @click="validateProviderConfig('ollama')"
@@ -299,11 +335,20 @@
           <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
             {{ t('labelModel') }}
           </label>
-          <input
-            type="text"
+          <select
             v-model="providerConfigs.openrouter.model"
-            placeholder="meta-llama/llama-3.3-70b-instruct"
             class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option v-for="model in PREDEFINED_MODELS.openrouter" :key="model.value" :value="model.value">
+              {{ model.label }}
+            </option>
+          </select>
+          <input
+            v-if="isCustomModel(providerConfigs.openrouter.model)"
+            type="text"
+            v-model="providerConfigs.openrouter.customModel"
+            :placeholder="t('placeholderCustomModel')"
+            class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 mt-1"
           />
           <button
             @click="validateProviderConfig('openrouter')"
@@ -443,6 +488,7 @@ import { useI18nWrapper } from '@/composables/useI18nWrapper'
 import { useThemeMode } from '@/composables/useThemeMode'
 import { useSettings } from '@/composables/useSettings'
 import { usePresetsSettings } from '@/composables/usePresetsSettings'
+import { PREDEFINED_MODELS, isCustomModel, getEffectiveModel } from '@/config/predefinedModels'
 import type { SupportedLocale } from '@/core/utils/i18n'
 import type { TranslationPreset } from '@/types/common'
 import PresetEditor from '@/components/PresetEditor.vue'
@@ -584,7 +630,10 @@ async function validateProviderConfig(provider: string) {
         response = await chrome.runtime.sendMessage({
           type: 'VALIDATE_GEMINI_KEY',
           apiKey: providerConfigs.value.gemini.apiKey,
-          model: providerConfigs.value.gemini.model,
+          model: getEffectiveModel(
+            providerConfigs.value.gemini.model,
+            providerConfigs.value.gemini.customModel
+          ),
         })
         break
 
@@ -592,16 +641,22 @@ async function validateProviderConfig(provider: string) {
       case 'groq':
       case 'ollama':
       case 'openrouter':
-      case 'custom':
+      case 'custom': {
         const config = providerConfigs.value[provider as keyof typeof providerConfigs.value]
+        const effectiveModel =
+          provider === 'custom'
+            ? config.model
+            : getEffectiveModel(config.model, config.customModel)
         response = await chrome.runtime.sendMessage({
           type: 'VALIDATE_OPENAI_COMPATIBLE',
           config: {
             providerType: provider,
             ...config,
+            model: effectiveModel,
           },
         })
         break
+      }
 
       default:
         throw new Error(`Unknown provider: ${provider}`)

@@ -46,6 +46,7 @@ const enTranslations = {
 
   // Placeholders
   placeholderModel: 'model-name',
+  placeholderCustomModel: 'Enter custom model name',
   placeholderBaseUrl: 'https://api.example.com/v1',
   placeholderOptional: 'Optional',
 

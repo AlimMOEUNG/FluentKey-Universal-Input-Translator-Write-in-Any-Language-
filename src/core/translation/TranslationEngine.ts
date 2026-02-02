@@ -14,6 +14,7 @@ import {
   OpenAIConfig,
   getDefaultEndpoint,
 } from './providers'
+import { getEffectiveModel } from '@/config/predefinedModels'
 
 export class TranslationEngine {
   private currentProvider: BaseTranslationProvider | null = null
@@ -87,7 +88,11 @@ export class TranslationEngine {
             'Gemini API key is required. Please configure it in the extension settings.'
           )
         }
-        return new GeminiProvider(geminiConfig.apiKey, geminiConfig.model || 'gemini-1.5-flash')
+        const effectiveModel = getEffectiveModel(
+          geminiConfig.model || 'gemini-1.5-flash',
+          geminiConfig.customModel
+        )
+        return new GeminiProvider(geminiConfig.apiKey, effectiveModel)
       }
 
       case 'chatgpt':
@@ -105,11 +110,13 @@ export class TranslationEngine {
           )
         }
 
+        const effectiveModel = getEffectiveModel(config.model, config.customModel)
+
         const openaiConfig: OpenAIConfig = {
           providerType: providerType as any,
           baseUrl: config.baseUrl || getDefaultEndpoint(providerType as any),
           apiKey: config.apiKey,
-          model: config.model,
+          model: effectiveModel,
         }
 
         return new OpenAICompatibleProvider(openaiConfig)

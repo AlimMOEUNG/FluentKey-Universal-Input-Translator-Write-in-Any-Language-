@@ -38,26 +38,31 @@ export interface ProviderKeys {
   deeplApiKey?: string
   geminiConfig?: {
     apiKey: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   chatgptConfig?: {
     baseUrl: string
     apiKey: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   groqConfig?: {
     baseUrl: string
     apiKey: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   ollamaConfig?: {
     baseUrl: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   openrouterConfig?: {
     baseUrl: string
     apiKey: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   customConfig?: {
     baseUrl: string

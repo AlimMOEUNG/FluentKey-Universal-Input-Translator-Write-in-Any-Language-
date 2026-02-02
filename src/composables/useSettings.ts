@@ -29,26 +29,31 @@ export interface ProviderConfigs {
   }
   gemini: {
     apiKey: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   chatgpt: {
     apiKey: string
     baseUrl: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   groq: {
     apiKey: string
     baseUrl: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   ollama: {
     baseUrl: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   openrouter: {
     apiKey: string
     baseUrl: string
-    model: string
+    model: string // Selected model from dropdown or 'custom'
+    customModel?: string // Custom model name when model === 'custom'
   }
   custom: {
     baseUrl: string
