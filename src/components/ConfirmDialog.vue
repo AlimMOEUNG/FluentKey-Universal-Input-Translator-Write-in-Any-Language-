@@ -145,7 +145,7 @@ function handleCancel() {
   padding: 1rem;
 }
 
-:root[data-theme='dark'] .dialog-overlay {
+:root.dark .dialog-overlay {
   background-color: rgba(0, 0, 0, 0.65);
 }
 
@@ -160,7 +160,7 @@ function handleCancel() {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-:root[data-theme='dark'] .dialog-container {
+:root.dark .dialog-container {
   background-color: #1f2937;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
@@ -191,7 +191,7 @@ function handleCancel() {
   line-height: 1.4;
 }
 
-:root[data-theme='dark'] .dialog-title {
+:root.dark .dialog-title {
   color: #f3f4f6;
 }
 
@@ -204,7 +204,7 @@ function handleCancel() {
   line-height: 1.5;
 }
 
-:root[data-theme='dark'] .dialog-message {
+:root.dark .dialog-message {
   color: #9ca3af;
 }
 
@@ -241,13 +241,13 @@ function handleCancel() {
   background-color: #f9fafb;
 }
 
-:root[data-theme='dark'] .dialog-button-secondary {
+:root.dark .dialog-button-secondary {
   background-color: #374151;
   color: #e5e7eb;
   border-color: #4b5563;
 }
 
-:root[data-theme='dark'] .dialog-button-secondary:hover {
+:root.dark .dialog-button-secondary:hover {
   background-color: #4b5563;
 }
 
