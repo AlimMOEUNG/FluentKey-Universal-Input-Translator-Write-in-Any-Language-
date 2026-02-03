@@ -4,7 +4,12 @@
  * Now supports multiple presets with migration from old format
  */
 
-import type { TranslationPreset, PresetsSettings, TranslationProvider } from '@/types/common'
+import type {
+  Preset,
+  TranslationPreset,
+  PresetsSettings,
+  TranslationProvider,
+} from '@/types/common'
 
 export interface Settings {
   sourceLang: string // ISO 639-1 code or 'auto'
@@ -42,6 +47,7 @@ export class SettingsManager {
       {
         id: generateUUID(),
         name: 'Preset 1',
+        type: 'translation',
         sourceLang: 'auto',
         targetLang: 'en',
         keyboardShortcut: 'Alt+T',
@@ -77,6 +83,7 @@ export class SettingsManager {
         const migratedPreset: TranslationPreset = {
           id: generateUUID(),
           name: 'Preset 1',
+          type: 'translation',
           sourceLang: this.settings.sourceLang,
           targetLang: this.settings.targetLang,
           keyboardShortcut: this.settings.keyboardShortcut,
@@ -132,14 +139,14 @@ export class SettingsManager {
   /**
    * Get all presets
    */
-  getPresets(): TranslationPreset[] {
+  getPresets(): Preset[] {
     return this.presetsSettings.presets
   }
 
   /**
    * Get a preset by ID
    */
-  getPresetById(id: string): TranslationPreset | undefined {
+  getPresetById(id: string): Preset | undefined {
     return this.presetsSettings.presets.find((p) => p.id === id)
   }
 

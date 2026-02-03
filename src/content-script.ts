@@ -48,6 +48,10 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
   // Handle legacy settings changes (for backward compatibility during migration)
   if (areaName === 'sync' && changes.settings) {
     console.log('[Content] Legacy settings changed, reloading...')
+    if (!settings || !keyboardHandler) {
+      console.warn('[Content] Components not initialized yet, skipping settings reload')
+      return
+    }
     settings.load().then(() => {
       console.log('[Content] Settings reloaded')
       keyboardHandler.rebuildShortcutMap()
@@ -57,6 +61,11 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
   // Handle new presets settings changes
   if (areaName === 'sync' && changes.presetsSettings) {
     console.log('[Content] Presets settings changed, reloading...')
+
+    if (!settings || !keyboardHandler || !engine) {
+      console.warn('[Content] Components not initialized yet, skipping presets reload')
+      return
+    }
 
     // Reload settings
     settings.load().then(() => {
@@ -81,6 +90,10 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
   // Also reinitialize if API keys changed (provider keys are in local storage)
   if (areaName === 'local' && changes.providerKeys) {
     console.log('[Content] Provider keys changed, reinitializing...')
+    if (!engine) {
+      console.warn('[Content] Engine not initialized yet, skipping provider reinit')
+      return
+    }
     engine.reinitializeProvider().then(() => {
       console.log('[Content] Provider reinitialized')
     })

@@ -496,7 +496,7 @@ import { usePresetsSettings } from '@/composables/usePresetsSettings'
 import { usePopupState } from '@/composables/usePopupState'
 import { PREDEFINED_MODELS, isCustomModel, getEffectiveModel } from '@/config/predefinedModels'
 import type { SupportedLocale } from '@/core/utils/i18n'
-import type { TranslationPreset } from '@/types/common'
+import type { Preset } from '@/types/common'
 import PresetEditor from '@/components/PresetEditor.vue'
 
 // i18n setup
@@ -595,7 +595,7 @@ function addPreset() {
   }
 }
 
-function updatePreset(updatedPreset: TranslationPreset) {
+function updatePreset(updatedPreset: Preset) {
   updatePresetHelper(updatedPreset)
 }
 

@@ -15,6 +15,7 @@
  */
 
 import { TranslationEngine } from '../translation/TranslationEngine'
+import { TransformationEngine } from '../transformation/TransformationEngine'
 import { SettingsManager } from '../storage/SettingsManager'
 import { InputHandler } from './input/InputHandler'
 import {
@@ -22,17 +23,20 @@ import {
   normalizeShortcut,
   KeyboardSequenceDetector,
 } from '../utils/keyboardUtils'
-import type { TranslationPreset } from '@/types/common'
+import type { Preset } from '@/types/common'
 
 export class KeyboardShortcutHandler {
-  private isProcessing = false // Prevent concurrent translations
-  private shortcutMap = new Map<string, TranslationPreset>() // Shortcut → Preset mapping
+  private isProcessing = false // Prevent concurrent operations
+  private shortcutMap = new Map<string, Preset>() // Shortcut → Preset mapping
   private sequenceDetector = new KeyboardSequenceDetector() // Sequence detector for multi-key shortcuts
+  private transformationEngine: TransformationEngine // Engine for text transformations
 
   constructor(
     private engine: TranslationEngine,
     private settings: SettingsManager
-  ) {}
+  ) {
+    this.transformationEngine = new TransformationEngine()
+  }
 
   /**
    * Initialize the handler by setting up keyboard event listener
@@ -65,9 +69,17 @@ export class KeyboardShortcutHandler {
     for (const preset of presets) {
       const normalized = normalizeShortcut(preset.keyboardShortcut)
       this.shortcutMap.set(normalized, preset)
-      console.log(
-        `[KeyboardShortcut] Registered: ${preset.keyboardShortcut} → ${preset.name} (${preset.sourceLang} → ${preset.targetLang})`
-      )
+
+      // Log different info based on preset type
+      if (preset.type === 'transformation') {
+        console.log(
+          `[KeyboardShortcut] Registered: ${preset.keyboardShortcut} → ${preset.name} (${preset.transformationStyle})`
+        )
+      } else {
+        console.log(
+          `[KeyboardShortcut] Registered: ${preset.keyboardShortcut} → ${preset.name} (${preset.sourceLang} → ${preset.targetLang})`
+        )
+      }
     }
   }
 
@@ -125,29 +137,28 @@ export class KeyboardShortcutHandler {
   }
 
   /**
-   * Main shortcut logic: detect context and translate
-   * Uses preset's source and target languages
+   * Main shortcut logic: detect context and process (translate or transform)
    */
-  private async handleShortcut(preset: TranslationPreset): Promise<void> {
+  private async handleShortcut(preset: Preset): Promise<void> {
     // Get focused input if any
     const focusedInput = InputHandler.getFocusedInput()
 
-    // Case 1: If input has selection, translate only the selection
+    // Case 1: If input has selection, process only the selection
     if (focusedInput && InputHandler.hasSelection(focusedInput)) {
       const selection = InputHandler.getSelectedText(focusedInput)
       if (selection && selection.trim().length > 0) {
-        console.log(`[KeyboardShortcut] Translating input selection (${selection.length} chars)`)
-        await this.translateInputSelection(focusedInput, selection, preset)
+        console.log(`[KeyboardShortcut] Processing input selection (${selection.length} chars)`)
+        await this.processText(focusedInput, selection, preset, 'selection')
         return
       }
     }
 
-    // Case 2: If input is focused, translate entire content
+    // Case 2: If input is focused, process entire content
     if (focusedInput) {
       const text = InputHandler.getTextValue(focusedInput)
       if (text && text.trim().length > 0) {
-        console.log(`[KeyboardShortcut] Translating input content (${text.length} chars)`)
-        await this.translateInputContent(focusedInput, text, preset)
+        console.log(`[KeyboardShortcut] Processing input content (${text.length} chars)`)
+        await this.processText(focusedInput, text, preset, 'content')
         return
       }
     }
@@ -155,116 +166,85 @@ export class KeyboardShortcutHandler {
     // Case 3: Check if there's a text selection outside of inputs (page selection)
     const pageSelection = window.getSelection()?.toString()
     if (pageSelection && pageSelection.trim().length > 0) {
-      console.log(`[KeyboardShortcut] Translating page selection (${pageSelection.length} chars)`)
-      await this.translatePageSelection(pageSelection, preset)
+      console.log(`[KeyboardShortcut] Processing page selection (${pageSelection.length} chars)`)
+      await this.processText(null, pageSelection, preset, 'page')
       return
     }
 
-    // Case 4: Nothing to translate
+    // Case 4: Nothing to process
     console.log('[KeyboardShortcut] No selection or input focus, skipping')
   }
 
   /**
-   * Translate selection within an input field
-   * Uses preset's source and target languages
+   * Process text: apply transformation or translation based on preset type
+   * Unified method that routes to appropriate engine
    */
-  private async translateInputSelection(
-    inputElement: HTMLElement,
-    selectedText: string,
-    preset: TranslationPreset
+  private async processText(
+    inputElement: HTMLElement | null,
+    text: string,
+    preset: Preset,
+    context: 'selection' | 'content' | 'page'
   ): Promise<void> {
     try {
-      // Translate the text using preset languages
-      const translatedText = await this.engine.translateText(
-        selectedText,
-        preset.sourceLang,
-        preset.targetLang
-      )
-      console.log(
-        `[KeyboardShortcut] Input selection translated (${preset.sourceLang} → ${preset.targetLang})`
-      )
+      let resultText: string
 
-      // Replace selection in input
-      const success = InputHandler.replaceSelectedText(inputElement, translatedText)
-      if (!success) {
-        throw new Error('Failed to replace selected text in input')
+      // Route based on preset type
+      if (preset.type === 'transformation') {
+        // SYNCHRONOUS transformation (no API call)
+        resultText = this.transformationEngine.transform(text, preset.transformationStyle)
+        console.log(
+          `[KeyboardShortcut] Text transformed using ${preset.transformationStyle} (${text.length} → ${resultText.length} chars)`
+        )
+      } else {
+        // ASYNCHRONOUS translation
+        resultText = await this.engine.translateText(text, preset.sourceLang, preset.targetLang)
+        console.log(
+          `[KeyboardShortcut] Text translated: ${preset.sourceLang} → ${preset.targetLang} (${text.length} → ${resultText.length} chars)`
+        )
+      }
+
+      // Apply result based on context
+      if (context === 'selection' && inputElement) {
+        // Replace selection in input
+        const success = await InputHandler.replaceSelectedText(inputElement, resultText)
+        if (!success) {
+          throw new Error('Failed to replace selected text in input')
+        }
+      } else if (context === 'content' && inputElement) {
+        // Replace entire input content
+        const success = await InputHandler.setTextValue(inputElement, resultText)
+        if (!success) {
+          throw new Error('Failed to set text value in input')
+        }
+      } else if (context === 'page') {
+        // Replace page selection using DOM manipulation
+        this.replacePageSelection(resultText)
       }
     } catch (error) {
-      console.error('[KeyboardShortcut] Input selection translation failed:', error)
-      alert(`Translation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      console.error('[KeyboardShortcut] Processing failed:', error)
+      const operation = preset.type === 'transformation' ? 'Transformation' : 'Translation'
+      alert(`${operation} failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
   /**
-   * Translate entire input content
-   * Uses preset's source and target languages
+   * Replace page selection with new text
+   * Used for text selected outside of input fields
    */
-  private async translateInputContent(
-    inputElement: HTMLElement,
-    originalText: string,
-    preset: TranslationPreset
-  ): Promise<void> {
-    try {
-      // Translate the text using preset languages
-      const translatedText = await this.engine.translateText(
-        originalText,
-        preset.sourceLang,
-        preset.targetLang
-      )
-      console.log(
-        `[KeyboardShortcut] Input content translated (${preset.sourceLang} → ${preset.targetLang})`
-      )
+  private replacePageSelection(text: string): void {
+    const selection = window.getSelection()
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0)
+      range.deleteContents()
+      const textNode = document.createTextNode(text)
+      range.insertNode(textNode)
 
-      // Replace entire input content
-      const success = InputHandler.setTextValue(inputElement, translatedText)
-      if (!success) {
-        throw new Error('Failed to set text value in input')
-      }
-
-      // Select all translated text
-      InputHandler.selectAll(inputElement)
-    } catch (error) {
-      console.error('[KeyboardShortcut] Input content translation failed:', error)
-      alert(`Translation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      // Select the new text
+      const newRange = document.createRange()
+      newRange.selectNodeContents(textNode)
+      selection.removeAllRanges()
+      selection.addRange(newRange)
     }
   }
 
-  /**
-   * Translate page selection (text selected outside of input fields)
-   * Uses preset's source and target languages
-   */
-  private async translatePageSelection(
-    selectedText: string,
-    preset: TranslationPreset
-  ): Promise<void> {
-    try {
-      // Translate the text using preset languages
-      const translatedText = await this.engine.translateText(
-        selectedText,
-        preset.sourceLang,
-        preset.targetLang
-      )
-      console.log(
-        `[KeyboardShortcut] Page selection translated (${preset.sourceLang} → ${preset.targetLang})`
-      )
-
-      // Replace selection using DOM manipulation
-      const selection = window.getSelection()
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0)
-        range.deleteContents()
-        const textNode = document.createTextNode(translatedText)
-        range.insertNode(textNode)
-
-        // Select the new text
-        const newRange = document.createRange()
-        newRange.selectNodeContents(textNode)
-        selection.removeAllRanges()
-        selection.addRange(newRange)
-      }
-    } catch (error) {
-      console.error('[KeyboardShortcut] Page selection translation failed:', error)
-      alert(`Translation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    }
-  }
 }

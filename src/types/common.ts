@@ -72,22 +72,61 @@ export interface ProviderKeys {
 }
 
 /**
- * Translation preset (triplet: sourceLang + targetLang + keyboardShortcut)
+ * Base preset interface with common fields
  */
-export interface TranslationPreset {
+export interface BasePreset {
   id: string
   name: string
-  sourceLang: string
-  targetLang: string
   keyboardShortcut: string
   createdAt: number
 }
 
 /**
+ * Translation preset (triplet: sourceLang + targetLang + keyboardShortcut)
+ */
+export interface TranslationPreset extends BasePreset {
+  type: 'translation'
+  sourceLang: string
+  targetLang: string
+}
+
+/**
+ * Transformation styles for text effects
+ */
+export type TransformationStyle =
+  | 'strikethrough' // s̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶
+  | 'upside-down' // ʇxǝʇ pǝddᴉlɟ
+  | 'mirror' // reversed text (RTL)
+  | 'bold' // 𝗯𝗼𝗹𝗱
+  | 'italic' // 𝘪𝘵𝘢𝘭𝘪𝘤
+  | 'bold-italic' // 𝙗𝙤𝙡𝙙-𝙞𝙩𝙖𝙡𝙞𝙘
+  | 'script' // 𝓼𝓬𝓻𝓲𝓹𝓽 (cursive)
+  | 'circled' // ⓒⓘⓡⓒⓛⓔⓓ
+  | 'squared' // 🅂🅀🅄🅰🅁🅴🅳
+  | 'monospace' // 𝚖𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎
+  | 'double-struck' // 𝕕𝕠𝕦𝕓𝕝𝕖-𝕤𝕥𝕣𝕦𝕔𝕜
+  | 'fullwidth' // ｆｕｌｌｗｉｄｔｈ
+  | 'smallcaps' // sᴍᴀʟʟᴄᴀᴘs
+
+/**
+ * Transformation preset for text effects
+ */
+export interface TransformationPreset extends BasePreset {
+  type: 'transformation'
+  transformationStyle: TransformationStyle
+  exampleText?: string // Optional customizable preview text
+}
+
+/**
+ * Union type for all preset types
+ */
+export type Preset = TranslationPreset | TransformationPreset
+
+/**
  * Presets settings structure
  */
 export interface PresetsSettings {
-  presets: TranslationPreset[]
+  presets: Preset[]
   activePresetId: string | null
   provider: TranslationProvider
 }

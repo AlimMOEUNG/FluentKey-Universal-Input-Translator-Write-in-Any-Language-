@@ -5,7 +5,7 @@
 
 import { ref, watch } from 'vue'
 import type { TranslationSettings } from './useSettings'
-import type { TranslationPreset, PresetsSettings } from '@/types/common'
+import type { Preset, TranslationPreset, TransformationPreset, PresetsSettings } from '@/types/common'
 
 /**
  * Generate a UUID v4
@@ -30,16 +30,33 @@ function generateDefaultShortcut(index: number): string {
 }
 
 /**
- * Create a default preset with specified index
+ * Create a default preset with specified index and type
  */
-function createDefaultPreset(index: number): TranslationPreset {
-  return {
+function createDefaultPreset(
+  index: number,
+  type: 'translation' | 'transformation' = 'translation'
+): Preset {
+  const basePreset = {
     id: generateUUID(),
     name: `Preset ${index}`,
-    sourceLang: 'auto',
-    targetLang: 'en',
     keyboardShortcut: generateDefaultShortcut(index),
     createdAt: Date.now(),
+  }
+
+  if (type === 'transformation') {
+    return {
+      ...basePreset,
+      type: 'transformation',
+      transformationStyle: 'strikethrough',
+      exampleText: 'Example text',
+    } as TransformationPreset
+  } else {
+    return {
+      ...basePreset,
+      type: 'translation',
+      sourceLang: 'auto',
+      targetLang: 'en',
+    } as TranslationPreset
   }
 }
 
@@ -85,6 +102,55 @@ async function saveToStorage() {
 }
 
 /**
+ * Migrate preset to typed format (add type field if missing)
+ */
+function migratePresetToTyped(preset: any): Preset {
+  // If preset already has type field, it's already migrated
+  if ('type' in preset && (preset.type === 'translation' || preset.type === 'transformation')) {
+    return preset as Preset
+  }
+
+  // Legacy preset without type → assume translation preset
+  return {
+    ...preset,
+    type: 'translation',
+  } as TranslationPreset
+}
+
+/**
+ * Validate individual preset structure based on type
+ */
+function isValidPreset(preset: any): preset is Preset {
+  // Base validation: all presets must have these fields
+  const hasBaseFields =
+    preset &&
+    typeof preset === 'object' &&
+    typeof preset.id === 'string' &&
+    typeof preset.name === 'string' &&
+    typeof preset.keyboardShortcut === 'string' &&
+    typeof preset.createdAt === 'number'
+
+  if (!hasBaseFields) {
+    return false
+  }
+
+  // Type-specific validation
+  if (preset.type === 'translation') {
+    // Translation presets require sourceLang and targetLang
+    return (
+      typeof preset.sourceLang === 'string' &&
+      typeof preset.targetLang === 'string'
+    )
+  } else if (preset.type === 'transformation') {
+    // Transformation presets require transformationStyle
+    return typeof preset.transformationStyle === 'string'
+  }
+
+  // Unknown type or missing type field
+  return false
+}
+
+/**
  * Validate presets settings structure
  */
 function isValidPresetsSettings(data: any): data is PresetsSettings {
@@ -93,6 +159,7 @@ function isValidPresetsSettings(data: any): data is PresetsSettings {
     typeof data === 'object' &&
     Array.isArray(data.presets) &&
     data.presets.length > 0 &&
+    data.presets.every((p: any) => isValidPreset(p)) &&
     typeof data.activePresetId === 'string' &&
     typeof data.provider === 'string'
 
@@ -103,6 +170,7 @@ function isValidPresetsSettings(data: any): data is PresetsSettings {
       hasPresets: data?.presets !== undefined,
       isPresetsArray: Array.isArray(data?.presets),
       presetsLength: data?.presets?.length,
+      presetsValid: data?.presets?.every((p: any) => isValidPreset(p)),
       activePresetIdType: typeof data?.activePresetId,
       providerType: typeof data?.provider,
       data: data,
@@ -119,28 +187,43 @@ async function loadFromStorage() {
   try {
     const result = await chrome.storage.sync.get(['settings', 'presetsSettings'])
 
-    // Case 1: New format exists and is valid
-    if (result.presetsSettings && isValidPresetsSettings(result.presetsSettings)) {
-      presetsSettings.value = result.presetsSettings
-      console.log('[usePresetsSettings] Loaded from storage')
-      return
+    // Case 1: New format exists
+    if (result.presetsSettings) {
+      // Migrate presets that don't have type field
+      const migratedData = {
+        ...result.presetsSettings,
+        presets: result.presetsSettings.presets.map(migratePresetToTyped),
+      }
+
+      // Validate after migration
+      if (isValidPresetsSettings(migratedData)) {
+        presetsSettings.value = migratedData
+
+        // Save migrated data if we had to migrate any presets
+        const hadMigration = result.presetsSettings.presets.some((p: any) => !('type' in p))
+        if (hadMigration) {
+          await chrome.storage.sync.set({ presetsSettings: presetsSettings.value })
+          console.log('[usePresetsSettings] Migrated presets to typed format')
+        } else {
+          console.log('[usePresetsSettings] Loaded from storage')
+        }
+        return
+      } else {
+        console.warn('[usePresetsSettings] Invalid data after migration, resetting to defaults')
+        presetsSettings.value = getDefaultPresetsSettings()
+        await chrome.storage.sync.set({ presetsSettings: presetsSettings.value })
+        return
+      }
     }
 
-    // Case 1b: New format exists but is malformed
-    if (result.presetsSettings && !isValidPresetsSettings(result.presetsSettings)) {
-      console.warn('[usePresetsSettings] Malformed data in storage, resetting to defaults')
-      presetsSettings.value = getDefaultPresetsSettings()
-      await chrome.storage.sync.set({ presetsSettings: presetsSettings.value })
-      return
-    }
-
-    // Case 2: Migration from old format
+    // Case 2: Migration from old settings format
     if (result.settings) {
       const oldSettings: TranslationSettings = result.settings
 
       const migratedPreset: TranslationPreset = {
         id: generateUUID(),
         name: 'Preset 1',
+        type: 'translation',
         sourceLang: oldSettings.sourceLang,
         targetLang: oldSettings.targetLang,
         keyboardShortcut: oldSettings.keyboardShortcut,
@@ -265,7 +348,7 @@ export function usePresetsSettings() {
   /**
    * Add a new preset with default values
    */
-  function addPreset(): TranslationPreset | null {
+  function addPreset(type: 'translation' | 'transformation' = 'translation'): Preset | null {
     if (!canAddPreset()) {
       console.warn('[usePresetsSettings] Maximum presets limit reached')
       return null
@@ -273,7 +356,7 @@ export function usePresetsSettings() {
 
     const preferredIndex = presetsSettings.value.presets.length + 1
     const availableNumber = findAvailablePresetNumber(preferredIndex)
-    const newPreset = createDefaultPreset(availableNumber)
+    const newPreset = createDefaultPreset(availableNumber, type)
 
     presetsSettings.value.presets.push(newPreset)
     presetsSettings.value.activePresetId = newPreset.id
@@ -285,7 +368,7 @@ export function usePresetsSettings() {
   /**
    * Update an existing preset
    */
-  function updatePreset(updatedPreset: TranslationPreset): boolean {
+  function updatePreset(updatedPreset: Preset): boolean {
     const index = presetsSettings.value.presets.findIndex((p) => p.id === updatedPreset.id)
 
     if (index === -1) {
@@ -328,7 +411,7 @@ export function usePresetsSettings() {
   /**
    * Get a preset by ID
    */
-  function getPresetById(id: string): TranslationPreset | undefined {
+  function getPresetById(id: string): Preset | undefined {
     return presetsSettings.value.presets.find((p) => p.id === id)
   }
 
@@ -336,7 +419,7 @@ export function usePresetsSettings() {
    * Get the active preset
    * Returns the first preset if activePresetId is null or doesn't exist
    */
-  function getActivePreset(): TranslationPreset | undefined {
+  function getActivePreset(): Preset | undefined {
     if (!presetsSettings.value.activePresetId) {
       return presetsSettings.value.presets[0]
     }
@@ -379,7 +462,7 @@ export function usePresetsSettings() {
   function validateShortcutUniqueness(
     shortcut: string,
     currentPresetId: string
-  ): { valid: boolean; error?: string; duplicatePreset?: TranslationPreset } {
+  ): { valid: boolean; error?: string; duplicatePreset?: Preset } {
     const normalized = shortcut.toLowerCase().trim()
 
     const duplicate = presetsSettings.value.presets.find(

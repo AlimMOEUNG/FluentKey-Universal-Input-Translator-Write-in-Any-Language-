@@ -88,6 +88,13 @@ const enTranslations = {
   undo: 'Undo',
   undoChanges: 'Undo changes',
 
+  // Transformation Presets
+  enableTransformationMode: 'Fun text transformation',
+  transformationModeDescription: 'Apply Unicode effects instead of translation',
+  transformationStyle: 'Transformation Style',
+  previewExample: 'Preview Example',
+  previewPlaceholder: 'Type to see transformation...',
+
   // Usage
   howToUse: 'How to use:',
   usageSelect: 'Select text and press {shortcut} to translate it',
