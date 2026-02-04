@@ -86,9 +86,14 @@
         </label>
         <select
           v-model="localPreset.transformationStyle"
-          class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 font-unicode"
         >
-          <option v-for="style in transformationStyles" :key="style.value" :value="style.value">
+          <option
+            v-for="style in transformationStyles"
+            :key="style.value"
+            :value="style.value"
+            class="font-unicode"
+          >
             {{ style.label }} - {{ style.example }}
           </option>
         </select>
@@ -105,7 +110,7 @@
           class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         <div
-          class="p-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded text-sm font-mono text-gray-900 dark:text-gray-100"
+          class="p-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-gray-100 preview-transformed"
         >
           {{ transformedPreview }}
         </div>
@@ -456,5 +461,14 @@ function handleDeleteConfirm() {
 <style scoped>
 .preset-editor {
   padding-bottom: 0.5rem;
+}
+
+/* MathSymbols @font-face is declared in popup.html — it covers U+1D400-U+1D7FF
+   and U+2100-U+214F via unicode-range so only those codepoints use it.
+   Everything else stays monospace as normal. */
+.preview-transformed {
+  font-family:
+    'MathSymbols', ui-monospace, 'Cascadia Code', 'Source Code Pro', 'Menlo', 'Consolas',
+    'Courier New', monospace;
 }
 </style>

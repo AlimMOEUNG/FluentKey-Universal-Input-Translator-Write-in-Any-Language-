@@ -166,10 +166,12 @@ export function applyBold(text: string): string {
  * Mathematical Italic Unicode mapping (U+1D434 - U+1D467)
  */
 const italicMap = new Map<string, string>([
-  // Uppercase A-Z: U+0041-U+005A → U+1D434-U+1D44D (skip h at U+1D455)
+  // Uppercase A-Z: U+1D434-U+1D44D
   ...Array.from(createCharMap(0x41, 0x1d434, 26)),
-  // Lowercase a-z: U+0061-U+007A → U+1D44E-U+1D467
+  // Lowercase a-z: U+1D44E-U+1D467 (base range)
   ...Array.from(createCharMap(0x61, 0x1d44e, 26)),
+  // U+1D455 (italic small h) is reserved; canonical glyph is in Letterlike Symbols
+  ['h', '\u210E'], // ℎ
 ])
 
 /**
@@ -206,10 +208,24 @@ export function applyBoldItalic(text: string): string {
  * Mathematical Script Unicode mapping (U+1D49C - U+1D4CF)
  */
 const scriptMap = new Map<string, string>([
-  // Uppercase A-Z: U+0041-U+005A → U+1D49C-U+1D4B5
+  // Uppercase A-Z: U+1D49C-U+1D4B5 (base range)
   ...Array.from(createCharMap(0x41, 0x1d49c, 26)),
-  // Lowercase a-z: U+0061-U+007A → U+1D4B6-U+1D4CF
+  // Lowercase a-z: U+1D4B6-U+1D4CF (base range)
   ...Array.from(createCharMap(0x61, 0x1d4b6, 26)),
+  // Uppercase overrides: these codepoints are reserved in the Script block;
+  // the canonical glyphs live in Letterlike Symbols (U+2100-U+214F)
+  ['B', '\u212C'], // ℬ
+  ['E', '\u2130'], // ℰ
+  ['F', '\u2131'], // ℱ
+  ['H', '\u210B'], // ℋ
+  ['I', '\u2110'], // ℐ
+  ['L', '\u2112'], // ℒ
+  ['M', '\u2133'], // ℳ
+  ['R', '\u211B'], // ℛ
+  // Lowercase overrides: same reason
+  ['e', '\u212F'], // ℯ
+  ['g', '\u210A'], // ℊ
+  ['o', '\u2134'], // ℴ
 ])
 
 /**
@@ -348,12 +364,20 @@ export function applyMonospace(text: string): string {
  * Mathematical Double-Struck Unicode mapping (U+1D538 - U+1D56B)
  */
 const doubleStruckMap = new Map<string, string>([
-  // Uppercase A-Z: U+0041-U+005A → U+1D538-U+1D551
+  // Uppercase A-Z: U+1D538-U+1D551 (base range)
   ...Array.from(createCharMap(0x41, 0x1d538, 26)),
-  // Lowercase a-z: U+0061-U+007A → U+1D552-U+1D56B
+  // Lowercase a-z: U+1D552-U+1D56B
   ...Array.from(createCharMap(0x61, 0x1d552, 26)),
-  // Numbers 0-9: U+0030-U+0039 → U+1D7D8-U+1D7E1
+  // Numbers 0-9: U+1D7D8-U+1D7E1
   ...Array.from(createCharMap(0x30, 0x1d7d8, 10)),
+  // Uppercase overrides: reserved codepoints replaced by Letterlike Symbols equivalents
+  ['C', '\u2102'], // ℂ
+  ['H', '\u210D'], // ℍ
+  ['N', '\u2115'], // ℕ
+  ['P', '\u2119'], // ℙ
+  ['Q', '\u211A'], // ℚ
+  ['R', '\u211D'], // ℝ
+  ['Z', '\u2124'], // ℤ
 ])
 
 /**

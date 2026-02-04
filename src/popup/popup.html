@@ -39,6 +39,19 @@
         min-height: 300px;
         width: 100%;
       }
+
+      /* Routes Mathematical Alphanumeric Symbols + Letterlike Symbols
+         to a font that has these glyphs. Declared here (outside Tailwind)
+         so no CSS layer / plugin reordering can interfere. */
+      @font-face {
+        font-family: 'MathSymbols';
+        src:
+          local('Noto Sans Math'),
+          local('Noto Sans Symbols2'),
+          local('Segoe UI Symbol'),
+          local('Symbola');
+        unicode-range: U+2100-U+214F, U+1D400-U+1D7FF;
+      }
     </style>
   </head>
   <body>
