@@ -45,6 +45,20 @@ export class TransformationEngine {
         return transformationMaps.applyFullwidth(text)
       case 'smallcaps':
         return transformationMaps.applySmallCaps(text)
+      case 'morse':
+        return transformationMaps.applyMorse(text)
+      case 'zalgo':
+        return transformationMaps.applyZalgo(text)
+      case 'zalgo-lite':
+        return transformationMaps.applyZalgoLite(text)
+      case 'leet':
+        return transformationMaps.applyLeet(text)
+      case 'rot13':
+        return transformationMaps.applyRot13(text)
+      case 'braille':
+        return transformationMaps.applyBraille(text)
+      case 'drunk':
+        return transformationMaps.applyDrunk(text)
       default:
         console.warn(`[TransformationEngine] Unknown style: ${style}`)
         return text
@@ -71,6 +85,13 @@ export class TransformationEngine {
       'double-struck': 'Double-Struck',
       fullwidth: 'Fullwidth',
       smallcaps: 'Small Caps',
+      morse: 'Morse Code',
+      zalgo: 'Zalgo',
+      'zalgo-lite': 'Zalgo Lite',
+      leet: 'Leet Speak',
+      rot13: 'ROT13',
+      braille: 'Braille',
+      drunk: 'Drunk Text',
     }
     return names[style] || style
   }
@@ -109,6 +130,13 @@ export class TransformationEngine {
       'double-struck',
       'fullwidth',
       'smallcaps',
+      'morse',
+      'zalgo',
+      'zalgo-lite',
+      'leet',
+      'rot13',
+      'braille',
+      'drunk',
     ]
 
     return styles.map((style) => ({

@@ -107,6 +107,13 @@ export type TransformationStyle =
   | 'double-struck' // 𝕕𝕠𝕦𝕓𝕝𝕖-𝕤𝕥𝕣𝕦𝕔𝕜
   | 'fullwidth' // ｆｕｌｌｗｉｄｔｈ
   | 'smallcaps' // sᴍᴀʟʟᴄᴀᴘs
+  | 'morse' // .... . .-.. .-.. ---
+  | 'zalgo' // Z̶̬̠̮̃̌̈́ȃ̶̡̛̰̝̈l̵̛̮̐̑g̷̶̛̺̻̞̓̃o̶̟̓̈́̚
+  | 'zalgo-lite' // Z̃ȃl̐g̓o̚
+  | 'leet' // H3||0
+  | 'rot13' // Uryyb
+  | 'braille' // ⠓⠑⠇⠇⠕
+  | 'drunk' // hOw DaRe YoU
 
 /**
  * Transformation preset for text effects

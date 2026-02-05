@@ -466,3 +466,246 @@ export function applySmallCaps(text: string): string {
     })
     .join('')
 }
+
+// ---------------------------------------------------------------------------
+// Morse Code
+// ---------------------------------------------------------------------------
+
+/** Morse code table — letters a-z and digits 0-9 */
+const morseMap: Record<string, string> = {
+  a: '.-',
+  b: '-...',
+  c: '-.-.',
+  d: '-..',
+  e: '.',
+  f: '..-.',
+  g: '--.',
+  h: '....',
+  i: '..',
+  j: '.---',
+  k: '-.-',
+  l: '.-..',
+  m: '--',
+  n: '-.',
+  o: '---',
+  p: '.--.',
+  q: '--.-',
+  r: '.-.',
+  s: '...',
+  t: '-',
+  u: '..-',
+  v: '...-',
+  w: '.--',
+  x: '-..-',
+  y: '-.--',
+  z: '--..',
+  '0': '-----',
+  '1': '.----',
+  '2': '..---',
+  '3': '...--',
+  '4': '....-',
+  '5': '.....',
+  '6': '-....',
+  '7': '--...',
+  '8': '---..',
+  '9': '----.',
+}
+
+/**
+ * Apply Morse code.
+ * Letters are separated by a single space, words by ' / '.
+ * Characters without a Morse mapping are kept as-is.
+ */
+export function applyMorse(text: string): string {
+  return text
+    .split(' ')
+    .map((word) =>
+      word
+        .split('')
+        .map((char) => morseMap[char.toLowerCase()] || char)
+        .join(' ')
+    )
+    .join(' / ')
+}
+
+// ---------------------------------------------------------------------------
+// Zalgo Text
+// ---------------------------------------------------------------------------
+
+/**
+ * Core Zalgo logic — stacks random combining diacritical marks (U+0300–U+036F) on each character.
+ */
+function applyZalgoInternal(text: string, minMarks: number, maxMarks: number): string {
+  const START = 0x0300
+  const END = 0x036f
+
+  return text
+    .split('')
+    .map((char) => {
+      if (char === ' ') return char
+      const count = Math.floor(Math.random() * (maxMarks - minMarks + 1)) + minMarks
+      let result = char
+      for (let i = 0; i < count; i++) {
+        result += String.fromCodePoint(Math.floor(Math.random() * (END - START + 1)) + START)
+      }
+      return result
+    })
+    .join('')
+}
+
+/** Full Zalgo — 3 to 8 combining marks per character */
+export function applyZalgo(text: string): string {
+  return applyZalgoInternal(text, 3, 8)
+}
+
+/** Lite Zalgo — 1 to 2 marks per character, stays readable */
+export function applyZalgoLite(text: string): string {
+  return applyZalgoInternal(text, 1, 2)
+}
+
+// ---------------------------------------------------------------------------
+// Leet Speak
+// ---------------------------------------------------------------------------
+
+/** Classic Leet Speak substitution table */
+const leetMap: Record<string, string> = {
+  a: '4',
+  A: '4',
+  e: '3',
+  E: '3',
+  i: '1',
+  I: '1',
+  l: '|',
+  L: '|',
+  o: '0',
+  O: '0',
+  s: '5',
+  S: '5',
+  t: '7',
+  T: '7',
+}
+
+/** Apply Leet Speak — unmapped characters are kept as-is */
+export function applyLeet(text: string): string {
+  return text
+    .split('')
+    .map((char) => leetMap[char] || char)
+    .join('')
+}
+
+// ---------------------------------------------------------------------------
+// ROT13
+// ---------------------------------------------------------------------------
+
+/**
+ * Apply ROT13 — each letter shifted by 13 positions (mod 26).
+ * Self-inverse: applying twice returns the original. Non-alpha characters unchanged.
+ */
+export function applyRot13(text: string): string {
+  return text
+    .split('')
+    .map((char) => {
+      const code = char.charCodeAt(0)
+      // Uppercase A-Z
+      if (code >= 65 && code <= 90) {
+        return String.fromCharCode(((code - 65 + 13) % 26) + 65)
+      }
+      // Lowercase a-z
+      if (code >= 97 && code <= 122) {
+        return String.fromCharCode(((code - 97 + 13) % 26) + 97)
+      }
+      return char
+    })
+    .join('')
+}
+
+// ---------------------------------------------------------------------------
+// Braille (Grade 1)
+// ---------------------------------------------------------------------------
+
+/**
+ * Grade 1 Braille letter map (a-z).
+ * Each codepoint = U+2800 + bitmask of active dots:
+ *   dot1=0x01 dot2=0x02 dot3=0x04 dot4=0x08 dot5=0x10 dot6=0x20
+ */
+const brailleMap: Record<string, string> = {
+  a: '\u2801', // dot 1
+  b: '\u2803', // dots 1,2
+  c: '\u2809', // dots 1,4
+  d: '\u2819', // dots 1,4,5
+  e: '\u2811', // dots 1,5
+  f: '\u280B', // dots 1,2,4
+  g: '\u281B', // dots 1,2,4,5
+  h: '\u2813', // dots 1,2,5
+  i: '\u280A', // dots 2,4
+  j: '\u281A', // dots 2,4,5
+  k: '\u2805', // dots 1,3
+  l: '\u2807', // dots 1,2,3
+  m: '\u280D', // dots 1,3,4
+  n: '\u281D', // dots 1,3,4,5
+  o: '\u2815', // dots 1,3,5
+  p: '\u280F', // dots 1,2,3,4
+  q: '\u281F', // dots 1,2,3,4,5
+  r: '\u2817', // dots 1,2,3,5
+  s: '\u280E', // dots 2,3,4
+  t: '\u281E', // dots 2,3,4,5
+  u: '\u2825', // dots 1,3,6
+  v: '\u2827', // dots 1,2,3,6
+  w: '\u283A', // dots 2,4,5,6
+  x: '\u282D', // dots 1,3,4,6
+  y: '\u283D', // dots 1,3,4,5,6
+  z: '\u2835', // dots 1,3,5,6
+}
+
+/** Capital indicator ⠠ and number indicator ⠼ */
+const BRAILLE_CAP = '\u2820'
+const BRAILLE_NUM = '\u283C'
+
+/** Digit → equivalent letter for the number indicator pattern (1→a … 9→i, 0→j) */
+const brailleDigitLetter: Record<string, string> = {
+  '1': 'a',
+  '2': 'b',
+  '3': 'c',
+  '4': 'd',
+  '5': 'e',
+  '6': 'f',
+  '7': 'g',
+  '8': 'h',
+  '9': 'i',
+  '0': 'j',
+}
+
+/**
+ * Apply Braille (Grade 1).
+ * - Uppercase letters are prefixed with the capital indicator ⠠.
+ * - Digits are prefixed with the number indicator ⠼ and use letter patterns a-j.
+ */
+export function applyBraille(text: string): string {
+  return text
+    .split('')
+    .map((char) => {
+      // Uppercase → capital indicator + braille of lowercase equivalent
+      if (char >= 'A' && char <= 'Z') {
+        return BRAILLE_CAP + (brailleMap[char.toLowerCase()] || char)
+      }
+      // Digit → number indicator + braille of equivalent letter
+      if (brailleDigitLetter[char]) {
+        return BRAILLE_NUM + brailleMap[brailleDigitLetter[char]]
+      }
+      // Lowercase or other
+      return brailleMap[char] || char
+    })
+    .join('')
+}
+
+// ---------------------------------------------------------------------------
+// Drunk Text (Mocking Spongebob)
+// ---------------------------------------------------------------------------
+
+/** Random upper/lower case per character */
+export function applyDrunk(text: string): string {
+  return text
+    .split('')
+    .map((char) => (Math.random() > 0.5 ? char.toUpperCase() : char.toLowerCase()))
+    .join('')
+}
