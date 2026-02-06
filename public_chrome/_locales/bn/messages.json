@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "YouTube, Netflix, Disney+, Prime Video এর জন্য সাবটাইটেল ডাউনলোডার"
+    "message": "Power Input Action: অনুবাদ, রূপান্তর এবং মানানসই করুন"
   },
   "extensionDescription": {
-    "message": "আপনার প্রিয় স্ট্রিমিং সাইট থেকে SRT/VTT/TXT তে সাবটাইটেল এবং ট্রান্সক্রিপ্ট ডাউনলোড করুন। দ্বৈত/স্বয়ংক্রিয় অনুবাদ, ডাউনলোডের আগে সম্পাদনা করুন।"
+    "message": "আপনি যেখানে টাইপ করছেন সেখানেই সরাসরি টেক্সট অনুবাদ, পুনর্লিখন এবং স্টাইল করার জন্য কীবোর্ড শর্টকাট। কপি-পেস্ট নেই, সম্পূর্ণ কাস্টমাইজযোগ্য প্রিসেট।"
   },
   "extensionName": {
-    "message": "YouTube, Netflix, Disney+, Prime Video এর জন্য সাবটাইটেল ডাউনলোডার"
+    "message": "Power Input Action: অনুবাদ, রূপান্তর এবং মানানসই করুন"
   }
 }

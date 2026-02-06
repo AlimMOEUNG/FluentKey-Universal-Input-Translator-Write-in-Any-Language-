@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Преузимање титлова за YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Преведи и Трансформиши"
   },
   "extensionDescription": {
-    "message": "Титлови и транскрипти са стриминг сервиса у SRT/VTT/TXT. Двоструки/аутоматски превод, уредите пре преузимања."
+    "message": "Пречице на тастатури за превођење, поновно писање и стилизовање текста директно тамо где куцате. Без копирања и лепљења, потпуно прилагодљива подешавања."
   },
   "extensionName": {
-    "message": "Преузимање титлова за YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Преведи и Трансформиши"
   }
 }

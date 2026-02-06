@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Extension Boilerplate"
+    "message": "Power Input Action: Translate, Transform, Adapt your Input"
   },
   "extensionDescription": {
-    "message": "Production-ready Chrome extension with Vue 3, TypeScript, and Tailwind CSS"
+    "message": "Keyboard shortcuts to translate, rewrite and style any text directly where you type. No copy‑paste, fully customizable presets."
   },
   "extensionName": {
-    "message": "Extension Boilerplate"
+    "message": "Power Input Action: Translate, Transform, Adapt your Input"
   }
 }

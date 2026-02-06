@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Pobieracz napisów dla YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: Tłumacz i Przekształcaj"
   },
   "extensionDescription": {
-    "message": "Pobierz napisy i transkrypcje z serwisów streamingowych w SRT/VTT/TXT. Podwójne/automatyczne tłumaczenie, edytuj przed pobraniem."
+    "message": "Skróty klawiaturowe do tłumaczenia, przepisywania i stylizowania tekstu bezpośrednio w miejscu pisania. Bez kopiowania i wklejania, w pełni konfigurowalne ustawienia."
   },
   "extensionName": {
-    "message": "Pobieracz napisów dla YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: Tłumacz i Przekształcaj"
   }
 }

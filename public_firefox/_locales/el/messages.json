@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Λήψη υποτίτλων για YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Μετάφραση & Μετασχηματισμός"
   },
   "extensionDescription": {
-    "message": "Λήψη υποτίτλων & μεταγραφών από υπηρεσίες ροής σε SRT/VTT/TXT. Διπλή/αυτόματη μετάφραση, επεξεργασία πριν λήψη."
+    "message": "Συντομεύσεις πληκτρολογίου για μετάφραση, επαναδιατύπωση και στυλ κειμένου απευθείας εκεί που πληκτρολογείτε. Χωρίς αντιγραφή-επικόλληση, πλήρως προσαρμόσιμες προεπιλογές."
   },
   "extensionName": {
-    "message": "Λήψη υποτίτλων για YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Μετάφραση & Μετασχηματισμός"
   }
 }

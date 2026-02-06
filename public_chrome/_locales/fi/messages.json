@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Tekstityslataaja YouTube, Netflix, Disney+, Prime Video varten"
+    "message": "Power Input Action: Käännä, Muunna, Mukauta"
   },
   "extensionDescription": {
-    "message": "Lataa tekstitykset & transkriptiot striimauspalveluista SRT/VTT/TXT. Kaksois/auto käännös, muokkaa ennen lataamista."
+    "message": "Pikanäppäimet tekstin kääntämiseen, uudelleenkirjoittamiseen ja muotoiluun suoraan kirjoituskohdassa. Ei kopiointia ja liittämistä, täysin muokattavat esiasetukset."
   },
   "extensionName": {
-    "message": "Tekstityslataaja YouTube, Netflix, Disney+, Prime Video varten"
+    "message": "Power Input Action: Käännä, Muunna, Mukauta"
   }
 }

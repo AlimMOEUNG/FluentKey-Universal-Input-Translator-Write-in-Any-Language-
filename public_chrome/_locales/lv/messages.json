@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Subtitru lejupielādētājs priekš YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Tulkot, Pārveidot, Pielāgot"
   },
   "extensionDescription": {
-    "message": "Lejupielādējiet subtitrus un transkripcijas no straumēšanas vietnēm SRT/VTT/TXT. Divkāršs/automātisks tulkojums, rediģējiet pirms lejupielādes."
+    "message": "Tastatūras īsceļi, lai tulkotu, pārrakstītu un veidotu tekstu tieši tur, kur rakstāt. Bez kopēšanas un ielīmēšanas, pilnībā pielāgojami sākotnējie iestatījumi."
   },
   "extensionName": {
-    "message": "Subtitru lejupielādētājs priekš YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Tulkot, Pārveidot, Pielāgot"
   }
 }

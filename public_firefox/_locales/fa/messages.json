@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "دانلودکننده زیرنویس برای YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: ترجمه و تبدیل"
   },
   "extensionDescription": {
-    "message": "زیرنویس و رونوشت‌ها را از سایت‌های پخش در SRT/VTT/TXT دانلود کنید. ترجمه دوگانه/خودکار، قبل از دانلود ویرایش کنید."
+    "message": "میانبرهای صفحه کلید برای ترجمه، بازنویسی و استایل دهی متن مستقیماً در جایی که تایپ می کنید. بدون کپی پیست، پیش تنظیمات کاملاً قابل تنظیم."
   },
   "extensionName": {
-    "message": "دانلودکننده زیرنویس برای YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: ترجمه و تبدیل"
   }
 }

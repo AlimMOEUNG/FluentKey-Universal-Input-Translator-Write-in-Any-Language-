@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "YouTube、Netflix、Disney+、Prime Video用の字幕ダウンローダー"
+    "message": "Power Input Action: 入力を翻訳・変換"
   },
   "extensionDescription": {
-    "message": "ストリーミングサイトからSRT/VTT/TXT形式で字幕とトランスクリプトをダウンロード。デュアル/自動翻訳、ダウンロード前に編集。"
+    "message": "入力場所で直接テキストを翻訳、書き換え、スタイル変更できるキーボードショートカット。コピペ不要、完全にカスタマイズ可能なプリセット。"
   },
   "extensionName": {
-    "message": "YouTube、Netflix、Disney+、Prime Video用の字幕ダウンローダー"
+    "message": "Power Input Action: 入力を翻訳・変換"
   }
 }

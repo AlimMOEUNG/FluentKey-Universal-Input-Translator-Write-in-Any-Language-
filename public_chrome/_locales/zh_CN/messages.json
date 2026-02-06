@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "YouTube、Netflix、Disney+、Prime Video 字幕下载器"
+    "message": "Power Input Action：翻译、转换、调整您的输入"
   },
   "extensionDescription": {
-    "message": "从流媒体网站下载 SRT/VTT/TXT 格式的字幕和转录。双语/自动翻译，下载前编辑。"
+    "message": "键盘快捷键直接在输入处翻译、重写和设置文本样式。无需复制粘贴，完全可自定义的预设。"
   },
   "extensionName": {
-    "message": "YouTube、Netflix、Disney+、Prime Video 字幕下载器"
+    "message": "Power Input Action：翻译、转换、调整您的输入"
   }
 }

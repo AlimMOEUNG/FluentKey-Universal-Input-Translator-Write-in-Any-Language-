@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Kipakuzi cha Manukuu kwa YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Tafsiri, Badilisha, Rekebisha"
   },
   "extensionDescription": {
-    "message": "Pakua manukuu na manukuu kutoka tovuti za kutiririsha katika SRT/VTT/TXT. Tafsiri mbili/otomatiki, hariri kabla ya kupakua."
+    "message": "Njia za mkato za kibodi kutafsiri, kuandika upya na kuweka mtindo maandishi yoyote moja kwa moja unapoandika. Hakuna kunakili na kubandika, mipangilio iliyobinafsishwa kikamilifu."
   },
   "extensionName": {
-    "message": "Kipakuzi cha Manukuu kwa YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Tafsiri, Badilisha, Rekebisha"
   }
 }

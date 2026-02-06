@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "YouTube, Netflix, Disney +, Prime Video용 자막 다운로더"
+    "message": "Power Input Action: 입력 번역, 변환, 조정"
   },
   "extensionDescription": {
-    "message": "스트리밍 사이트에서 SRT/VTT/TXT로 자막 및 스크립트 다운로드. 이중/자동 번역, 다운로드 전에 편집."
+    "message": "입력하는 곳에서 직접 텍스트를 번역, 재작성 및 스타일링하는 키보드 단축키. 복사 붙여넣기 없음, 완전히 사용자 정의 가능한 사전 설정."
   },
   "extensionName": {
-    "message": "YouTube, Netflix, Disney +, Prime Video용 자막 다운로더"
+    "message": "Power Input Action: 입력 번역, 변환, 조정"
   }
 }

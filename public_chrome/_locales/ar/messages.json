@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "محمّل الترجمات لـ YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: ترجم، حول، كيّف مدخلاتك"
   },
   "extensionDescription": {
-    "message": "قم بتنزيل الترجمات والنصوص من مواقع البث المفضلة لديك بتنسيق SRT/VTT/TXT. ترجمة مزدوجة/آلية، قم بالتحرير قبل التنزيل."
+    "message": "اختصارات لوحة المفاتيح لترجمة أي نص وإعادة صياغته وتنسيقه مباشرةً حيث تكتب. لا نسخ ولصق، إعدادات مسبقة قابلة للتخصيص بالكامل."
   },
   "extensionName": {
-    "message": "محمّل الترجمات لـ YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: ترجم، حول، كيّف مدخلاتك"
   }
 }

@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Загрузчик субтитров для YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Перевод, Трансформация, Адаптация"
   },
   "extensionDescription": {
-    "message": "Загружайте субтитры и стенограммы с потоковых сайтов в SRT/VTT/TXT. Двойной/автоматический перевод, редактируйте перед загрузкой."
+    "message": "Горячие клавиши для перевода, переписывания и стилизации текста прямо при вводе. Без копирования, полностью настраиваемые пресеты."
   },
   "extensionName": {
-    "message": "Загрузчик субтитров для YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Перевод, Трансформация, Адаптация"
   }
 }

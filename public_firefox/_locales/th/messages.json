@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "ตัวดาวน์โหลดคำบรรยายสำหรับ YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: แปลและแปลงอินพุต"
   },
   "extensionDescription": {
-    "message": "ดาวน์โหลดคำบรรยายและบทถอดเสียงจากเว็บไซต์สตรีมมิ่งในรูปแบบ SRT/VTT/TXT. แปลคู่/อัตโนมัติ แก้ไขก่อนดาวน์โหลด."
+    "message": "แป้นพิมพ์ลัดเพื่อแปล เขียนใหม่ และจัดรูปแบบข้อความโดยตรงในตำแหน่งที่คุณพิมพ์ ไม่มีการคัดลอกวาง ค่าที่ตั้งล่วงหน้าปรับแต่งได้เต็มที่"
   },
   "extensionName": {
-    "message": "ตัวดาวน์โหลดคำบรรยายสำหรับ YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: แปลและแปลงอินพุต"
   }
 }

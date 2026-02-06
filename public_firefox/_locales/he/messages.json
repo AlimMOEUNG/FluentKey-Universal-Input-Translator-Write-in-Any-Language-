@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "מוריד כתוביות עבור YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: תרגם ושנה את הקלט"
   },
   "extensionDescription": {
-    "message": "הורד כתוביות ותמלילים מאתרי סטרימינג ב-SRT/VTT/TXT. תרגום כפול/אוטומטי, ערוך לפני הורדה."
+    "message": "קיצורי מקלדת לתרגום, שכתוב ועיצוב טקסט ישירות במקום שבו אתה מקליד. ללא העתק-הדבק, הגדרות קבועות מראש הניתנות להתאמה אישית מלאה."
   },
   "extensionName": {
-    "message": "מוריד כתוביות עבור YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: תרגם ושנה את הקלט"
   }
 }

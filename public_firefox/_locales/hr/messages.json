@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Preuzimatelj titlova za YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Prevedi i Preoblikuj"
   },
   "extensionDescription": {
-    "message": "Titlovi i transkripti sa streaming servisa u SRT/VTT/TXT. Dvostruki/auto prijevod, uredi prije preuzimanja."
+    "message": "Tipkovnički prečaci za prevođenje, prepisivanje i stiliziranje teksta izravno tamo gdje tipkate. Nema kopiranja i lijepljenja, potpuno prilagodljive postavke."
   },
   "extensionName": {
-    "message": "Preuzimatelj titlova za YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Prevedi i Preoblikuj"
   }
 }

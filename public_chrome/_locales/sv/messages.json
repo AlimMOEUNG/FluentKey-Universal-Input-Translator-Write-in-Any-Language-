@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Undertextnedladdare för YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Översätt, Transformera, Anpassa"
   },
   "extensionDescription": {
-    "message": "Ladda ner undertexter och transkriptioner från streamingtjänster i SRT/VTT/TXT. Dubbel/automatisk översättning, redigera före nedladdning."
+    "message": "Kortkommandon för att översätta, skriva om och styla text direkt där du skriver. Ingen kopiera-klistra, helt anpassningsbara förinställningar."
   },
   "extensionName": {
-    "message": "Undertextnedladdare för YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Översätt, Transformera, Anpassa"
   }
 }

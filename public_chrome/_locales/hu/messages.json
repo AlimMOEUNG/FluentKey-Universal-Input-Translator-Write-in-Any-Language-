@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Feliratletöltő a YouTube, Netflix, Disney +, Prime Video számára"
+    "message": "Power Input Action: Fordítás, Átalakítás, Igazítás"
   },
   "extensionDescription": {
-    "message": "Feliratok és átiratok streaming szolgáltatásokból SRT/VTT/TXT-ben. Kettős/auto fordítás, szerkesztés letöltés előtt."
+    "message": "Billentyűparancsok a szöveg fordításához, átírásához és stílusának megadásához közvetlenül gépelés közben. Nincs másolás-beillesztés, teljesen testreszabható előre beállított értékek."
   },
   "extensionName": {
-    "message": "Feliratletöltő a YouTube, Netflix, Disney +, Prime Video számára"
+    "message": "Power Input Action: Fordítás, Átalakítás, Igazítás"
   }
 }

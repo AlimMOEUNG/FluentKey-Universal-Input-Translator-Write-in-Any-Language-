@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Downloader ng Subtitle para sa YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Isalin at Baguhin"
   },
   "extensionDescription": {
-    "message": "I-download ang mga subtitle at transkrip mula sa streaming sites sa SRT/VTT/TXT. Dual/auto translate, i-edit bago i-download."
+    "message": "Mga keyboard shortcut upang isalin, muling isulat, at i-style ang anumang text nang direkta kung saan ka nagta-type. Walang copy-paste, ganap na nako-customize na mga preset."
   },
   "extensionName": {
-    "message": "Downloader ng Subtitle para sa YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Isalin at Baguhin"
   }
 }

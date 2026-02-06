@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Downloader di sottotitoli per YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Traduci e Trasforma"
   },
   "extensionDescription": {
-    "message": "Scarica sottotitoli e trascrizioni da siti di streaming in SRT/VTT/TXT. Doppia/auto traduzione, modifica prima del download."
+    "message": "Scorciatoie da tastiera per tradurre, riscrivere e stilizzare qualsiasi testo direttamente mentre scrivi. Nessun copia-incolla, preset completamente personalizzabili."
   },
   "extensionName": {
-    "message": "Downloader di sottotitoli per YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Traduci e Trasforma"
   }
 }

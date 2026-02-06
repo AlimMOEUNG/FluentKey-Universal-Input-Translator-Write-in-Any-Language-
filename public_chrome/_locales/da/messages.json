@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Undertekst-downloader for YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Oversæt, Transformér, Tilpas"
   },
   "extensionDescription": {
-    "message": "Hent undertekster & transskriptioner fra streamingtjenester i SRT/VTT/TXT. Dobbelt/auto oversættelse, rediger før download."
+    "message": "Genvejstaster til at oversætte, omskrive og style tekst direkte, hvor du skriver. Ingen kopiering og indsættelse, fuldt tilpasselige forudindstillinger."
   },
   "extensionName": {
-    "message": "Undertekst-downloader for YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Oversæt, Transformér, Tilpas"
   }
 }

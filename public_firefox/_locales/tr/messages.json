@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "YouTube, Netflix, Disney +, Prime Video için Altyazı İndirici"
+    "message": "Power Input Action: Çevir ve Dönüştür"
   },
   "extensionDescription": {
-    "message": "Akış sitelerinden SRT/VTT/TXT biçiminde altyazıları ve transkriptleri indirin. İkili/otomatik çeviri, indirmeden önce düzenleyin."
+    "message": "Metni doğrudan yazdığınız yerde çevirmek, yeniden yazmak ve biçimlendirmek için klavye kısayolları. Kopyala-yapıştır yok, tamamen özelleştirilebilir hazır ayarlar."
   },
   "extensionName": {
-    "message": "YouTube, Netflix, Disney +, Prime Video için Altyazı İndirici"
+    "message": "Power Input Action: Çevir ve Dönüştür"
   }
 }

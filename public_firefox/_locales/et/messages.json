@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Subtiitrite allalaadija YouTube, Netflix, Disney+, Prime Video jaoks"
+    "message": "Power Input Action: Tõlgi ja Muuda"
   },
   "extensionDescription": {
-    "message": "Laadi alla subtiitrid ja transkriptsioonid voogesitussaitidelt SRT/VTT/TXT. Topelt/auto tõlge, muuda enne allalaadimist."
+    "message": "Kiirklahvid teksti tõlkimiseks, ümberkirjutamiseks ja kujundamiseks otse tippimise kohas. Ei mingit kopeerimist-kleepimist, täielikult kohandatavad eelseadistused."
   },
   "extensionName": {
-    "message": "Subtiitrite allalaadija YouTube, Netflix, Disney+, Prime Video jaoks"
+    "message": "Power Input Action: Tõlgi ja Muuda"
   }
 }

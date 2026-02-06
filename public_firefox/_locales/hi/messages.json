@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "YouTube, Netflix, Disney+, Prime Video के लिए सबटाइटल डाउनलोडर"
+    "message": "Power Input Action: अनुवाद और रूपांतरण"
   },
   "extensionDescription": {
-    "message": "स्ट्रीमिंग साइट्स से SRT/VTT/TXT में सबटाइटल और ट्रांसक्रिप्ट डाउनलोड करें। दोहरी/ऑटो अनुवाद, डाउनलोड से पहले संपादित करें।"
+    "message": "आप जहां टाइप करते हैं, वहीं सीधे टेक्स्ट का अनुवाद, पुनर्लेखन और स्टाइल करने के लिए कीबोर्ड शॉर्टकट। कोई कॉपी-पेस्ट नहीं, पूरी तरह से अनुकूलन योग्य प्रीसेट।"
   },
   "extensionName": {
-    "message": "YouTube, Netflix, Disney+, Prime Video के लिए सबटाइटल डाउनलोडर"
+    "message": "Power Input Action: अनुवाद और रूपांतरण"
   }
 }

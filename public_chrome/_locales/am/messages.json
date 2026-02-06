@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "የንዑስ ጽሑፍ አውራጅ ለ YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: መተርጎም፣ መለወጥ፣ ማስማማት"
   },
   "extensionDescription": {
-    "message": "የቪዲዮ የትርጉም ጽሑፎችን እና ትራንስክሪፕቶችን ያውርዱ። SRT/VTT/TXT። ባለሁለት/ራስ-ሰር ተርጉም። ከማውረድዎ በፊት ያርትዑ።"
+    "message": "እየተየቡ እያለ ጽሑፍን ለመተርጎም፣ እንደገና ለመጻፍ እና ለማሳመር የሚያገለግሉ የቁልፍ ሰሌዳ አቋራጮች። ቅጂ-ለጥፍ የለም፣ ሙሉ በሙሉ ሊበጁ የሚችሉ ቅድመ-ቅንብሮች።"
   },
   "extensionName": {
-    "message": "የንዑስ ጽሑፍ አውራጅ ለ YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: መተርጎም፣ መለወጥ፣ ማስማማት"
   }
 }

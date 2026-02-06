@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Ondertitel Downloader voor YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Vertaal, Transformeer, Pas aan"
   },
   "extensionDescription": {
-    "message": "Download ondertitels en transcripten van streamingdiensten in SRT/VTT/TXT. Dubbele/auto vertaling, bewerk vóór download."
+    "message": "Sneltoetsen om tekst direct te vertalen, herschrijven en stylen waar je typt. Geen kopiëren-plakken, volledig aanpasbare voorinstellingen."
   },
   "extensionName": {
-    "message": "Ondertitel Downloader voor YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Vertaal, Transformeer, Pas aan"
   }
 }

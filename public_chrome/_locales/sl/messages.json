@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Prenosnik podnapisov za YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Prevedi, Preoblikuj, Prilagodi"
   },
   "extensionDescription": {
-    "message": "Prenesite podnapise in prepise iz pretočnih storitev v obliki SRT/VTT/TXT. Dvojni/samodejni prevod, uredite pred prenosom."
+    "message": "Bližnjice na tipkovnici za prevajanje, prepisovanje in oblikovanje besedila neposredno tam, kjer tipkate. Brez kopiranja in lepljenja, popolnoma prilagodljive prednastavitve."
   },
   "extensionName": {
-    "message": "Prenosnik podnapisov za YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Prevedi, Preoblikuj, Prilagodi"
   }
 }

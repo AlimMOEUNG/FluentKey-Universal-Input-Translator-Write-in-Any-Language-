@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Subtitrų siuntiklis, skirtas „YouTube“, „Netflix“, „Disney+“, „Prime Video“"
+    "message": "Power Input Action: Versti ir Keisti"
   },
   "extensionDescription": {
-    "message": "Atsisiųskite subtitrus ir transkripcijas iš srautinio perdavimo svetainių SRT/VTT/TXT. Dvigubas/auto vertimas, redaguokite prieš atsisiunčiant."
+    "message": "Spartieji klavišai, skirti versti, perrašyti ir stilizuoti tekstą tiesiogiai ten, kur rašote. Jokio kopijavimo ir įklijavimo, visiškai pritaikomi išankstiniai nustatymai."
   },
   "extensionName": {
-    "message": "Subtitrų siuntiklis, skirtas „YouTube“, „Netflix“, „Disney+“, „Prime Video“"
+    "message": "Power Input Action: Versti ir Keisti"
   }
 }

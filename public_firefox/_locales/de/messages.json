@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Untertitel-Downloader für YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Übersetzen & Umwandeln"
   },
   "extensionDescription": {
-    "message": "Untertitel & Transkripte von Streaming-Diensten in SRT/VTT/TXT herunterladen. Duale/auto Übersetzung, vor Download bearbeiten."
+    "message": "Tastaturkürzel zum Übersetzen, Umschreiben und Gestalten von Text direkt bei der Eingabe. Kein Kopieren und Einfügen, völlig anpassbare Voreinstellungen."
   },
   "extensionName": {
-    "message": "Untertitel-Downloader für YouTube, Netflix, Disney+, Prime Video"
+    "message": "Power Input Action: Übersetzen & Umwandeln"
   }
 }

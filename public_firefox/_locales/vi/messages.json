@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Trình tải xuống phụ đề cho YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: Dịch & Chuyển đổi"
   },
   "extensionDescription": {
-    "message": "Tải phụ đề và bản ghi từ trang web phát trực tuyến ở SRT/VTT/TXT. Dịch kép/tự động, chỉnh sửa trước khi tải xuống."
+    "message": "Phím tắt để dịch, viết lại và tạo kiểu cho bất kỳ văn bản nào trực tiếp tại nơi bạn nhập. Không cần sao chép-dán, cài đặt trước hoàn toàn có thể tùy chỉnh."
   },
   "extensionName": {
-    "message": "Trình tải xuống phụ đề cho YouTube, Netflix, Disney +, Prime Video"
+    "message": "Power Input Action: Dịch & Chuyển đổi"
   }
 }
