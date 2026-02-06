@@ -9,6 +9,12 @@
 
 import { BaseTranslationProvider, TranslationOptions } from './BaseTranslationProvider'
 
+// DeepL API endpoints
+const DEEPL_ENDPOINTS = {
+  free: 'https://api-free.deepl.com/v2/translate',
+  pro: 'https://api.deepl.com/v2/translate',
+}
+
 export class DeepLProvider extends BaseTranslationProvider {
   readonly name = 'DeepL'
   readonly requiresApiKey = true
@@ -18,6 +24,40 @@ export class DeepLProvider extends BaseTranslationProvider {
   constructor(apiKey: string) {
     super()
     this.apiKey = apiKey
+  }
+
+  /**
+   * Convert ISO 639-1 code to DeepL language code
+   */
+  private convertToDeepLLangCode(isoCode: string): string {
+    return isoCode.toUpperCase()
+  }
+
+  /**
+   * Make a DeepL API request via PROXY_FETCH
+   */
+  private async makeDeepLRequest(
+    endpoint: string,
+    text: string,
+    targetLang: string
+  ): Promise<{ success: boolean; data?: any; error?: string }> {
+    // Build request params
+    const params = new URLSearchParams({
+      text,
+      target_lang: this.convertToDeepLLangCode(targetLang),
+    })
+
+    // Send request via background script (CORS bypass)
+    return await chrome.runtime.sendMessage({
+      type: 'PROXY_FETCH',
+      url: endpoint,
+      method: 'POST',
+      headers: {
+        Authorization: `DeepL-Auth-Key ${this.apiKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
+    })
   }
 
   /**
@@ -32,26 +72,41 @@ export class DeepLProvider extends BaseTranslationProvider {
       this.handleError(new Error('API key is required'), 'Translation failed')
     }
 
-    const { targetLanguage, sourceLanguage } = options
+    const { targetLanguage } = options
 
-    try {
-      // Send translation request to background script (CORS bypass)
-      const response = await chrome.runtime.sendMessage({
-        type: 'TRANSLATE_DEEPL',
-        text,
-        targetLang: targetLanguage,
-        apiKey: this.apiKey,
-        sourceLang: sourceLanguage === 'auto' || !sourceLanguage ? undefined : sourceLanguage,
-      })
+    // Try Free API first, fallback to Pro
+    const endpoints = [DEEPL_ENDPOINTS.free, DEEPL_ENDPOINTS.pro]
+    let lastError: string | undefined
 
-      if (!response.success) {
-        throw new Error(response.error || 'Translation failed')
+    for (const endpoint of endpoints) {
+      try {
+        const response = await this.makeDeepLRequest(endpoint, text, targetLanguage)
+
+        if (response.success && response.data) {
+          const translation = response.data.translations[0].text
+
+          console.log('[DeepL] Translation successful')
+          return translation
+        } else if (response.error) {
+          // Parse specific error codes
+          if (response.error.includes('429')) {
+            lastError = 'DeepL quota exceeded. Character limit reached for this billing period.'
+          } else if (response.error.includes('403') || response.error.includes('401')) {
+            lastError = 'DeepL API key is invalid. Please check your settings.'
+          } else {
+            lastError = response.error
+          }
+        }
+      } catch (error) {
+        console.log(`[DeepL] ${endpoint} failed, trying next...`)
+        lastError = error instanceof Error ? error.message : 'Network error'
       }
-
-      return response.data.translation
-    } catch (error) {
-      this.handleError(error, 'Translation failed')
     }
+
+    this.handleError(
+      new Error(lastError || 'DeepL translation failed. Please check your connection.'),
+      'Translation failed'
+    )
   }
 
   /**
@@ -62,17 +117,26 @@ export class DeepLProvider extends BaseTranslationProvider {
       return { valid: false, error: 'API key is required' }
     }
 
+    // Try Free API first
     try {
-      const response = await chrome.runtime.sendMessage({
-        type: 'VALIDATE_DEEPL_KEY',
-        apiKey: this.apiKey,
-      })
+      const response = await this.makeDeepLRequest(DEEPL_ENDPOINTS.free, 'Hello', 'FR')
 
-      if (!response.success) {
+      if (response.success) {
+        return { valid: true }
+      }
+    } catch {
+      console.log('[DeepL] Free API validation failed, trying Pro...')
+    }
+
+    // Try Pro API
+    try {
+      const response = await this.makeDeepLRequest(DEEPL_ENDPOINTS.pro, 'Hello', 'FR')
+
+      if (response.success) {
+        return { valid: true }
+      } else {
         return { valid: false, error: response.error || 'Invalid API key' }
       }
-
-      return { valid: true }
     } catch {
       return { valid: false, error: 'Validation failed' }
     }

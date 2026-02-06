@@ -60,9 +60,7 @@ export const PREDEFINED_MODELS = {
 
   // Ollama models are fetched dynamically from local instance
   // This is just a fallback if fetch fails
-  ollama: [
-    { value: 'custom', label: 'Custom Model', isCustom: true },
-  ] as ModelOption[],
+  ollama: [{ value: 'custom', label: 'Custom Model', isCustom: true }] as ModelOption[],
 } as const
 
 export type PredefinedModelProvider = keyof typeof PREDEFINED_MODELS

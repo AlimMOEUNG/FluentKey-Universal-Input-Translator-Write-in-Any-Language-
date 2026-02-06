@@ -787,9 +787,17 @@ async function fetchOllamaModels() {
   ollamaModelsError.value = ''
 
   try {
+    // Ensure URL doesn't end with /v1 (tags endpoint is on base URL)
+    const cleanUrl = baseUrl.replace(/\/v1\/?$/, '')
+    const url = `${cleanUrl}/api/tags`
+
     const response = await chrome.runtime.sendMessage({
-      type: 'FETCH_OLLAMA_MODELS',
-      baseUrl,
+      type: 'PROXY_FETCH',
+      url,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
 
     if (response.success && response.data?.models) {

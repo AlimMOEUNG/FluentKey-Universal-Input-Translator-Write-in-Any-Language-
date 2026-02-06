@@ -148,10 +148,27 @@ export class OpenAICompatibleProvider extends BaseTranslationProvider {
     }
 
     try {
+      // Build request headers
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add Authorization header if API key is provided
+      if (this.config.apiKey) {
+        headers['Authorization'] = `Bearer ${this.config.apiKey}`
+      }
+
       // Send a simple test request to validate configuration
       const response = await chrome.runtime.sendMessage({
-        type: 'VALIDATE_OPENAI_COMPATIBLE',
-        config: this.config,
+        type: 'PROXY_FETCH',
+        url: this.getEndpointUrl(),
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          model: this.config.model,
+          messages: [{ role: 'user', content: 'Test' }],
+          max_tokens: 5,
+        }),
       })
 
       if (!response.success) {

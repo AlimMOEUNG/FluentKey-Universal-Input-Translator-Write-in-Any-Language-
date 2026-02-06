@@ -9,6 +9,9 @@
 
 import { BaseTranslationProvider, TranslationOptions } from './BaseTranslationProvider'
 
+// Gemini REST API endpoint
+const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models'
+
 export class GeminiProvider extends BaseTranslationProvider {
   readonly name = 'Google Gemini'
   readonly requiresApiKey = true
@@ -20,6 +23,37 @@ export class GeminiProvider extends BaseTranslationProvider {
     super()
     this.apiKey = apiKey
     this.model = model
+  }
+
+  /**
+   * Get the full Gemini API endpoint URL
+   */
+  private getEndpointUrl(): string {
+    return `${GEMINI_API_BASE}/${this.model}:generateContent?key=${this.apiKey}`
+  }
+
+  /**
+   * Make a Gemini API request via PROXY_FETCH
+   */
+  private async makeGeminiRequest(
+    prompt: string
+  ): Promise<{ success: boolean; data?: any; error?: string }> {
+    // Send request via background script (CORS bypass)
+    return await chrome.runtime.sendMessage({
+      type: 'PROXY_FETCH',
+      url: this.getEndpointUrl(),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: prompt }],
+          },
+        ],
+      }),
+    })
   }
 
   /**
@@ -37,20 +71,33 @@ export class GeminiProvider extends BaseTranslationProvider {
     const { targetLanguage } = options
 
     try {
-      // Send translation request to background script (CORS bypass)
-      const response = await chrome.runtime.sendMessage({
-        type: 'TRANSLATE_GEMINI',
-        text,
-        targetLang: targetLanguage,
-        apiKey: this.apiKey,
-        model: this.model,
-      })
+      // Build prompt for translation
+      const prompt = `Translate the following text to ${targetLanguage}. If the text is already in ${targetLanguage}, return it unchanged. Return ONLY the translation or original text without any explanations, notes, or additional text.\n\nText: "${text}"`
+
+      const response = await this.makeGeminiRequest(prompt)
 
       if (!response.success) {
-        throw new Error(response.error || 'Translation failed')
+        // Parse specific error codes
+        let errorMessage = response.error || 'Translation failed'
+
+        if (errorMessage.includes('429') || errorMessage.includes('quota') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
+          errorMessage = 'Gemini API quota exceeded. Please check your credits at console.cloud.google.com'
+        } else if (errorMessage.includes('401') || errorMessage.includes('403') || errorMessage.includes('API_KEY_INVALID')) {
+          errorMessage = 'Gemini API key is invalid. Please check your settings.'
+        }
+
+        throw new Error(errorMessage)
       }
 
-      return response.data.translation
+      // Extract translation from response
+      const translation = response.data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+
+      if (!translation) {
+        throw new Error('Empty response from Gemini API')
+      }
+
+      console.log('[Gemini] Translation successful')
+      return translation
     } catch (error) {
       this.handleError(error, 'Translation failed')
     }
@@ -65,17 +112,19 @@ export class GeminiProvider extends BaseTranslationProvider {
     }
 
     try {
-      const response = await chrome.runtime.sendMessage({
-        type: 'VALIDATE_GEMINI_KEY',
-        apiKey: this.apiKey,
-        model: this.model,
-      })
+      const response = await this.makeGeminiRequest('Test')
 
-      if (!response.success) {
-        return { valid: false, error: response.error || 'Invalid API key' }
+      if (response.success) {
+        return { valid: true }
+      } else {
+        let errorMessage = response.error || 'Invalid API key'
+
+        if (errorMessage.includes('API key') || errorMessage.includes('401')) {
+          errorMessage = 'Invalid API key'
+        }
+
+        return { valid: false, error: errorMessage }
       }
-
-      return { valid: true }
     } catch {
       return { valid: false, error: 'Validation failed' }
     }
