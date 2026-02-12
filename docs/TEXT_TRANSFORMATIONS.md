@@ -115,7 +115,7 @@ chrome.storage.sync.get(['presetsSettings'], (result) => {
   //       type: "translation",
   //       sourceLang: "en",
   //       targetLang: "fr",
-  //       keyboardShortcut: "Alt+T",
+  //       keyboardShortcut: "Ctrl+Alt+T",
   //       createdAt: 1234567890
   //     },
   //     {

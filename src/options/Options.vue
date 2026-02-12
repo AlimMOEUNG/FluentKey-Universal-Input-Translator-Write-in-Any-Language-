@@ -59,7 +59,7 @@
                   {{ transform.name }}
                 </h3>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {{ t('optionsMappings') }}: {{ Object.keys(transform.charMap).length }}
+                  {{ t('optionsMappings', { params: { count: Object.keys(transform.charMap).length } }) }}
                 </p>
               </div>
               <div class="flex gap-2 ml-4">
@@ -133,7 +133,7 @@
         <!-- Mappings Table -->
         <div>
           <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
-            {{ t('optionsMappings') }} ({{ editorState.charMap.length }})
+            {{ t('optionsMappings', { params: { count: editorState.charMap.length } }) }}
           </label>
           <div class="border border-gray-200 dark:border-gray-700 rounded overflow-hidden">
             <!-- Table Header -->

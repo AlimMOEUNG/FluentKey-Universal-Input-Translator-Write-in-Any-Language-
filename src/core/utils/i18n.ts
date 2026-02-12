@@ -74,7 +74,7 @@ const enTranslations = {
 
   // Keyboard Shortcut
   keyboardShortcut: 'Keyboard Shortcut',
-  keyboardShortcutDescription: 'Press the desired keyboard combination (e.g., Alt+T, Ctrl+Shift+T)',
+  keyboardShortcutDescription: 'Press the desired keyboard combination (e.g., Ctrl+Alt+T, Ctrl+Alt+2)',
 
   // Presets
   presetName: 'Preset Name',

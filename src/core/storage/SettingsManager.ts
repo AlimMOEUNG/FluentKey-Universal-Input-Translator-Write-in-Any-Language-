@@ -15,7 +15,7 @@ export interface Settings {
   sourceLang: string // ISO 639-1 code or 'auto'
   targetLang: string // ISO 639-1 code
   provider: 'builtin' | 'deepl' | 'gemini'
-  keyboardShortcut: string // e.g., 'Alt+T'
+  keyboardShortcut: string // e.g., 'Ctrl+Alt+T'
 }
 
 /**
@@ -38,7 +38,7 @@ export class SettingsManager {
     sourceLang: 'auto',
     targetLang: 'en',
     provider: 'builtin',
-    keyboardShortcut: 'Alt+T',
+    keyboardShortcut: 'Ctrl+Alt+T',
   }
 
   // New presets-based settings
@@ -50,7 +50,7 @@ export class SettingsManager {
         type: 'translation',
         sourceLang: 'auto',
         targetLang: 'en',
-        keyboardShortcut: 'Alt+T', // Intuitive default for translation
+        keyboardShortcut: 'Ctrl+Alt+T', // Intuitive default for translation
         createdAt: Date.now(),
       },
     ],
@@ -126,7 +126,7 @@ export class SettingsManager {
         sourceLang: 'auto',
         targetLang: 'en',
         provider: this.presetsSettings.provider as 'builtin' | 'deepl' | 'gemini',
-        keyboardShortcut: 'Alt+T',
+        keyboardShortcut: 'Ctrl+Alt+T',
       }
       return defaults[key]
     }

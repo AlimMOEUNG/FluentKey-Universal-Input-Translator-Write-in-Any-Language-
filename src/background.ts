@@ -25,7 +25,7 @@ chrome.runtime.onInstalled.addListener((details) => {
         sourceLang: 'auto',
         targetLang: 'en',
         provider: 'google', // Default to Google Translate (free, no API key)
-        keyboardShortcut: 'Alt+T',
+        keyboardShortcut: 'Ctrl+Alt+T',
       },
       themeMode: 'auto',
       locale: 'en',

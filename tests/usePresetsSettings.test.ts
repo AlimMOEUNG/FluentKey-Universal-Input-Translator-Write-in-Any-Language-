@@ -22,7 +22,7 @@ describe('usePresetsSettings CRUD', () => {
   beforeAll(async () => {
     // Wait for the module-level loadFromStorage() to complete.
     // chrome.storage.sync.get (mocked in tests/setup.ts) returns {} so the
-    // composable falls back to its default state: 1 preset, shortcut Alt+T.
+    // composable falls back to its default state: 1 preset, shortcut Ctrl+Alt+T.
     await flushPromises()
   })
 
@@ -40,9 +40,9 @@ describe('usePresetsSettings CRUD', () => {
     expect(presetsSettings.value.presets).toHaveLength(1)
   })
 
-  it('default preset uses Alt+T as keyboard shortcut', () => {
+  it('default preset uses Ctrl+Alt+T as keyboard shortcut', () => {
     const { presetsSettings } = usePresetsSettings()
-    expect(presetsSettings.value.presets[0].keyboardShortcut).toBe('Alt+T')
+    expect(presetsSettings.value.presets[0].keyboardShortcut).toBe('Ctrl+Alt+T')
   })
 
   // -------------------------------------------------------------------------

@@ -6,6 +6,7 @@
 import { ref, watch } from 'vue'
 import type { TranslationSettings } from './useSettings'
 import type { Preset, TranslationPreset, TransformationPreset, CustomTransformPreset, LLMPromptPreset, PresetsSettings } from '@/types/common'
+import { normalizeShortcut } from '@/core/utils/keyboardUtils'
 
 /**
  * Generate a UUID v4
@@ -23,23 +24,22 @@ function generateUUID(): string {
 }
 
 /**
- * Generate default keyboard shortcut for a preset index
- * First preset gets Alt+T (intuitive for "Translate")
- * Following presets get Alt+2, Alt+3, Alt+4, etc. (avoids conflicts)
+ * Generate default keyboard shortcut for a preset index.
+ * Ctrl+Alt combos avoid conflicts with Chrome tab shortcuts (Ctrl+N) and
+ * GNOME/OS shortcuts that capture plain Alt+N.
  *
  * Examples:
- * - Preset 1 → Alt+T
- * - Preset 2 → Alt+2
- * - Preset 3 → Alt+3
- * - Preset 4 → Alt+4
+ * - Preset 1 → Ctrl+Alt+T
+ * - Preset 2 → Ctrl+Alt+2
+ * - Preset 3 → Ctrl+Alt+3
+ * - Preset 4 → Ctrl+Alt+4
  */
 function generateDefaultShortcut(index: number): string {
   if (index === 1) {
-    return 'Alt+T'
+    return 'Ctrl+Alt+T'
   }
-  // For index 2 and above, use Alt+2, Alt+3, Alt+4, etc.
-  // This matches the preset number and avoids prefix conflicts
-  return `Alt+${index}`
+  // For index 2 and above, use Ctrl+Alt+2, Ctrl+Alt+3, etc.
+  return `Ctrl+Alt+${index}`
 }
 
 /**
@@ -342,34 +342,23 @@ export function usePresetsSettings() {
   }
 
   /**
-   * Find the next available preset number for keyboard shortcut
-   * Tests numbers in circular order: preferred, preferred+1, ..., 10, 1, 2, ..., preferred-1
+   * Find the next available preset number for keyboard shortcut.
+   * Tests numbers in circular order: preferred, preferred+1, ..., 10, 1, 2, ..., preferred-1.
+   * Uses normalizeShortcut for comparison to catch all equivalent formats.
    */
   function findAvailablePresetNumber(preferredNumber: number): number {
-    const existingShortcuts = presetsSettings.value.presets.map((p) =>
-      p.keyboardShortcut.toLowerCase().trim()
+    // Normalize existing shortcuts once for consistent comparison
+    const existingNormalized = presetsSettings.value.presets.map((p) =>
+      normalizeShortcut(p.keyboardShortcut)
     )
-
-    console.log('[findAvailablePresetNumber] Starting search:', {
-      preferredNumber,
-      existingShortcuts,
-      totalPresets: presetsSettings.value.presets.length,
-    })
 
     // Test numbers in circular order using modulo
     for (let i = 0; i < MAX_PRESETS; i++) {
       const num = ((preferredNumber - 1 + i) % MAX_PRESETS) + 1
-      const shortcut = (num === 1 ? 'alt+t' : `alt+${num}+t`).toLowerCase()
+      // Generate the candidate shortcut the same way as createDefaultPreset
+      const candidate = normalizeShortcut(generateDefaultShortcut(num))
 
-      console.log('[findAvailablePresetNumber] Testing:', {
-        iteration: i,
-        num,
-        shortcut,
-        isAvailable: !existingShortcuts.includes(shortcut),
-      })
-
-      if (!existingShortcuts.includes(shortcut)) {
-        console.log('[findAvailablePresetNumber] Found available number:', num)
+      if (!existingNormalized.includes(candidate)) {
         return num
       }
     }
@@ -500,10 +489,11 @@ export function usePresetsSettings() {
     shortcut: string,
     currentPresetId: string
   ): { valid: boolean; error?: string; duplicatePreset?: Preset } {
-    const normalized = shortcut.toLowerCase().trim()
+    // Use normalizeShortcut to catch all equivalent formats (e.g. Ctrl+Alt+1 vs Alt+Ctrl+1)
+    const normalized = normalizeShortcut(shortcut)
 
     const duplicate = presetsSettings.value.presets.find(
-      (p) => p.id !== currentPresetId && p.keyboardShortcut.toLowerCase().trim() === normalized
+      (p) => p.id !== currentPresetId && normalizeShortcut(p.keyboardShortcut) === normalized
     )
 
     if (duplicate) {

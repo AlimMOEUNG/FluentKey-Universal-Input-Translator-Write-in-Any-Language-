@@ -21,7 +21,7 @@ interface TranslationPreset {
   name: string              // User-defined name (e.g., "English to French")
   sourceLang: string        // Source language code (e.g., "en", "fr", "auto")
   targetLang: string        // Target language code (e.g., "en", "fr", "es")
-  keyboardShortcut: string  // Keyboard shortcut (e.g., "Alt+T", "Alt+T+2")
+  keyboardShortcut: string  // Keyboard shortcut (e.g., "Ctrl+Alt+T", "Ctrl+Alt+2")
   createdAt: number         // Timestamp of creation
 }
 ```
@@ -61,7 +61,7 @@ The system automatically migrates from the old single-settings format to the new
   settings: {
     sourceLang: "auto",
     targetLang: "en",
-    keyboardShortcut: "Alt+T",
+    keyboardShortcut: "Ctrl+Alt+T",
     provider: "google"
   }
 }
@@ -76,7 +76,7 @@ The system automatically migrates from the old single-settings format to the new
       name: "Preset 1",
       sourceLang: "auto",
       targetLang: "en",
-      keyboardShortcut: "Alt+T",
+      keyboardShortcut: "Ctrl+Alt+T",
       createdAt: 1234567890
     }],
     activePresetId: "generated-uuid",
@@ -150,7 +150,7 @@ Adds a new preset with default values:
 - Name: "Preset N" (where N is the index)
 - Source Language: "auto"
 - Target Language: "en"
-- Keyboard Shortcut: "Alt+T" for first, "Alt+T+2" for second, etc.
+- Keyboard Shortcut: "Ctrl+Alt+T" for first, "Ctrl+Alt+2" for second, etc.
 
 ```typescript
 const newPreset = addPreset()
@@ -166,7 +166,7 @@ const success = updatePreset({
   name: "English to French",
   sourceLang: "en",
   targetLang: "fr",
-  keyboardShortcut: "Alt+E",
+  keyboardShortcut: "Ctrl+Alt+E",
   createdAt: 1234567890
 })
 ```
@@ -199,7 +199,7 @@ setActivePreset("preset-uuid")
 Validates that a keyboard shortcut is not already used by another preset.
 
 ```typescript
-const validation = validateShortcutUniqueness("Alt+T", currentPresetId)
+const validation = validateShortcutUniqueness("Ctrl+Alt+T", currentPresetId)
 if (!validation.valid) {
   console.error(validation.error)
   // "Shortcut already used by 'Preset 1'"
@@ -231,9 +231,9 @@ Shortcuts must follow this pattern:
 ```
 
 **Valid examples:**
-- `Alt+T`
+- `Ctrl+Alt+T`
 - `Ctrl+Shift+E`
-- `Alt+T+2`
+- `Ctrl+Alt+2`
 - `Meta+F`
 
 **Invalid examples:**
@@ -247,9 +247,9 @@ Shortcuts are validated for uniqueness across all presets. The validation is cas
 
 ### Default Shortcuts
 
-- Preset 1: `Alt+T`
-- Preset 2: `Alt+T+2`
-- Preset 3: `Alt+T+3`
+- Preset 1: `Ctrl+Alt+T`
+- Preset 2: `Ctrl+Alt+2`
+- Preset 3: `Ctrl+Alt+3`
 - And so on...
 
 ## UI Components

@@ -326,7 +326,7 @@
           v-model="localPreset.keyboardShortcut"
           @keydown="handleShortcutInput"
           @keyup="handleShortcutKeyUp"
-          placeholder="Alt+T, Alt+2, Alt+T+1"
+          placeholder="Ctrl+Alt+T, Ctrl+Alt+2"
           class="flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 font-mono"
         />
         <div class="relative group">

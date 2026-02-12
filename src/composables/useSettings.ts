@@ -66,7 +66,7 @@ const DEFAULT_SETTINGS: TranslationSettings = {
   sourceLang: 'auto',
   targetLang: 'en',
   provider: 'google',
-  keyboardShortcut: 'Alt+T',
+  keyboardShortcut: 'Ctrl+Alt+T',
 }
 
 const DEFAULT_PROVIDER_CONFIGS: ProviderConfigs = {

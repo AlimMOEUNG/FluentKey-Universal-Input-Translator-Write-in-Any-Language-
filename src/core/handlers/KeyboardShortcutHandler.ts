@@ -44,20 +44,27 @@ export class KeyboardShortcutHandler {
   private sequenceDetector = new KeyboardSequenceDetector() // Sequence detector for multi-key shortcuts
   private transformationEngine: TransformationEngine // Engine for text transformations
 
+  // Store bound references so removeEventListener can match them exactly
+  private boundHandleKeyDown: (event: KeyboardEvent) => void
+  private boundHandleKeyUp: (event: KeyboardEvent) => void
+
   constructor(
     private engine: TranslationEngine,
     private settings: SettingsManager
   ) {
     this.transformationEngine = new TransformationEngine()
+    this.boundHandleKeyDown = this.handleKeyDown.bind(this)
+    this.boundHandleKeyUp = this.handleKeyUp.bind(this)
   }
 
   /**
-   * Initialize the handler by setting up keyboard event listener
+   * Initialize the handler by setting up keyboard event listeners.
+   * Uses capture phase so the extension intercepts shortcuts before the page does.
    */
   initialize(): void {
     this.rebuildShortcutMap()
-    document.addEventListener('keydown', this.handleKeyDown.bind(this))
-    document.addEventListener('keyup', this.handleKeyUp.bind(this))
+    document.addEventListener('keydown', this.boundHandleKeyDown, { capture: true })
+    document.addEventListener('keyup', this.boundHandleKeyUp, { capture: true })
     console.log('[KeyboardShortcut] Handler initialized with presets:', this.shortcutMap.size)
   }
 
@@ -65,8 +72,8 @@ export class KeyboardShortcutHandler {
    * Clean up event listeners
    */
   destroy(): void {
-    document.removeEventListener('keydown', this.handleKeyDown.bind(this))
-    document.removeEventListener('keyup', this.handleKeyUp.bind(this))
+    document.removeEventListener('keydown', this.boundHandleKeyDown, { capture: true })
+    document.removeEventListener('keyup', this.boundHandleKeyUp, { capture: true })
     this.shortcutMap.clear()
     console.log('[KeyboardShortcut] Handler destroyed')
   }
@@ -126,9 +133,11 @@ export class KeyboardShortcutHandler {
       return
     }
 
-    // Prevent default browser behavior and event propagation
+    // Intercept the event: prevent default browser behavior and stop all propagation
+    // stopImmediatePropagation also blocks other capture-phase listeners on the same element
     event.preventDefault()
     event.stopPropagation()
+    event.stopImmediatePropagation()
 
     // Prevent concurrent translations
     if (this.isProcessing) {
