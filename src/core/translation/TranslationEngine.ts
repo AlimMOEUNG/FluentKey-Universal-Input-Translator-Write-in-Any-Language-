@@ -19,6 +19,8 @@ import { getEffectiveModel } from '@/config/predefinedModels'
 export class TranslationEngine {
   private currentProvider: BaseTranslationProvider | null = null
   private currentProviderType: string | null = null
+  // Stores the last initialization error — used to surface a clear message in translateText()
+  private initializationError: Error | null = null
 
   constructor(private settings: SettingsManager) {}
 
@@ -31,12 +33,14 @@ export class TranslationEngine {
   }
 
   /**
-   * Reinitialize provider when settings change
+   * Reinitialize provider when settings change.
+   * Errors are captured silently so that non-translation presets
+   * (transformation, custom-transform, llm-prompt with custom provider) keep working.
    */
   async reinitializeProvider(): Promise<void> {
     const providerType = this.settings.get('provider')
 
-    // If provider hasn't changed, don't reinitialize
+    // If provider hasn't changed and is healthy, skip
     if (providerType === this.currentProviderType && this.currentProvider) {
       return
     }
@@ -47,14 +51,25 @@ export class TranslationEngine {
       this.currentProvider = null
     }
 
-    // Create new provider
-    this.currentProvider = await this.createProvider(providerType)
-    this.currentProviderType = providerType
+    // Reset error before each attempt so a new key/config can succeed
+    this.initializationError = null
 
-    // Initialize provider
-    if (this.currentProvider) {
-      await this.currentProvider.initialize()
-      console.log(`[TranslationEngine] Initialized provider: ${this.currentProvider.name}`)
+    try {
+      // Create and initialize new provider
+      this.currentProvider = await this.createProvider(providerType)
+      this.currentProviderType = providerType
+
+      if (this.currentProvider) {
+        await this.currentProvider.initialize()
+        console.log(`[TranslationEngine] Initialized provider: ${this.currentProvider.name}`)
+      }
+    } catch (error) {
+      // Store error silently — do NOT throw, so other preset types still work
+      this.initializationError = error instanceof Error ? error : new Error(String(error))
+      this.currentProvider = null
+      // Reset type so the next reinitialize() call attempts a real retry
+      this.currentProviderType = null
+      console.warn(`[TranslationEngine] Provider '${providerType}' unavailable:`, error)
     }
   }
 
@@ -136,6 +151,13 @@ export class TranslationEngine {
   async translateText(text: string, sourceLang?: string, targetLang?: string): Promise<string> {
     // Ensure provider is initialized
     if (!this.currentProvider) {
+      // If a previous init attempt failed, surface a clear error immediately
+      if (this.initializationError) {
+        const providerType = this.settings.get('provider')
+        throw new Error(
+          `Default provider '${providerType}' is not configured: ${this.initializationError.message}`
+        )
+      }
       await this.reinitializeProvider()
     }
 

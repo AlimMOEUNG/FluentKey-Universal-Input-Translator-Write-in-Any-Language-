@@ -183,7 +183,7 @@ src/
 │   │   ├── KeyboardSequenceDetector.ts  # Multi-key sequence detection
 │   │   └── input/                       # Input detection & text replacement
 │   └── translation/
-│       ├── TranslationEngine.ts         # Provider factory & lazy init
+│       ├── TranslationEngine.ts         # Provider factory, lazy init & resilient error handling
 │       ├── TransformationEngine.ts      # Unicode text transformations
 │       ├── LLMPromptExecutor.ts         # LLM prompt execution
 │       └── providers/                   # One file per provider (9 total)
@@ -202,6 +202,7 @@ src/
 - **Adapter**: `BaseTranslationProvider` abstract class, one concrete class per provider
 - **Strategy**: runtime provider swapping without changing consumer code
 - **Discriminated union**: `Preset = TranslationPreset | TransformationPreset | CustomTransformPreset | LLMPromptPreset`
+- **Resilient initialization**: provider init errors are captured silently — `transformation`, `custom-transform`, and `llm-prompt` presets with a custom provider keep working even if the global provider is misconfigured; the error is surfaced only when a `translation` preset tries to use the failing provider
 
 ---
 

@@ -361,6 +361,16 @@ If shortcuts don't trigger translation:
 3. **Verify shortcut format** matches pattern requirements
 4. **Check content script is injected** on the page
 
+### Provider misconfigured — only translation presets fail
+
+If the global provider is misconfigured (e.g. ChatGPT without an API key), `transformation`, `custom-transform`, and `llm-prompt` presets with a custom provider will still work. Only `translation` presets that rely on the global provider will return an error. Check the browser console for:
+
+```
+[TranslationEngine] Provider 'chatgpt' unavailable: ...
+```
+
+Fix the API key in the Provider tab — the provider will reinitialize automatically.
+
 ### Migration issues
 
 If migrating from old single-settings format fails:
