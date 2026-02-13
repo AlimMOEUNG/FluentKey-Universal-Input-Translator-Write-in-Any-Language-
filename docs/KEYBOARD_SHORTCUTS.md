@@ -1,6 +1,6 @@
 # Keyboard Shortcuts Logic
 
-This document explains the keyboard shortcut system implemented in Simple Input Translator, including the design decisions and conflict prevention mechanisms.
+This document explains the keyboard shortcut system implemented in PowerInput, including the design decisions and conflict prevention mechanisms.
 
 ---
 

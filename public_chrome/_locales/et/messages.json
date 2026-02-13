@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Tõlgi, Muuda, Kohanda"
+    "message": "PowerInput : Tõlgi, Muuda, Kohanda"
   },
   "extensionDescription": {
     "message": "Kiirklahvid teksti tõlkimiseks, ümberkirjutamiseks ja kujundamiseks otse tippimise kohas. Ei mingit kopeerimist-kleepimist, täielikult kohandatavad eelseadistused."
   },
   "extensionName": {
-    "message": "Power Input Action: Tõlgi, Muuda, Kohanda"
+    "message": "PowerInput : Tõlgi, Muuda, Kohanda"
   }
 }

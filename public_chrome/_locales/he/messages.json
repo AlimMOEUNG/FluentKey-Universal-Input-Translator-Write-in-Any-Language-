@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: תרגם, שנה, התאם את הקלט"
+    "message": "PowerInput : תרגם, שנה, התאם את הקלט"
   },
   "extensionDescription": {
     "message": "קיצורי מקלדת לתרגום, שכתוב ועיצוב טקסט ישירות במקום שבו אתה מקליד. ללא העתק-הדבק, הגדרות קבועות מראש הניתנות להתאמה אישית מלאה."
   },
   "extensionName": {
-    "message": "Power Input Action: תרגם, שנה, התאם את הקלט"
+    "message": "PowerInput : תרגם, שנה, התאם את הקלט"
   }
 }

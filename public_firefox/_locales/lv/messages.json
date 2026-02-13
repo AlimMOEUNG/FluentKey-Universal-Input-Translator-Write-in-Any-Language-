@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Tulkot un Pārveidot"
+    "message": "PowerInput : Tulkot un Pārveidot"
   },
   "extensionDescription": {
     "message": "Tastatūras īsceļi, lai tulkotu, pārrakstītu un veidotu tekstu tieši tur, kur rakstāt. Bez kopēšanas un ielīmēšanas, pilnībā pielāgojami sākotnējie iestatījumi."
   },
   "extensionName": {
-    "message": "Power Input Action: Tulkot un Pārveidot"
+    "message": "PowerInput : Tulkot un Pārveidot"
   }
 }

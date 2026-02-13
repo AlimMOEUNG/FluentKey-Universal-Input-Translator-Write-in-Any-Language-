@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: 입력 번역 및 변환"
+    "message": "PowerInput : 입력 번역 및 변환"
   },
   "extensionDescription": {
     "message": "입력하는 곳에서 직접 텍스트를 번역, 재작성 및 스타일링하는 키보드 단축키. 복사 붙여넣기 없음, 완전히 사용자 정의 가능한 사전 설정."
   },
   "extensionName": {
-    "message": "Power Input Action: 입력 번역 및 변환"
+    "message": "PowerInput : 입력 번역 및 변환"
   }
 }

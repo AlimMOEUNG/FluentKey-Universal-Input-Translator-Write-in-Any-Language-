@@ -24,7 +24,7 @@ type BackgroundResponse = { success: true; data?: any } | { success: false; erro
 // Context menu item ID for the pinned preset action
 const CONTEXT_MENU_ID = 'translate-pinned-preset'
 
-console.log('[Background] Simple Input Translator initialized')
+console.log('[Background] PowerInput initialized')
 
 /**
  * Retrieve the pinned preset name from storage (async)

@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Oversæt, Transformér, Tilpas"
+    "message": "PowerInput : Oversæt, Transformér, Tilpas"
   },
   "extensionDescription": {
     "message": "Genvejstaster til at oversætte, omskrive og style tekst direkte, hvor du skriver. Ingen kopiering og indsættelse, fuldt tilpasselige forudindstillinger."
   },
   "extensionName": {
-    "message": "Power Input Action: Oversæt, Transformér, Tilpas"
+    "message": "PowerInput : Oversæt, Transformér, Tilpas"
   }
 }

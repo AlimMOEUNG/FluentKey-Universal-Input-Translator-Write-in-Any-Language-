@@ -1,7 +1,7 @@
 {
-  "name": "simple-input-translator",
+  "name": "power-input",
   "version": "1.0.0",
-  "description": "Simple Chrome extension to translate text in inputs with keyboard shortcut (Alt+T)",
+  "description": "PowerInput : AI Translate, Rewrite & Style Inline with Shortcuts",
   "type": "module",
   "scripts": {
     "build:chrome": "node scripts/build-chrome.js",

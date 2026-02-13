@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Prevedi i Preoblikuj"
+    "message": "PowerInput : Prevedi i Preoblikuj"
   },
   "extensionDescription": {
     "message": "Tipkovnički prečaci za prevođenje, prepisivanje i stiliziranje teksta izravno tamo gdje tipkate. Nema kopiranja i lijepljenja, potpuno prilagodljive postavke."
   },
   "extensionName": {
-    "message": "Power Input Action: Prevedi i Preoblikuj"
+    "message": "PowerInput : Prevedi i Preoblikuj"
   }
 }

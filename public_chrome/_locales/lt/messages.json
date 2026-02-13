@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Versti, Keisti, Pritaikyti"
+    "message": "PowerInput : Versti, Keisti, Pritaikyti"
   },
   "extensionDescription": {
     "message": "Spartieji klavišai, skirti versti, perrašyti ir stilizuoti tekstą tiesiogiai ten, kur rašote. Jokio kopijavimo ir įklijavimo, visiškai pritaikomi išankstiniai nustatymai."
   },
   "extensionName": {
-    "message": "Power Input Action: Versti, Keisti, Pritaikyti"
+    "message": "PowerInput : Versti, Keisti, Pritaikyti"
   }
 }

@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Preložiť, Transformovať, Prispôsobiť"
+    "message": "PowerInput : Preložiť, Transformovať, Prispôsobiť"
   },
   "extensionDescription": {
     "message": "Klávesové skratky na preklad, prepisovanie a štýlovanie textu priamo tam, kde píšete. Žiadne kopírovanie a vkladanie, plne prispôsobiteľné predvoľby."
   },
   "extensionName": {
-    "message": "Power Input Action: Preložiť, Transformovať, Prispôsobiť"
+    "message": "PowerInput : Preložiť, Transformovať, Prispôsobiť"
   }
 }

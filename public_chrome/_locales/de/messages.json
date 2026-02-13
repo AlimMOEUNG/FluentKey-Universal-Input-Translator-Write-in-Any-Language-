@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Übersetzen, Umwandeln, Anpassen"
+    "message": "PowerInput : Übersetzen, Umwandeln, Anpassen"
   },
   "extensionDescription": {
     "message": "Tastaturkürzel zum Übersetzen, Umschreiben und Gestalten von Text direkt bei der Eingabe. Kein Kopieren und Einfügen, völlig anpassbare Voreinstellungen."
   },
   "extensionName": {
-    "message": "Power Input Action: Übersetzen, Umwandeln, Anpassen"
+    "message": "PowerInput : Übersetzen, Umwandeln, Anpassen"
   }
 }

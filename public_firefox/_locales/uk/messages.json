@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Переклад та Трансформація"
+    "message": "PowerInput : Переклад та Трансформація"
   },
   "extensionDescription": {
     "message": "Комбінації клавіш для перекладу, переписуванню та стилізації тексту безпосередньо під час введення. Без копіювання, повністю настроювані пресети."
   },
   "extensionName": {
-    "message": "Power Input Action: Переклад та Трансформація"
+    "message": "PowerInput : Переклад та Трансформація"
   }
 }

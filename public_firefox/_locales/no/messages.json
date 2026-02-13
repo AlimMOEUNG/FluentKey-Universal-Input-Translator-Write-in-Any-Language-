@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Oversett og Transformer"
+    "message": "PowerInput : Oversett og Transformer"
   },
   "extensionDescription": {
     "message": "Tastatursnarveier for å oversette, omskrive og style tekst direkte der du skriver. Ingen kopiering og liming, fullt tilpassbare forhåndsinnstillinger."
   },
   "extensionName": {
-    "message": "Power Input Action: Oversett og Transformer"
+    "message": "PowerInput : Oversett og Transformer"
   }
 }

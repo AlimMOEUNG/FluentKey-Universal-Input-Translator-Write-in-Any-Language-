@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action：翻译与转换"
+    "message": "PowerInput : ：翻译与转换"
   },
   "extensionDescription": {
     "message": "键盘快捷键直接在输入处翻译、重写和设置文本样式。无需复制粘贴，完全可自定义的预设。"
   },
   "extensionName": {
-    "message": "Power Input Action：翻译与转换"
+    "message": "PowerInput : ：翻译与转换"
   }
 }

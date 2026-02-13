@@ -1,6 +1,6 @@
-# FluentKey — Universal Input Translator
+# PowerInput : AI Translate, Rewrite & Style Inline with Shortcuts
 
-> Press a keyboard shortcut. Your text is translated, transformed, or processed by an AI — instantly, on any website.
+> Transform any text field instantly! Use shortcuts to translate, rewrite or style inline. Zero copy-paste, total focus.
 
 A Chrome & Firefox extension that brings translation and text transformation directly into any input field or text selection, powered by your choice of 9 different providers.
 
@@ -10,7 +10,7 @@ A Chrome & Firefox extension that brings translation and text transformation dir
 
 ## What it does
 
-Most translation tools require you to copy text, open another tab, paste, translate, then copy the result back. FluentKey eliminates all of that.
+Most translation tools require you to copy text, open another tab, paste, translate, then copy the result back. PowerInput eliminates all of that.
 
 **Select text or focus an input → press your shortcut → done.**
 

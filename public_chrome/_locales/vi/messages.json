@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Dịch, Chuyển đổi, Thích ứng"
+    "message": "PowerInput : Dịch, Chuyển đổi, Thích ứng"
   },
   "extensionDescription": {
     "message": "Phím tắt để dịch, viết lại và tạo kiểu cho bất kỳ văn bản nào trực tiếp tại nơi bạn nhập. Không cần sao chép-dán, cài đặt trước hoàn toàn có thể tùy chỉnh."
   },
   "extensionName": {
-    "message": "Power Input Action: Dịch, Chuyển đổi, Thích ứng"
+    "message": "PowerInput : Dịch, Chuyển đổi, Thích ứng"
   }
 }

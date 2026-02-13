@@ -1,5 +1,5 @@
 /**
- * Content script - Simple Input Translator
+ * Content script - PowerInput
  * Handles keyboard shortcuts for translating selected text or input content
  */
 
@@ -8,7 +8,7 @@ import { SettingsManager } from './core/storage/SettingsManager'
 import { KeyboardShortcutHandler } from './core/handlers/KeyboardShortcutHandler'
 import { WordSelectionHandler } from './core/handlers/input/WordSelectionHandler'
 
-console.log('[Content] Simple Input Translator loaded')
+console.log('[Content] PowerInput loaded')
 
 // Initialize components
 let settings: SettingsManager

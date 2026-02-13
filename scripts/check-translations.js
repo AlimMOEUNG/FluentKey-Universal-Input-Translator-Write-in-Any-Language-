@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Translation Analysis Script for Simple Input Translator
+ * Translation Analysis Script for PowerInput
  *
  * This script analyzes src/core/utils/i18n.ts to find missing translations.
  * It compares the keys in 'enTranslations' with every other locale block.
@@ -38,7 +38,7 @@ const BACKUP_DIR = path.join(process.cwd(), '.backup-translations');
 
 function main() {
   const modeText = FIX_MODE ? 'Translation Synchronizer' : 'Translation Analyzer';
-  console.log(`${COLORS.blue}${COLORS.bold}🌍 Simple Input Translator ${modeText}${COLORS.reset}\n`);
+  console.log(`${COLORS.blue}${COLORS.bold}🌍 PowerInput ${modeText}${COLORS.reset}\n`);
 
   if (FIX_MODE) {
     console.log(`${COLORS.yellow}⚙️  Fix mode enabled: Missing keys will be added with [MISSING] marker${COLORS.reset}\n`);

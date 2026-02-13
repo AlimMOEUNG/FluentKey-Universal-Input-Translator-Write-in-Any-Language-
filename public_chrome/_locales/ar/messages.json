@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: ترجم، حول، كيّف مدخلاتك"
+    "message": "PowerInput : ترجم، حول، كيّف مدخلاتك"
   },
   "extensionDescription": {
     "message": "اختصارات لوحة المفاتيح لترجمة أي نص وإعادة صياغته وتنسيقه مباشرةً حيث تكتب. لا نسخ ولصق، إعدادات مسبقة قابلة للتخصيص بالكامل."
   },
   "extensionName": {
-    "message": "Power Input Action: ترجم، حول، كيّف مدخلاتك"
+    "message": "PowerInput : ترجم، حول، كيّف مدخلاتك"
   }
 }

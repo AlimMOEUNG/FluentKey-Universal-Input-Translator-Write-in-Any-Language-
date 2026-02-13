@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Fordítás és Átalakítás"
+    "message": "PowerInput : Fordítás és Átalakítás"
   },
   "extensionDescription": {
     "message": "Billentyűparancsok a szöveg fordításához, átírásához és stílusának megadásához közvetlenül gépelés közben. Nincs másolás-beillesztés, teljesen testreszabható előre beállított értékek."
   },
   "extensionName": {
-    "message": "Power Input Action: Fordítás és Átalakítás"
+    "message": "PowerInput : Fordítás és Átalakítás"
   }
 }

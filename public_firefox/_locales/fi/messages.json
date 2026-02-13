@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Käännä ja Muunna"
+    "message": "PowerInput : Käännä ja Muunna"
   },
   "extensionDescription": {
     "message": "Pikanäppäimet tekstin kääntämiseen, uudelleenkirjoittamiseen ja muotoiluun suoraan kirjoituskohdassa. Ei kopiointia ja liittämistä, täysin muokattavat esiasetukset."
   },
   "extensionName": {
-    "message": "Power Input Action: Käännä ja Muunna"
+    "message": "PowerInput : Käännä ja Muunna"
   }
 }

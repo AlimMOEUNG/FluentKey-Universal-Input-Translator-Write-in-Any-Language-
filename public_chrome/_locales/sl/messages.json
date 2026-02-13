@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Prevedi, Preoblikuj, Prilagodi"
+    "message": "PowerInput : Prevedi, Preoblikuj, Prilagodi"
   },
   "extensionDescription": {
     "message": "Bližnjice na tipkovnici za prevajanje, prepisovanje in oblikovanje besedila neposredno tam, kjer tipkate. Brez kopiranja in lepljenja, popolnoma prilagodljive prednastavitve."
   },
   "extensionName": {
-    "message": "Power Input Action: Prevedi, Preoblikuj, Prilagodi"
+    "message": "PowerInput : Prevedi, Preoblikuj, Prilagodi"
   }
 }

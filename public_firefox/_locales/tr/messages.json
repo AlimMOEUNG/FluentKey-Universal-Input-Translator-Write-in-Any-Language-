@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Çevir ve Dönüştür"
+    "message": "PowerInput : Çevir ve Dönüştür"
   },
   "extensionDescription": {
     "message": "Metni doğrudan yazdığınız yerde çevirmek, yeniden yazmak ve biçimlendirmek için klavye kısayolları. Kopyala-yapıştır yok, tamamen özelleştirilebilir hazır ayarlar."
   },
   "extensionName": {
-    "message": "Power Input Action: Çevir ve Dönüştür"
+    "message": "PowerInput : Çevir ve Dönüştür"
   }
 }

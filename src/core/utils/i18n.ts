@@ -17,7 +17,7 @@ type TranslationMap = Record<TranslationKey, TranslationValue>
 
 const enTranslations = {
   // App
-  appTitle: 'Simple Input Translator',
+  appTitle: 'PowerInput',
 
   // Provider
   providerLabel: 'Provider',
@@ -114,7 +114,7 @@ const enTranslations = {
   usageWorks: 'Works on any website!',
 
   // Footer
-  footerText: 'Simple Input Translator • Built with Vue 3',
+  footerText: 'PowerInput • Built with Vue 3',
 
   // Theme
   themeToggle: 'Toggle theme',
@@ -184,7 +184,7 @@ const enTranslations = {
 export type TranslationKey = keyof typeof enTranslations
 
 const frTranslations: TranslationMap = {
-  appTitle: 'Simple Input Translator',
+  appTitle: 'PowerInput',
   providerLabel: 'Fournisseur',
   providerBuiltin: 'IA intégrée Chrome',
   providerDeepL: 'API DeepL',
@@ -253,7 +253,7 @@ const frTranslations: TranslationMap = {
   usageInput:
     'Concentrez-vous sur un champ de saisie et appuyez sur {shortcut} pour traduire le contenu',
   usageWorks: 'Fonctionne sur tous les sites web !',
-  footerText: 'Simple Input Translator • Créé avec Vue 3',
+  footerText: 'PowerInput • Créé avec Vue 3',
   themeToggle: 'Changer de thème',
   placeholderCustomModel: 'Enter custom model name',
   enableTransformationMode: 'Fun text transformation',
@@ -311,7 +311,7 @@ const frTranslations: TranslationMap = {
 }
 
 const esTranslations: TranslationMap = {
-  appTitle: 'Simple Input Translator',
+  appTitle: 'PowerInput',
   providerLabel: 'Proveedor',
   providerBuiltin: 'IA integrada de Chrome',
   providerDeepL: 'API DeepL',
@@ -380,7 +380,7 @@ const esTranslations: TranslationMap = {
   usageSelect: 'Seleccione texto y presione {shortcut} para traducirlo',
   usageInput: 'Enfóquese en un campo de entrada y presione {shortcut} para traducir el contenido',
   usageWorks: '¡Funciona en cualquier sitio web!',
-  footerText: 'Simple Input Translator • Creado con Vue 3',
+  footerText: 'PowerInput • Creado con Vue 3',
   themeToggle: 'Cambiar tema',
   placeholderCustomModel: 'Enter custom model name',
   enableTransformationMode: 'Fun text transformation',
@@ -438,7 +438,7 @@ const esTranslations: TranslationMap = {
 }
 
 const deTranslations: TranslationMap = {
-  appTitle: 'Simple Input Translator',
+  appTitle: 'PowerInput',
   providerLabel: 'Anbieter',
   providerBuiltin: 'Chrome integrierte KI',
   providerDeepL: 'DeepL API',
@@ -507,7 +507,7 @@ const deTranslations: TranslationMap = {
   usageInput:
     'Fokussieren Sie ein Eingabefeld und drücken Sie {shortcut}, um den Inhalt zu übersetzen',
   usageWorks: 'Funktioniert auf jeder Website!',
-  footerText: 'Simple Input Translator • Erstellt mit Vue 3',
+  footerText: 'PowerInput • Erstellt mit Vue 3',
   themeToggle: 'Thema wechseln',
   placeholderCustomModel: 'Enter custom model name',
   enableTransformationMode: 'Fun text transformation',
@@ -565,7 +565,7 @@ const deTranslations: TranslationMap = {
 }
 
 const zhTranslations: TranslationMap = {
-  appTitle: 'Simple Input Translator',
+  appTitle: 'PowerInput',
   providerLabel: '提供商',
   providerBuiltin: 'Chrome 内置 AI',
   providerDeepL: 'DeepL API',
@@ -629,7 +629,7 @@ const zhTranslations: TranslationMap = {
   usageSelect: '选择文本并按 {shortcut} 翻译',
   usageInput: '聚焦输入字段并按 {shortcut} 翻译内容',
   usageWorks: '适用于任何网站！',
-  footerText: 'Simple Input Translator • 使用 Vue 3 构建',
+  footerText: 'PowerInput • 使用 Vue 3 构建',
   themeToggle: '切换主题',
   placeholderCustomModel: 'Enter custom model name',
   enableTransformationMode: 'Fun text transformation',
@@ -687,7 +687,7 @@ const zhTranslations: TranslationMap = {
 }
 
 const jaTranslations: TranslationMap = {
-  appTitle: 'Simple Input Translator',
+  appTitle: 'PowerInput',
   providerLabel: 'プロバイダー',
   providerBuiltin: 'Chrome 内蔵 AI',
   providerDeepL: 'DeepL API',
@@ -754,7 +754,7 @@ const jaTranslations: TranslationMap = {
   usageSelect: 'テキストを選択して {shortcut} を押して翻訳',
   usageInput: '入力フィールドにフォーカスして {shortcut} を押してコンテンツを翻訳',
   usageWorks: 'すべてのウェブサイトで動作します！',
-  footerText: 'Simple Input Translator • Vue 3 で構築',
+  footerText: 'PowerInput • Vue 3 で構築',
   themeToggle: 'テーマを切り替え',
   placeholderCustomModel: 'Enter custom model name',
   enableTransformationMode: 'Fun text transformation',

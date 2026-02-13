@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Tłumacz, Przekształcaj, Dostosuj"
+    "message": "PowerInput : Tłumacz, Przekształcaj, Dostosuj"
   },
   "extensionDescription": {
     "message": "Skróty klawiaturowe do tłumaczenia, przepisywania i stylizowania tekstu bezpośrednio w miejscu pisania. Bez kopiowania i wklejania, w pełni konfigurowalne ustawienia."
   },
   "extensionName": {
-    "message": "Power Input Action: Tłumacz, Przekształcaj, Dostosuj"
+    "message": "PowerInput : Tłumacz, Przekształcaj, Dostosuj"
   }
 }

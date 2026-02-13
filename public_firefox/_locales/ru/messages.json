@@ -1,11 +1,11 @@
 {
   "actionTitle": {
-    "message": "Power Input Action: Перевод и Трансформация"
+    "message": "PowerInput : Перевод и Трансформация"
   },
   "extensionDescription": {
     "message": "Горячие клавиши для перевода, переписывания и стилизации текста прямо при вводе. Без копирования, полностью настраиваемые пресеты."
   },
   "extensionName": {
-    "message": "Power Input Action: Перевод и Трансформация"
+    "message": "PowerInput : Перевод и Трансформация"
   }
 }
