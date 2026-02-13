@@ -358,18 +358,20 @@
       <p v-if="shortcutError" class="text-[10px] text-red-600 mt-0.5">
         {{ shortcutError }}
       </p>
-      <!-- Pinned preset checkbox for right-click context menu -->
+      <!-- Pinned preset checkbox — disabled when already pinned (cannot unpin without selecting another) -->
       <div class="flex items-center gap-2 mt-1">
         <input
           type="checkbox"
           :id="`pinned-preset-${localPreset.id}`"
           :checked="isPinned"
+          :disabled="isPinned"
           @change="handlePinChange"
-          class="w-3.5 h-3.5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-1 focus:ring-blue-500"
+          class="w-3.5 h-3.5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-1 focus:ring-blue-500 disabled:opacity-60 disabled:cursor-not-allowed"
         />
         <label
           :for="`pinned-preset-${localPreset.id}`"
-          class="text-[10px] text-gray-600 dark:text-gray-400 cursor-pointer"
+          class="text-[10px] text-gray-600 dark:text-gray-400"
+          :class="isPinned ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'"
         >
           {{ t('pinnedPresetLabel') }}
         </label>
@@ -895,11 +897,9 @@ function handleModeChange(
 
 /**
  * Handle pin checkbox change.
- * No-op if this preset is already pinned (cannot unpin without pinning another).
- * Emits 'set-pinned' to let the parent immediately persist the change.
+ * Disabled at the DOM level when already pinned, so this only fires when pinning a new preset.
  */
 function handlePinChange() {
-  if (props.isPinned) return // Already pinned, no-op
   emit('set-pinned', props.preset.id)
 }
 
