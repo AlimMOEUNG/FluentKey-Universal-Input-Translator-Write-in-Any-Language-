@@ -10,7 +10,13 @@ export default defineConfigWithVueTs(
 
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-*/**', '**/coverage/**', '**/node_modules/**'],
+    ignores: [
+      '**/dist/**',
+      '**/dist-*/**',
+      '**/coverage/**',
+      '**/node_modules/**',
+      '**/.backup-translations/**',
+    ],
   },
 
   pluginVue.configs['flat/essential'],
