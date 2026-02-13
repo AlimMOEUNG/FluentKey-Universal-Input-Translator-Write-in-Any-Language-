@@ -501,6 +501,7 @@
 import { ref, watch, computed, onMounted } from 'vue'
 import { Check, RotateCcw, Info, Lock, Maximize2, X } from 'lucide-vue-next'
 import { useI18nWrapper } from '@/composables/useI18nWrapper'
+import { useDraftPreset, type DraftPresetState } from '@/composables/useDraftPreset'
 import { usePro } from '@/composables/usePro'
 import {
   buildShortcutFromEvent,
@@ -531,6 +532,14 @@ import ConfirmDialog from './ConfirmDialog.vue'
 import LanguageSelector from './LanguageSelector.vue'
 
 const { t } = useI18nWrapper()
+const { loadDraft, saveDraft, clearDraft } = useDraftPreset()
+
+// Debounce timer for draft auto-save
+let draftSaveTimer: ReturnType<typeof setTimeout> | null = null
+
+// In-memory mirror of the persisted draft — kept in sync with storage so the
+// preset-switch watcher can restore state synchronously (no async read = no flash)
+const memoryCachedDraft = ref<DraftPresetState | null>(null)
 
 // Sequence detector for multi-key shortcut capture
 const sequenceDetector = new KeyboardSequenceDetector()
@@ -643,21 +652,115 @@ function onLLMProviderChange() {
   llmCustomModelInput.value = ''
 }
 
+// ─── Draft persistence ────────────────────────────────────────────
+
+/**
+ * Schedule a debounced draft save (400 ms).
+ * Only writes if there are actually unsaved changes.
+ */
+function scheduleDraftSave() {
+  if (draftSaveTimer) clearTimeout(draftSaveTimer)
+  draftSaveTimer = setTimeout(async () => {
+    if (!hasUnsavedChanges.value) return
+    const state: DraftPresetState = {
+      presetId: props.preset.id,
+      // Strip Vue Proxy before storing
+      localPreset: JSON.parse(JSON.stringify(localPreset.value)),
+      presetConfig: { ...presetConfig.value },
+      llmModelSelection: llmModelSelection.value,
+      llmCustomModelInput: llmCustomModelInput.value,
+      customExampleText: customExampleText.value,
+      savedAt: Date.now(),
+    }
+    // Update memory cache synchronously so the watcher can restore without a storage round-trip
+    memoryCachedDraft.value = state
+    await saveDraft(state)
+  }, 400)
+}
+
+/**
+ * Load a persisted draft and restore editor state if the draft belongs to the
+ * currently displayed preset and passes basic structural validation.
+ * Called at the end of onMounted (after baseline init).
+ */
+/**
+ * Apply a validated draft object to the editor state (synchronous).
+ * Shared by both the async load path (onMounted) and the sync cache path (watcher).
+ */
+function applyDraft(draft: DraftPresetState) {
+  localPreset.value = draft.localPreset
+  if (draft.localPreset.type === 'translation') {
+    presetConfig.value = draft.presetConfig || {}
+  }
+  if (draft.localPreset.type === 'llm-prompt') {
+    llmModelSelection.value = draft.llmModelSelection || ''
+    llmCustomModelInput.value = draft.llmCustomModelInput || ''
+  }
+  if (
+    draft.localPreset.type === 'transformation' ||
+    draft.localPreset.type === 'custom-transform'
+  ) {
+    if (draft.customExampleText) customExampleText.value = draft.customExampleText
+  }
+}
+
+/**
+ * Load draft from storage, populate the memory cache, and apply to editor state.
+ * Only called from onMounted — async is fine here since the component is just mounting.
+ */
+async function restoreDraftIfValid() {
+  try {
+    const draft = await loadDraft()
+    if (!draft) return
+    // Stale draft from a different preset — silently ignore
+    if (draft.presetId !== props.preset.id) return
+    // Basic structure check to guard against corrupted storage
+    if (!draft.localPreset || typeof draft.localPreset.type !== 'string') {
+      await clearDraft()
+      return
+    }
+    // Populate memory cache so subsequent tab switches are flash-free
+    memoryCachedDraft.value = draft
+    applyDraft(draft)
+  } catch (e) {
+    console.error('[PresetEditor] Failed to restore draft:', e)
+    // Non-fatal: falls back to saved preset state
+  }
+}
+
+/**
+ * Synchronous draft restore from memory cache — used by the preset-switch watcher
+ * to avoid a storage round-trip (which would cause a visual flash).
+ */
+function restoreDraftFromCache(presetId: string) {
+  const draft = memoryCachedDraft.value
+  if (!draft) return
+  if (draft.presetId !== presetId) return
+  if (!draft.localPreset || typeof draft.localPreset.type !== 'string') {
+    memoryCachedDraft.value = null
+    clearDraft().catch((e) => console.error('[PresetEditor] Failed to clear invalid cached draft:', e))
+    return
+  }
+  applyDraft(draft)
+}
+
 // ─── Lifecycle ────────────────────────────────────────────────────
 
 onMounted(async () => {
   customTransforms.value = await getAllCustomTransforms()
-  // Initialize presetConfig from localPreset
+  // Initialize presetConfig from localPreset (baseline)
   if (localPreset.value.type === 'translation' && localPreset.value.customProviderConfig) {
     presetConfig.value = { ...localPreset.value.customProviderConfig }
   }
-  // Initialize LLM model selection state
+  // Initialize LLM model selection state (baseline)
   if (localPreset.value.type === 'llm-prompt') {
     initLLMModelState(
       (localPreset.value as LLMPromptPreset).llmProvider,
       (localPreset.value as LLMPromptPreset).llmModel
     )
   }
+  // Override baseline with persisted draft if one exists for this preset
+  await restoreDraftIfValid()
 })
 
 // ─── Computed ─────────────────────────────────────────────────────
@@ -773,6 +876,13 @@ const hasUnsavedChanges = computed(() => {
 
 // ─── Watchers ─────────────────────────────────────────────────────
 
+// Auto-save draft whenever any editor field changes
+watch(localPreset, scheduleDraftSave, { deep: true })
+watch(presetConfig, scheduleDraftSave, { deep: true })
+watch(llmModelSelection, scheduleDraftSave)
+watch(llmCustomModelInput, scheduleDraftSave)
+watch(customExampleText, scheduleDraftSave)
+
 // Sync local state when parent switches the active preset tab
 watch(
   () => props.preset,
@@ -798,6 +908,8 @@ watch(
       llmModelSelection.value = ''
       llmCustomModelInput.value = ''
     }
+    // Restore draft synchronously from memory cache — no storage round-trip, no visual flash
+    restoreDraftFromCache(newPreset.id)
   },
   { deep: true }
 )
@@ -975,6 +1087,9 @@ function undoChanges() {
       (props.preset as LLMPromptPreset).llmModel
     )
   }
+  // Remove persisted draft so it does not restore on next popup open
+  memoryCachedDraft.value = null
+  clearDraft().catch((e) => console.error('[PresetEditor] Failed to clear draft on undo:', e))
 }
 
 /** Navigate to the extension options page (custom-transform manager) */
@@ -1213,6 +1328,9 @@ function savePreset() {
   }
 
   emit('update-preset', { ...localPreset.value })
+  // Remove persisted draft now that the preset is officially saved
+  memoryCachedDraft.value = null
+  clearDraft().catch((e) => console.error('[PresetEditor] Failed to clear draft on save:', e))
   console.log('[PresetEditor] Preset saved:', localPreset.value)
 }
 
