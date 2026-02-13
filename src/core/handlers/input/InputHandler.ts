@@ -220,10 +220,17 @@ export class InputHandler {
   }
 
   /**
-   * Get the currently focused input element
+   * Get the currently focused input element.
+   * Traverses nested Shadow DOMs to find the truly focused element,
+   * since document.activeElement only returns the shadow host when focus
+   * is inside a Shadow DOM (e.g. Reddit search bar, DM chat).
    */
   static getFocusedInput(): HTMLElement | null {
-    const activeElement = document.activeElement as HTMLElement
+    // Walk down shadow roots until we reach the deepest focused element
+    let activeElement = document.activeElement as HTMLElement
+    while (activeElement?.shadowRoot?.activeElement) {
+      activeElement = activeElement.shadowRoot.activeElement as HTMLElement
+    }
 
     if (this.isEditableElement(activeElement)) {
       return activeElement
