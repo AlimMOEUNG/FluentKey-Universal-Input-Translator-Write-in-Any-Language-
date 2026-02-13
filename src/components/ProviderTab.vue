@@ -313,20 +313,76 @@
       />
       <ValidationMessage :message="validationMessage.custom" :status="validationStatus.custom" />
     </div>
+
+    <!-- Word selection modifier selector (global shortcut setting) -->
+    <div class="border-t border-gray-200 dark:border-gray-700 pt-2 mt-1">
+      <div class="flex items-center gap-1 mb-1">
+        <label class="text-[10px] font-semibold text-gray-700 dark:text-gray-300">
+          {{ t('selectionModifierLabel') }}
+        </label>
+        <!-- Info tooltip explaining the word selection shortcut -->
+        <div class="relative group">
+          <Info :size="13" class="text-gray-400 dark:text-gray-500 cursor-help" />
+          <div class="absolute bottom-full left-0 mb-1 hidden group-hover:block z-10 w-64">
+            <div class="bg-gray-900 dark:bg-gray-700 text-white text-[10px] p-2 rounded shadow-lg leading-relaxed">
+              {{ t('selectionModifierHelp') }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <select
+        :value="selectionModifier"
+        @change="selectionModifier = ($event.target as HTMLSelectElement).value as SelectionModifier"
+        class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option
+          v-for="mod in SELECTION_MODIFIERS"
+          :key="mod.value"
+          :value="mod.value"
+        >
+          {{ mod.label }}
+        </option>
+      </select>
+      <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-0.5">
+        <span class="font-medium text-gray-600 dark:text-gray-400">{{ selectionModifier }}</span>
+        <span class="text-base leading-none">+←</span>
+        <span class="mx-0.5">/</span>
+        <span class="font-medium text-gray-600 dark:text-gray-400">{{ selectionModifier }}</span>
+        <span class="text-base leading-none">+→</span>
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, defineComponent, h } from 'vue'
+import { Info } from 'lucide-vue-next'
 import { useI18nWrapper } from '@/composables/useI18nWrapper'
 import { useSettings } from '@/composables/useSettings'
 import { usePresetsSettings } from '@/composables/usePresetsSettings'
 import { PREDEFINED_MODELS, isCustomModel, getEffectiveModel } from '@/config/predefinedModels'
 import { AVAILABLE_PROVIDERS } from '@/config/providers'
+import type { SelectionModifier } from '@/types/common'
 
 const { t } = useI18nWrapper()
 const { providerConfigs } = useSettings()
 const { presetsSettings } = usePresetsSettings()
+
+// Available modifier keys for word selection shortcut
+const SELECTION_MODIFIERS: Array<{ value: SelectionModifier; label: string }> = [
+  { value: 'Alt', label: 'Alt' },
+  { value: 'Ctrl', label: 'Ctrl' },
+  { value: 'Shift', label: 'Shift' },
+  { value: 'Meta', label: 'Meta (⌘/Win)' },
+]
+
+// Computed with 'Alt' as default when selectionModifier is undefined
+const selectionModifier = computed<SelectionModifier>({
+  get: () => presetsSettings.value.selectionModifier ?? 'Alt',
+  set: (val) => {
+    presetsSettings.value.selectionModifier = val
+  },
+})
 
 // --- Validation state ---
 

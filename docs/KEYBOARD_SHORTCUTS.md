@@ -337,3 +337,147 @@ The keyboard shortcut system prevents conflicts through:
 5. **Proactive UX**: Problems caught at configuration time, not runtime
 
 This ensures a reliable, predictable shortcut system where every configured shortcut is guaranteed to work.
+
+---
+
+## Word Selection Shortcut (Modifier+Arrow)
+
+### Overview
+
+In addition to translation shortcuts, the extension provides a **word-by-word selection** shortcut that works in any focused text field (input, textarea, contenteditable).
+
+| Action | Shortcut (default) | Result |
+|--------|--------------------|--------|
+| Select next word | `Alt+→` | Extends or shrinks selection one word to the right |
+| Select previous word | `Alt+←` | Extends or shrinks selection one word to the left |
+
+The modifier key (`Alt` by default) is configurable in the **Global** tab of the extension popup.
+
+---
+
+### Configurable Modifier
+
+The modifier can be changed to any of:
+
+| Value | Key pressed |
+|-------|-------------|
+| `Alt` | Alt (default) |
+| `Ctrl` | Ctrl/Control |
+| `Shift` | Shift |
+| `Meta` | Cmd (macOS) / Windows key |
+
+The setting is stored in `presetsSettings.selectionModifier` (chrome.storage.sync) and applied immediately without a page reload.
+
+---
+
+### Selection Behavior
+
+The shortcut mirrors the native browser `Selection.modify('extend', direction, 'word')` behavior:
+
+#### Collapsed cursor (no existing selection)
+
+| Cursor position | Key | Result |
+|-----------------|-----|--------|
+| Start of word `\|word` | `→` | Selects `word`, cursor at end |
+| Middle of word `wo\|rd` | `→` | Selects entire `word`, cursor at end |
+| Middle of word `wo\|rd` | `←` | Selects entire `word`, cursor at start |
+| End of word `word\|` | `←` | Selects `word`, cursor at start |
+| On whitespace | `→` | Selects next word, cursor at its end |
+| On whitespace | `←` | Selects previous word, cursor at its start |
+
+#### With existing selection (directional shrink/extend)
+
+The selection has a **direction** (anchor → focus):
+
+- **Forward selection** (left-to-right): `→` extends the end forward; `←` shrinks the end backward
+- **Backward selection** (right-to-left): `←` extends the start backward; `→` shrinks the start forward
+
+This exactly mirrors how `Shift+Ctrl+→` / `Shift+Ctrl+←` work natively, preserving the anchor point.
+
+---
+
+### Event Handling
+
+The handler registers on the **capture phase** (`{ capture: true }`) so it runs before any page-level listeners (Reddit, Google Docs, etc.) and calls:
+
+```typescript
+event.preventDefault()
+event.stopPropagation()
+event.stopImmediatePropagation()
+```
+
+This prevents the host page from intercepting the key combination.
+
+---
+
+### Shadow DOM Support
+
+`document.activeElement` stops at the shadow host boundary. The handler traverses shadow roots recursively to find the truly focused element:
+
+```typescript
+private getDeepActiveElement(): Element | null {
+  let element: Element | null = document.activeElement
+  while (element?.shadowRoot) {
+    element = element.shadowRoot.activeElement
+  }
+  return element
+}
+```
+
+This ensures the shortcut works inside Shadow DOM contexts (e.g. Reddit DMs, custom web components).
+
+---
+
+### Implementation Details
+
+#### Files involved
+
+| File | Role |
+|------|------|
+| `src/core/handlers/input/WordSelectionHandler.ts` | Core handler class |
+| `src/core/storage/SettingsManager.ts` | `getSelectionModifier()` method |
+| `src/content-script.ts` | Instantiation, initialization, live settings update |
+| `src/components/ProviderTab.vue` | Modifier selector UI in the Global tab |
+| `src/types/common.ts` | `SelectionModifier` union type, `PresetsSettings.selectionModifier` field |
+| `src/core/utils/i18n.ts` | `selectionModifierLabel`, `selectionModifierHelp`, `selectionModifierExample` keys |
+
+#### `WordSelectionHandler` class structure
+
+```
+WordSelectionHandler
+├── initialize()              Register capture-phase keydown listener
+├── destroy()                 Remove listener (uses stored bound reference)
+├── setModifier(modifier)     Update modifier key at runtime
+├── enable() / disable()      Toggle handler on/off
+│
+├── handleKeyDown()           Entry point — checks modifier + editable target
+├── isModifierActive()        Checks the right event.xxxKey for each modifier
+├── getDeepActiveElement()    Traverses shadow roots to find real focused element
+│
+├── selectNextWord()          Dispatch to input or contenteditable path
+├── selectPreviousWord()      Dispatch to input or contenteditable path
+│
+├── selectNextWordInInput()         input/textarea: respects selectionDirection
+├── selectPreviousWordInInput()     input/textarea: respects selectionDirection
+├── selectNextWordInContentEditable()     uses selection.modify('extend','forward','word')
+├── selectPreviousWordInContentEditable() uses selection.modify('extend','backward','word')
+│
+├── findCurrentWordStart()    Walk backward to start of current word
+├── findCurrentWordEnd()      Walk forward to end of current word
+├── findNextWordBoundary()    Skip current word + whitespace + next word
+├── findPreviousWordBoundary() Walk back past whitespace + previous word
+├── isWordChar()              [\w\u00C0-\u024F\u1E00-\u1EFF]
+└── isWhitespace()            \s
+```
+
+#### `selectionDirection` usage for `input`/`textarea`
+
+Unlike `contenteditable` (which uses the native Selection API anchor/focus model), `input` and `textarea` elements expose `selectionDirection` (`'forward'` | `'backward'` | `'none'`). The handler reads this to decide which end of the selection is "active":
+
+```
+direction = 'forward'  → active end is selectionEnd   → → extends end, ← shrinks end
+direction = 'backward' → active end is selectionStart → ← extends start, → shrinks start
+direction = 'none'     → collapsed cursor              → use cursor position
+```
+
+`setSelectionRange(start, end, direction)` is always used (not direct property assignment) to explicitly preserve the direction for subsequent keypresses.

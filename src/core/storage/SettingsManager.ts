@@ -9,6 +9,7 @@ import type {
   TranslationPreset,
   PresetsSettings,
   TranslationProvider,
+  SelectionModifier,
 } from '@/types/common'
 
 export interface Settings {
@@ -181,6 +182,13 @@ export class SettingsManager {
    */
   getPresetsSettings(): PresetsSettings {
     return this.presetsSettings
+  }
+
+  /**
+   * Get the configured selection modifier key (defaults to 'Alt')
+   */
+  getSelectionModifier(): SelectionModifier {
+    return this.presetsSettings.selectionModifier ?? 'Alt'
   }
 
   /**

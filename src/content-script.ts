@@ -30,9 +30,11 @@ async function initialize() {
     keyboardHandler = new KeyboardShortcutHandler(engine, settings)
     keyboardHandler.initialize()
 
-    // Create word selection handler (Alt+Arrow keys)
+    // Create word selection handler (Modifier+Arrow keys)
     wordSelectionHandler = new WordSelectionHandler()
     wordSelectionHandler.initialize()
+    // Apply the configured selection modifier from settings
+    wordSelectionHandler.setModifier(settings.getSelectionModifier())
 
     console.log('[Content] Initialization complete')
   } catch (error) {
@@ -74,6 +76,15 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
       // Rebuild shortcut map when presets change
       keyboardHandler.rebuildShortcutMap()
       console.log('[Content] Shortcut map rebuilt')
+
+      // Update word selection modifier if it changed
+      if (
+        changes.presetsSettings.newValue?.selectionModifier !==
+        changes.presetsSettings.oldValue?.selectionModifier
+      ) {
+        wordSelectionHandler.setModifier(settings.getSelectionModifier())
+        console.log('[Content] Selection modifier updated')
+      }
 
       // Reinitialize provider if provider changed
       if (

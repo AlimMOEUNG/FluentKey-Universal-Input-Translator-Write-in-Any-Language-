@@ -191,10 +191,16 @@ export type Preset =
   | LLMPromptPreset
 
 /**
+ * Modifier key used for word-by-word selection (Alt+Arrow by default)
+ */
+export type SelectionModifier = 'Alt' | 'Ctrl' | 'Shift' | 'Meta'
+
+/**
  * Presets settings structure
  */
 export interface PresetsSettings {
   presets: Preset[]
   activePresetId: string | null
   provider: TranslationProvider
+  selectionModifier?: SelectionModifier
 }

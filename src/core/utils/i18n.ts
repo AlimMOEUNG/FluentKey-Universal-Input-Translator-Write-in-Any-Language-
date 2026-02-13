@@ -147,6 +147,12 @@ const enTranslations = {
   validationLLMModelRequired: 'Please enter a model name',
   validationCustomProviderRequired: 'Please select a custom provider',
 
+  // Word selection modifier (Global tab)
+  selectionModifierLabel: 'Word Selection Modifier',
+  selectionModifierHelp:
+    'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
+  selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
+
   // Options page
   optionsTitle: 'Custom Transformations',
   optionsNewTransformation: 'New Transformation',
@@ -292,6 +298,10 @@ const frTranslations: TranslationMap = {
   optionsCancelButton: 'Cancel',
   optionsMaxReached: 'Maximum of {max} transformations reached',
   optionsEmptyName: 'Name is required',
+  selectionModifierLabel: 'Word Selection Modifier',
+  selectionModifierHelp:
+    'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
+  selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
 }
 
 const esTranslations: TranslationMap = {
@@ -413,6 +423,10 @@ const esTranslations: TranslationMap = {
   optionsCancelButton: 'Cancel',
   optionsMaxReached: 'Maximum of {max} transformations reached',
   optionsEmptyName: 'Name is required',
+  selectionModifierLabel: 'Word Selection Modifier',
+  selectionModifierHelp:
+    'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
+  selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
 }
 
 const deTranslations: TranslationMap = {
@@ -534,6 +548,10 @@ const deTranslations: TranslationMap = {
   optionsCancelButton: 'Cancel',
   optionsMaxReached: 'Maximum of {max} transformations reached',
   optionsEmptyName: 'Name is required',
+  selectionModifierLabel: 'Word Selection Modifier',
+  selectionModifierHelp:
+    'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
+  selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
 }
 
 const zhTranslations: TranslationMap = {
@@ -650,6 +668,10 @@ const zhTranslations: TranslationMap = {
   optionsCancelButton: 'Cancel',
   optionsMaxReached: 'Maximum of {max} transformations reached',
   optionsEmptyName: 'Name is required',
+  selectionModifierLabel: 'Word Selection Modifier',
+  selectionModifierHelp:
+    'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
+  selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
 }
 
 const jaTranslations: TranslationMap = {
@@ -769,6 +791,10 @@ const jaTranslations: TranslationMap = {
   optionsCancelButton: 'Cancel',
   optionsMaxReached: 'Maximum of {max} transformations reached',
   optionsEmptyName: 'Name is required',
+  selectionModifierLabel: 'Word Selection Modifier',
+  selectionModifierHelp:
+    'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
+  selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
 }
 
 const translations: Record<SupportedLocale, TranslationMap> = {

@@ -16,7 +16,7 @@
         @click="currentView = 'provider'"
         :class="['main-nav-tab', { active: currentView === 'provider' }]"
       >
-        Provider
+        Global
       </button>
     </div>
   </div>
