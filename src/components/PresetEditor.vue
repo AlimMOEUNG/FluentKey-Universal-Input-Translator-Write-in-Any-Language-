@@ -316,11 +316,7 @@
               v-model="llmModelSelection"
               class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
-              <option
-                v-for="model in llmAvailableModels"
-                :key="model.value"
-                :value="model.value"
-              >
+              <option v-for="model in llmAvailableModels" :key="model.value" :value="model.value">
                 {{ model.label }}
               </option>
             </select>
@@ -460,7 +456,13 @@ import {
   normalizeShortcut,
   KeyboardSequenceDetector,
 } from '@/core/utils/keyboardUtils'
-import type { Preset, TranslationProvider, LLMProvider, LLMPromptPreset, CustomTransformation } from '@/types/common'
+import type {
+  Preset,
+  TranslationProvider,
+  LLMProvider,
+  LLMPromptPreset,
+  CustomTransformation,
+} from '@/types/common'
 import {
   TransformationEngine,
   applyCustomCharMap,
@@ -654,9 +656,7 @@ const llmAvailableModels = computed((): ModelOption[] => {
 })
 
 // True when the current LLM provider has at least one non-custom predefined model (show dropdown)
-const llmHasPredefinedModels = computed(() =>
-  llmAvailableModels.value.some((m) => !m.isCustom)
-)
+const llmHasPredefinedModels = computed(() => llmAvailableModels.value.some((m) => !m.isCustom))
 
 // The resolved model name based on the current selection state
 const resolvedLLMModel = computed(() =>
@@ -874,7 +874,8 @@ function handleModeChange(
           : 'gemini'
       ) as LLMProvider
       // Initialize with the default model for the suggested provider
-      const defaultModel = getDefaultModel(suggestedProvider as keyof typeof PREDEFINED_MODELS) || ''
+      const defaultModel =
+        getDefaultModel(suggestedProvider as keyof typeof PREDEFINED_MODELS) || ''
       localPreset.value = {
         ...base,
         type: 'llm-prompt',
@@ -982,7 +983,8 @@ function validateShortcut(): boolean {
 
   // REJECT modifier-only shortcuts (Alt, Ctrl, Shift, Meta alone)
   if (keys.length === 0) {
-    shortcutError.value = t('shortcutModifierOnly') || 'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed'
+    shortcutError.value =
+      t('shortcutModifierOnly') || 'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed'
     return false
   }
 

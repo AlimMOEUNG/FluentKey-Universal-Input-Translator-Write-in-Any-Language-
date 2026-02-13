@@ -28,7 +28,9 @@
           :class="lang.code === modelValue ? 'bg-blue-50 dark:bg-blue-900/20' : ''"
         >
           <span class="text-base">{{ lang.flag }}</span>
-          <span class="flex-1 text-xs text-gray-900 dark:text-gray-100">{{ lang.displayName }}</span>
+          <span class="flex-1 text-xs text-gray-900 dark:text-gray-100">{{
+            lang.displayName
+          }}</span>
           <span
             class="text-[10px] font-mono text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 px-1 py-0.5 rounded"
             >{{ lang.code }}</span
@@ -77,7 +79,7 @@ const dropdownPosition = ref<Record<string, string>>({
   top: '0px',
   left: '0px',
   width: '0px',
-  maxHeight: '15rem' // 60 = 15rem
+  maxHeight: '15rem', // 60 = 15rem
 })
 
 const { t } = useI18nWrapper()

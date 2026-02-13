@@ -88,7 +88,11 @@ const infoDialog = reactive({
   variant: 'warning' as 'warning' | 'info' | 'danger',
 })
 
-function showInfoDialog(title: string, message: string, variant: 'warning' | 'info' | 'danger' = 'warning') {
+function showInfoDialog(
+  title: string,
+  message: string,
+  variant: 'warning' | 'info' | 'danger' = 'warning'
+) {
   infoDialog.title = title
   infoDialog.message = message
   infoDialog.variant = variant

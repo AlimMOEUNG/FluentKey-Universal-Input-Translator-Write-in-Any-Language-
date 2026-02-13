@@ -26,9 +26,7 @@ export async function getAllCustomTransforms(): Promise<CustomTransformation[]> 
   const keys = index.ids.map(itemKey)
   const result = await chrome.storage.sync.get(keys)
 
-  return index.ids
-    .map((id) => result[itemKey(id)] as CustomTransformation)
-    .filter(Boolean)
+  return index.ids.map((id) => result[itemKey(id)] as CustomTransformation).filter(Boolean)
 }
 
 export async function getCustomTransformById(id: string): Promise<CustomTransformation | null> {

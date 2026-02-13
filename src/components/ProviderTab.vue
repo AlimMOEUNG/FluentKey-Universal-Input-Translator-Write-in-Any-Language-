@@ -95,11 +95,7 @@
         v-model="providerConfigs.chatgpt.model"
         class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
       >
-        <option
-          v-for="model in PREDEFINED_MODELS.chatgpt"
-          :key="model.value"
-          :value="model.value"
-        >
+        <option v-for="model in PREDEFINED_MODELS.chatgpt" :key="model.value" :value="model.value">
           {{ model.label }}
         </option>
       </select>
@@ -316,30 +312,26 @@
 
     <!-- Word selection modifier selector (global shortcut setting) -->
     <div class="border-t border-gray-200 dark:border-gray-700 pt-2 mt-1">
-      <div class="flex items-center gap-1 mb-1">
+      <div class="flex items-center gap-1 mb-1 relative group">
         <label class="text-[10px] font-semibold text-gray-700 dark:text-gray-300">
           {{ t('selectionModifierLabel') }}
         </label>
         <!-- Info tooltip explaining the word selection shortcut -->
-        <div class="relative group">
-          <Info :size="13" class="text-gray-400 dark:text-gray-500 cursor-help" />
-          <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-10 w-64">
-            <div class="bg-gray-900 dark:bg-gray-700 text-white text-[10px] p-2 rounded shadow-lg leading-relaxed">
-              {{ t('selectionModifierHelp') }}
-            </div>
+        <Info :size="13" class="text-gray-400 dark:text-gray-500 cursor-help" />
+        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-10 w-64 pointer-events-none">
+          <div class="bg-gray-900 dark:bg-gray-700 text-white text-[10px] p-2 rounded shadow-lg leading-relaxed text-center">
+            {{ t('selectionModifierHelp') }}
           </div>
         </div>
       </div>
       <select
         :value="selectionModifier"
-        @change="selectionModifier = ($event.target as HTMLSelectElement).value as SelectionModifier"
+        @change="
+          selectionModifier = ($event.target as HTMLSelectElement).value as SelectionModifier
+        "
         class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option
-          v-for="mod in SELECTION_MODIFIERS"
-          :key="mod.value"
-          :value="mod.value"
-        >
+        <option v-for="mod in SELECTION_MODIFIERS" :key="mod.value" :value="mod.value">
           {{ mod.label }}
         </option>
       </select>
@@ -447,7 +439,7 @@ const ValidationButton = defineComponent({
               : 'bg-blue-600 text-white hover:bg-blue-700',
           ],
         },
-        props.status === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate'),
+        props.status === 'loading' ? t('apiKeyValidating') : t('apiKeyValidate')
       )
     }
   },
@@ -465,12 +457,9 @@ const ValidationMessage = defineComponent({
       return h(
         'p',
         {
-          class: [
-            'text-[10px]',
-            props.status === 'success' ? 'text-green-600' : 'text-red-600',
-          ],
+          class: ['text-[10px]', props.status === 'success' ? 'text-green-600' : 'text-red-600'],
         },
-        props.message,
+        props.message
       )
     }
   },
@@ -501,7 +490,7 @@ async function validateProviderConfig(provider: string) {
           apiKey: providerConfigs.value.gemini.apiKey,
           model: getEffectiveModel(
             providerConfigs.value.gemini.model,
-            providerConfigs.value.gemini.customModel,
+            providerConfigs.value.gemini.customModel
           ),
         })
         break

@@ -7,8 +7,15 @@
           v-for="(preset, index) in presets"
           :key="preset.id"
           @click="$emit('select-preset', preset.id)"
-          :class="['tab-button', { active: preset.id === activePresetId, locked: isPresetLocked(index) }]"
-          :title="isPresetLocked(index) ? t('presetLockedTooltip') : `${preset.name}: ${preset.keyboardShortcut}`"
+          :class="[
+            'tab-button',
+            { active: preset.id === activePresetId, locked: isPresetLocked(index) },
+          ]"
+          :title="
+            isPresetLocked(index)
+              ? t('presetLockedTooltip')
+              : `${preset.name}: ${preset.keyboardShortcut}`
+          "
         >
           <!-- Lock icon for locked presets (beyond free limit) -->
           <Lock v-if="isPresetLocked(index)" :size="11" class="lock-icon" />
@@ -19,7 +26,6 @@
           <Plus :size="14" />
         </button>
       </div>
-
     </div>
   </div>
 </template>
@@ -187,5 +193,4 @@ defineEmits<{
   color: theme('colors.emerald.300');
   border-color: theme('colors.emerald.600');
 }
-
 </style>

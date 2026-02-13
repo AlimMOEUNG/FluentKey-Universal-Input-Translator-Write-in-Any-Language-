@@ -23,6 +23,14 @@ export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
 
   {
+    name: 'app/cjs-files',
+    files: ['**/*.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+
+  {
     name: 'app/custom-rules',
     rules: {
       '@typescript-eslint/no-explicit-any': 'off', // Allow any for legitimate cases (private properties, build-time injections)
@@ -31,6 +39,7 @@ export default defineConfigWithVueTs(
         {
           argsIgnorePattern: '^_', // Ignore parameters starting with _
           varsIgnorePattern: '^_', // Ignore variables starting with _
+          caughtErrorsIgnorePattern: '^_', // Ignore caught errors starting with _
         },
       ],
     },

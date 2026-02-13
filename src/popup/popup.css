@@ -2,7 +2,8 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-html, body {
+html,
+body {
   height: fit-content;
   min-height: fit-content;
   overflow-y: hidden;
@@ -11,5 +12,10 @@ html, body {
 /* MathSymbols @font-face is declared in popup.html (outside Tailwind processing).
    Only the selector class is needed here — the preview uses a scoped style in PresetEditor. */
 .font-unicode {
-  font-family: 'MathSymbols', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family:
+    'MathSymbols',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
 }

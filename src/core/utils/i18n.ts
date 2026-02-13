@@ -285,7 +285,8 @@ const frTranslations: TranslationMap = {
   presetModeLLMPrompt: 'Prompt LLM',
   customTransformLabel: 'Transformation',
   customTransformPlaceholder: 'Sélectionnez une transformation',
-  customTransformEmpty: 'Aucune transformation personnalisée. Ouvrez les options pour en créer une.',
+  customTransformEmpty:
+    'Aucune transformation personnalisée. Ouvrez les options pour en créer une.',
   customTransformOpenOptions: 'Gérer les transformations',
   llmPromptLabel: 'Modèle de Prompt',
   llmPromptPlaceholder: 'Utilisez {{input}} pour le texte sélectionné',
@@ -301,7 +302,8 @@ const frTranslations: TranslationMap = {
   pinnedPresetLabel: 'Utiliser pour le menu contextuel',
   contextMenuTitle: '{name}',
   selectionModifierLabel: 'Modificateur de sélection de mots',
-  selectionModifierHelp: "Maintenez Modificateur+Flèches dans n'importe quel champ de saisie pour sélectionner le texte mot par mot. Idéal pour sélectionner rapidement des mots avant de traduire avec un raccourci clavier !",
+  selectionModifierHelp:
+    "Maintenez Modificateur+Flèches dans n'importe quel champ de saisie pour sélectionner le texte mot par mot. Idéal pour sélectionner rapidement des mots avant de traduire avec un raccourci clavier !",
   selectionModifierExample: '{modifier}+← / {modifier}+→ sélectionne mot par mot',
   optionsTitle: 'Transformations Personnalisées',
   optionsNewTransformation: 'Nouvelle Transformation',
@@ -327,12 +329,14 @@ const frTranslations: TranslationMap = {
   proUpgradeTitle: 'Débloquer les presets illimités',
   proUpgradeLimitReached: 'Vous avez atteint la limite',
   proBetaTitle: 'Accès Bêta gratuit',
-  proBetaDescription: 'Soumettez votre e-mail sur le formulaire pour recevoir un code bêta gratuit.',
+  proBetaDescription:
+    'Soumettez votre e-mail sur le formulaire pour recevoir un code bêta gratuit.',
   proBetaGetCode: 'Obtenir un code bêta',
   proBetaCodePlaceholder: 'Entrez le code bêta',
   proBetaActivate: 'Activer',
   proBetaErrorInvalid: 'Code invalide. Veuillez vérifier et réessayer.',
-  proBetaErrorExpired: 'La période bêta est terminée. Passez à la version Pro pour des presets illimités.',
+  proBetaErrorExpired:
+    'La période bêta est terminée. Passez à la version Pro pour des presets illimités.',
   proBetaSuccess: 'Accès bêta activé ! Presets illimités débloqués.',
   proBetaActivating: 'Activation...',
   proUpgradeButton: 'Passer à la version Pro',
@@ -340,7 +344,6 @@ const frTranslations: TranslationMap = {
   proClose: 'Fermer',
   presetLockedTooltip: 'Verrouillé — passez à la version Pro pour modifier ce preset',
   presetLockedMessage: 'Ce preset est verrouillé. Passez à la version Pro pour y accéder.',
-
 }
 
 const esTranslations: TranslationMap = {
@@ -444,7 +447,8 @@ const esTranslations: TranslationMap = {
   pinnedPresetLabel: 'Usar para el menú contextual',
   contextMenuTitle: '{name}',
   selectionModifierLabel: 'Modificador de selección de palabras',
-  selectionModifierHelp: 'Mantenga presionado Modificador+Flechas en cualquier campo de entrada para seleccionar texto palabra por palabra. ¡Ideal para seleccionar palabras rápidamente antes de traducir con un atajo de teclado!',
+  selectionModifierHelp:
+    'Mantenga presionado Modificador+Flechas en cualquier campo de entrada para seleccionar texto palabra por palabra. ¡Ideal para seleccionar palabras rápidamente antes de traducir con un atajo de teclado!',
   selectionModifierExample: '{modifier}+← / {modifier}+→ selecciona palabra por palabra',
   optionsTitle: 'Transformaciones personalizadas',
   optionsNewTransformation: 'Nueva transformación',
@@ -470,7 +474,8 @@ const esTranslations: TranslationMap = {
   proUpgradeTitle: 'Desbloquear presets ilimitados',
   proUpgradeLimitReached: 'Has alcanzado el límite',
   proBetaTitle: 'Acceso Beta gratuito',
-  proBetaDescription: 'Envíe su correo electrónico en el formulario para recibir un código beta gratuito.',
+  proBetaDescription:
+    'Envíe su correo electrónico en el formulario para recibir un código beta gratuito.',
   proBetaGetCode: 'Obtener código beta',
   proBetaCodePlaceholder: 'Ingrese el código beta',
   proBetaActivate: 'Activar',
@@ -483,7 +488,6 @@ const esTranslations: TranslationMap = {
   proClose: 'Cerrar',
   presetLockedTooltip: 'Bloqueado — actualice a Pro para editar este preset',
   presetLockedMessage: 'Este preset está bloqueado. Actualice a Pro para acceder a él.',
-
 }
 
 const deTranslations: TranslationMap = {
@@ -571,7 +575,8 @@ const deTranslations: TranslationMap = {
   presetModeLLMPrompt: 'LLM-Prompt',
   customTransformLabel: 'Transformation',
   customTransformPlaceholder: 'Wählen Sie eine Transformation',
-  customTransformEmpty: 'Keine benutzerdefinierten Transformationen. Öffnen Sie die Optionen, um eine zu erstellen.',
+  customTransformEmpty:
+    'Keine benutzerdefinierten Transformationen. Öffnen Sie die Optionen, um eine zu erstellen.',
   customTransformOpenOptions: 'Transformationen verwalten',
   llmPromptLabel: 'Prompt-Vorlage',
   llmPromptPlaceholder: 'Verwenden Sie {{input}} für den ausgewählten Text',
@@ -587,7 +592,8 @@ const deTranslations: TranslationMap = {
   pinnedPresetLabel: 'Für Rechtsklick-Menü verwenden',
   contextMenuTitle: '{name}',
   selectionModifierLabel: 'Wort-Auswahl-Modifikator',
-  selectionModifierHelp: 'Halten Sie Modifikator+Pfeiltasten in einem beliebig fokussierten Eingabefeld gedrückt, um Text wortweise auszuwählen. Ideal, um Wörter schnell auszuwählen, bevor Sie sie mit einem Tastenkürzel übersetzen!',
+  selectionModifierHelp:
+    'Halten Sie Modifikator+Pfeiltasten in einem beliebig fokussierten Eingabefeld gedrückt, um Text wortweise auszuwählen. Ideal, um Wörter schnell auszuwählen, bevor Sie sie mit einem Tastenkürzel übersetzen!',
   selectionModifierExample: '{modifier}+← / {modifier}+→ wählt wortweise aus',
   optionsTitle: 'Benutzerdefinierte Transformationen',
   optionsNewTransformation: 'Neue Transformation',
@@ -613,7 +619,8 @@ const deTranslations: TranslationMap = {
   proUpgradeTitle: 'Unbegrenzte Presets freischalten',
   proUpgradeLimitReached: 'Sie haben das Limit erreicht',
   proBetaTitle: 'Kostenloser Beta-Zugang',
-  proBetaDescription: 'Geben Sie Ihre E-Mail-Adresse im Formular ein, um einen kostenlosen Beta-Code zu erhalten.',
+  proBetaDescription:
+    'Geben Sie Ihre E-Mail-Adresse im Formular ein, um einen kostenlosen Beta-Code zu erhalten.',
   proBetaGetCode: 'Beta-Code erhalten',
   proBetaCodePlaceholder: 'Beta-Code eingeben',
   proBetaActivate: 'Aktivieren',
@@ -626,7 +633,6 @@ const deTranslations: TranslationMap = {
   proClose: 'Schließen',
   presetLockedTooltip: 'Gesperrt — Upgrade auf Pro, um dieses Preset zu bearbeiten',
   presetLockedMessage: 'Dieses Preset ist gesperrt. Upgrade auf Pro, um darauf zuzugreifen.',
-
 }
 
 const zhTranslations: TranslationMap = {
@@ -725,7 +731,8 @@ const zhTranslations: TranslationMap = {
   pinnedPresetLabel: '用于右键菜单',
   contextMenuTitle: '{name}',
   selectionModifierLabel: '词选择修饰键',
-  selectionModifierHelp: '在任何获得焦点的输入框中按住修饰键+方向键，即可按单词选择文本。非常适合在使用键盘快捷键翻译之前快速选择单词！',
+  selectionModifierHelp:
+    '在任何获得焦点的输入框中按住修饰键+方向键，即可按单词选择文本。非常适合在使用键盘快捷键翻译之前快速选择单词！',
   selectionModifierExample: '{modifier}+← / {modifier}+→ 按单词选择',
   optionsTitle: '自定义转换',
   optionsNewTransformation: '新建转换',
@@ -764,7 +771,6 @@ const zhTranslations: TranslationMap = {
   proClose: '关闭',
   presetLockedTooltip: '已锁定 — 升级到 Pro 以编辑此预设',
   presetLockedMessage: '此预设已锁定。升级到 Pro 以访问它。',
-
 }
 
 const jaTranslations: TranslationMap = {
@@ -866,7 +872,8 @@ const jaTranslations: TranslationMap = {
   pinnedPresetLabel: '右クリックメニューで使用する',
   contextMenuTitle: '{name}',
   selectionModifierLabel: '単語選択修飾キー',
-  selectionModifierHelp: 'フォーカスされている入力欄で修飾キー＋矢印キーを押し続けると、単語ごとにテキストを選択できます。キーボードショートカットで翻訳する前に、素早く単語を選択するのに最適です！',
+  selectionModifierHelp:
+    'フォーカスされている入力欄で修飾キー＋矢印キーを押し続けると、単語ごとにテキストを選択できます。キーボードショートカットで翻訳する前に、素早く単語を選択するのに最適です！',
   selectionModifierExample: '{modifier}+← / {modifier}+→ で単語ごとに選択',
   optionsTitle: 'カスタム変換',
   optionsNewTransformation: '新規変換',
@@ -892,20 +899,22 @@ const jaTranslations: TranslationMap = {
   proUpgradeTitle: '無制限のプリセットをアンロック',
   proUpgradeLimitReached: '制限に達しました',
   proBetaTitle: '無料ベータアクセス',
-  proBetaDescription: 'フォームにメールアドレスを送信して、無料のベータコードを受け取ってください。',
+  proBetaDescription:
+    'フォームにメールアドレスを送信して、無料のベータコードを受け取ってください。',
   proBetaGetCode: 'ベータコードを取得',
   proBetaCodePlaceholder: 'ベータコードを入力',
   proBetaActivate: '有効化',
   proBetaErrorInvalid: '無効なコードです。確認してもう一度お試しください。',
-  proBetaErrorExpired: 'ベータ期間が終了しました。無制限のプリセットを利用するにはProにアップグレードしてください。',
+  proBetaErrorExpired:
+    'ベータ期間が終了しました。無制限のプリセットを利用するにはProにアップグレードしてください。',
   proBetaSuccess: 'ベータアクセスが有効になりました！無制限のプリセットが解除されました。',
   proBetaActivating: '有効化中...',
   proUpgradeButton: 'Proにアップグレード',
   proUpgradeComingSoon: '(近日公開)',
   proClose: '閉じる',
   presetLockedTooltip: 'ロック済み — このプリセットを編集するにはProにアップグレードしてください',
-  presetLockedMessage: 'このプリセットはロックされています。アクセスするにはProにアップグレードしてください。',
-
+  presetLockedMessage:
+    'このプリセットはロックされています。アクセスするにはProにアップグレードしてください。',
 }
 
 const translations: Record<SupportedLocale, TranslationMap> = {
@@ -1022,7 +1031,7 @@ export function getLanguageDisplayName(code: string, displayLocale?: string): st
     const displayNames = new Intl.DisplayNames([locale], { type: 'language' })
     const name = displayNames.of(code)
     return name || code.toUpperCase()
-  } catch (error) {
+  } catch (_error) {
     // Fallback in case of API failure
     return code.toUpperCase()
   }

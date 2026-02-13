@@ -80,9 +80,18 @@ export class GeminiProvider extends BaseTranslationProvider {
         // Parse specific error codes
         let errorMessage = response.error || 'Translation failed'
 
-        if (errorMessage.includes('429') || errorMessage.includes('quota') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
-          errorMessage = 'Gemini API quota exceeded. Please check your credits at console.cloud.google.com'
-        } else if (errorMessage.includes('401') || errorMessage.includes('403') || errorMessage.includes('API_KEY_INVALID')) {
+        if (
+          errorMessage.includes('429') ||
+          errorMessage.includes('quota') ||
+          errorMessage.includes('RESOURCE_EXHAUSTED')
+        ) {
+          errorMessage =
+            'Gemini API quota exceeded. Please check your credits at console.cloud.google.com'
+        } else if (
+          errorMessage.includes('401') ||
+          errorMessage.includes('403') ||
+          errorMessage.includes('API_KEY_INVALID')
+        ) {
           errorMessage = 'Gemini API key is invalid. Please check your settings.'
         }
 

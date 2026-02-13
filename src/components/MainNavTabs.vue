@@ -1,7 +1,11 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div class="px-3 pt-3 pb-3 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
-    <div class="main-nav-container p-1 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center relative">
+  <div
+    class="px-3 pt-3 pb-3 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800"
+  >
+    <div
+      class="main-nav-container p-1 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center relative"
+    >
       <button
         @click="currentView = 'presets'"
         :class="['main-nav-tab', { active: currentView === 'presets' }]"

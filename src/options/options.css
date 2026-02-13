@@ -2,7 +2,8 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-html, body {
+html,
+body {
   height: 100%;
   min-height: 100vh;
 }
@@ -10,5 +11,10 @@ html, body {
 /* MathSymbols @font-face is declared in options.html (outside Tailwind processing).
    Only the selector class is needed here — the preview uses it for transformed text. */
 .font-unicode {
-  font-family: 'MathSymbols', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family:
+    'MathSymbols',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
 }

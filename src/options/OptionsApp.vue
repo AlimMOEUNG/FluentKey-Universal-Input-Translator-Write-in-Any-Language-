@@ -59,7 +59,11 @@
                   {{ transform.name }}
                 </h3>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {{ t('optionsMappings', { params: { count: Object.keys(transform.charMap).length } }) }}
+                  {{
+                    t('optionsMappings', {
+                      params: { count: Object.keys(transform.charMap).length },
+                    })
+                  }}
                 </p>
               </div>
               <div class="flex gap-2 ml-4">
@@ -224,9 +228,7 @@
     <ConfirmDialog
       :show="deleteDialogState.show"
       :title="t('optionsDeleteTitle')"
-      :message="
-        t('optionsDeleteMessage', { params: { name: deleteDialogState.transformName } })
-      "
+      :message="t('optionsDeleteMessage', { params: { name: deleteDialogState.transformName } })"
       :confirm-text="t('optionsDeleteButton')"
       :cancel-text="t('cancel')"
       variant="danger"
@@ -250,7 +252,10 @@ import {
   MAX_TRANSFORMS,
 } from '@/services/customTransformService'
 import { EXPORTABLE_STYLES, generateCharMapForStyle } from '@/core/transformation/exportableStyles'
-import { TransformationEngine, applyCustomCharMap } from '@/core/transformation/TransformationEngine'
+import {
+  TransformationEngine,
+  applyCustomCharMap,
+} from '@/core/transformation/TransformationEngine'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const { t } = useI18nWrapper()

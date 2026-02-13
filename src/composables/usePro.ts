@@ -128,7 +128,10 @@ export function usePro() {
    * pro_paid always grants unlimited access.
    */
   const isUnlimited = computed(() => {
-    return (proStatus.value === 'beta_unlocked' && Date.now() < BETA_CUTOFF_DATE) || proStatus.value === 'pro_paid'
+    return (
+      (proStatus.value === 'beta_unlocked' && Date.now() < BETA_CUTOFF_DATE) ||
+      proStatus.value === 'pro_paid'
+    )
   })
 
   /** Returns the maximum number of presets allowed for the current user. */

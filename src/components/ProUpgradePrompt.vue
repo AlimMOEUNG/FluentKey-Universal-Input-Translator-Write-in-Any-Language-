@@ -34,7 +34,9 @@
       </div>
 
       <!-- Tally form embedded — user submits email, sees code on thank-you page -->
-      <div class="flex-1 mx-3 mb-2 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 min-h-0">
+      <div
+        class="flex-1 mx-3 mb-2 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 min-h-0"
+      >
         <iframe
           :src="tallyEmbedUrl"
           width="100%"
@@ -72,7 +74,10 @@
           <AlertCircle :size="11" />
           {{ t(errorKey) }}
         </p>
-        <p v-if="activationSuccess" class="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+        <p
+          v-if="activationSuccess"
+          class="text-xs text-green-600 dark:text-green-400 flex items-center gap-1"
+        >
           <CheckCircle :size="11" />
           {{ t('proBetaSuccess') }}
         </p>
@@ -143,8 +148,7 @@ async function activateBeta() {
     // Close after a short delay so the user sees the success message
     setTimeout(() => emit('activated'), 1200)
   } else {
-    errorKey.value =
-      result.error === 'beta_expired' ? 'proBetaErrorExpired' : 'proBetaErrorInvalid'
+    errorKey.value = result.error === 'beta_expired' ? 'proBetaErrorExpired' : 'proBetaErrorInvalid'
   }
 }
 </script>
