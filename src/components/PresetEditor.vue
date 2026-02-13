@@ -1,5 +1,5 @@
 <template>
-  <div class="preset-editor space-y-2">
+  <div class="preset-editor space-y-2 relative">
     <!-- Preset Name (no label, just input with save/undo buttons) -->
     <div class="flex gap-1 items-center">
       <input
@@ -295,6 +295,7 @@
           </label>
           <select
             v-model="localPreset.llmProvider"
+            @change="onLLMProviderChange"
             class="flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option v-for="p in LLM_PROVIDERS" :key="p.value" :value="p.value">
@@ -302,16 +303,36 @@
             </option>
           </select>
         </div>
-        <div class="flex items-center gap-2">
-          <label class="text-[10px] font-semibold text-gray-700 dark:text-gray-300 w-24 shrink-0">
+        <div class="flex items-start gap-2">
+          <label
+            class="text-[10px] font-semibold text-gray-700 dark:text-gray-300 w-24 shrink-0 pt-1.5"
+          >
             {{ t('llmPromptModelLabel') }}
           </label>
-          <input
-            v-model="localPreset.llmModel"
-            type="text"
-            :placeholder="t('llmPromptModelPlaceholder')"
-            class="flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
+          <div class="flex-1 space-y-1">
+            <!-- Dropdown of predefined models (for providers that have them) -->
+            <select
+              v-if="llmHasPredefinedModels"
+              v-model="llmModelSelection"
+              class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option
+                v-for="model in llmAvailableModels"
+                :key="model.value"
+                :value="model.value"
+              >
+                {{ model.label }}
+              </option>
+            </select>
+            <!-- Free-text input: shown when 'custom' is selected or provider has no predefined list -->
+            <input
+              v-if="!llmHasPredefinedModels || isCustomModel(llmModelSelection)"
+              v-model="llmCustomModelInput"
+              type="text"
+              :placeholder="t('placeholderCustomModel')"
+              class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
         </div>
       </template>
     </div>
@@ -415,19 +436,31 @@
       @confirm="showValidationDialog = false"
       @cancel="showValidationDialog = false"
     />
+
+    <!-- Locked overlay — shown when the preset index exceeds the free limit and user has no Pro access -->
+    <div
+      v-if="isPresetLocked(presetIndex)"
+      class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-white/90 dark:bg-gray-900/90 rounded-lg backdrop-blur-sm"
+    >
+      <Lock :size="20" class="text-amber-500" />
+      <p class="text-xs font-semibold text-gray-700 dark:text-gray-300 text-center px-4">
+        {{ t('presetLockedMessage') }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from 'vue'
-import { Check, RotateCcw, Info } from 'lucide-vue-next'
+import { Check, RotateCcw, Info, Lock } from 'lucide-vue-next'
 import { useI18nWrapper } from '@/composables/useI18nWrapper'
+import { usePro } from '@/composables/usePro'
 import {
   buildShortcutFromEvent,
   normalizeShortcut,
   KeyboardSequenceDetector,
 } from '@/core/utils/keyboardUtils'
-import type { Preset, TranslationProvider, CustomTransformation } from '@/types/common'
+import type { Preset, TranslationProvider, LLMProvider, LLMPromptPreset, CustomTransformation } from '@/types/common'
 import {
   TransformationEngine,
   applyCustomCharMap,
@@ -479,9 +512,13 @@ interface Props {
   canDelete: boolean
   globalProvider?: TranslationProvider
   isPinned?: boolean
+  /** Index of this preset in the presets array — used to determine if it is locked */
+  presetIndex: number
 }
 
 const props = defineProps<Props>()
+
+const { isPresetLocked } = usePro()
 
 const emit = defineEmits<{
   'update-preset': [preset: Preset]
@@ -507,6 +544,51 @@ const customTransforms = ref<CustomTransformation[]>([])
 //  Custom provider configuration (reactive proxy for localPreset.customProviderConfig)
 const presetConfig = ref<import('@/types/common').PresetProviderConfig>({})
 
+// LLM model selection state (separate from localPreset.llmModel which stores the resolved value)
+// llmModelSelection holds the dropdown value (can be 'custom' for providers with predefined models)
+// llmCustomModelInput holds the free-text model name when 'custom' is selected
+const llmModelSelection = ref('')
+const llmCustomModelInput = ref('')
+
+// ─── LLM model helpers ────────────────────────────────────────────
+
+/**
+ * Initialize llmModelSelection and llmCustomModelInput from a stored (resolved) model name.
+ * Determines whether the stored model is predefined or custom for the given provider.
+ */
+function initLLMModelState(provider: LLMProvider, storedModel: string) {
+  const models = (PREDEFINED_MODELS as Record<string, ModelOption[]>)[provider] || []
+  // Providers with no real predefined models (e.g. 'custom', 'ollama') use a plain text input
+  const predefinedValues = models.filter((m) => !m.isCustom).map((m) => m.value)
+
+  if (predefinedValues.length === 0) {
+    // No dropdown - text input directly stores the model name
+    llmModelSelection.value = storedModel
+    llmCustomModelInput.value = ''
+  } else if (predefinedValues.includes(storedModel)) {
+    // Matches a known predefined entry
+    llmModelSelection.value = storedModel
+    llmCustomModelInput.value = ''
+  } else {
+    // Unknown model → treat as custom
+    llmModelSelection.value = 'custom'
+    llmCustomModelInput.value = storedModel
+  }
+}
+
+/**
+ * Reset LLM model state to the provider default when the user selects a different provider.
+ * Called via @change on the provider <select>.
+ */
+function onLLMProviderChange() {
+  if (localPreset.value.type !== 'llm-prompt') return
+  const provider = (localPreset.value as LLMPromptPreset).llmProvider
+  const models = (PREDEFINED_MODELS as Record<string, ModelOption[]>)[provider] || []
+  const defaultModel = models.find((m) => !m.isCustom)?.value || ''
+  llmModelSelection.value = defaultModel
+  llmCustomModelInput.value = ''
+}
+
 // ─── Lifecycle ────────────────────────────────────────────────────
 
 onMounted(async () => {
@@ -514,6 +596,13 @@ onMounted(async () => {
   // Initialize presetConfig from localPreset
   if (localPreset.value.type === 'translation' && localPreset.value.customProviderConfig) {
     presetConfig.value = { ...localPreset.value.customProviderConfig }
+  }
+  // Initialize LLM model selection state
+  if (localPreset.value.type === 'llm-prompt') {
+    initLLMModelState(
+      (localPreset.value as LLMPromptPreset).llmProvider,
+      (localPreset.value as LLMPromptPreset).llmModel
+    )
   }
 })
 
@@ -555,6 +644,24 @@ const currentProviderConfig = computed(() => {
   }
   return getProviderConfig(localPreset.value.customProvider)
 })
+
+// Predefined model list for the current LLM prompt provider (excludes 'custom' provider which has no list)
+const llmAvailableModels = computed((): ModelOption[] => {
+  if (localPreset.value.type !== 'llm-prompt') return []
+  const provider = (localPreset.value as LLMPromptPreset).llmProvider
+  if (provider === 'custom') return []
+  return (PREDEFINED_MODELS as Record<string, ModelOption[]>)[provider] || []
+})
+
+// True when the current LLM provider has at least one non-custom predefined model (show dropdown)
+const llmHasPredefinedModels = computed(() =>
+  llmAvailableModels.value.some((m) => !m.isCustom)
+)
+
+// The resolved model name based on the current selection state
+const resolvedLLMModel = computed(() =>
+  isCustomModel(llmModelSelection.value) ? llmCustomModelInput.value : llmModelSelection.value
+)
 
 // Per-type dirty check against the original prop
 const hasUnsavedChanges = computed(() => {
@@ -604,7 +711,8 @@ const hasUnsavedChanges = computed(() => {
       localPreset.value.name !== props.preset.name ||
       localPreset.value.prompt !== props.preset.prompt ||
       localPreset.value.llmProvider !== props.preset.llmProvider ||
-      localPreset.value.llmModel !== props.preset.llmModel ||
+      // Compare the resolved model (not the raw selection) against the saved value
+      resolvedLLMModel.value !== props.preset.llmModel ||
       localPreset.value.keyboardShortcut !== props.preset.keyboardShortcut
     )
   }
@@ -627,6 +735,16 @@ watch(
       presetConfig.value = { ...newPreset.customProviderConfig }
     } else {
       presetConfig.value = {}
+    }
+    // Sync LLM model selection state
+    if (newPreset.type === 'llm-prompt') {
+      initLLMModelState(
+        (newPreset as LLMPromptPreset).llmProvider,
+        (newPreset as LLMPromptPreset).llmModel
+      )
+    } else {
+      llmModelSelection.value = ''
+      llmCustomModelInput.value = ''
     }
   },
   { deep: true }
@@ -750,17 +868,22 @@ function handleModeChange(
       break
     case 'llm-prompt': {
       // Auto-suggest the LLM provider when the global translation provider is also an LLM
-      const suggestedProvider =
+      const suggestedProvider = (
         props.globalProvider && PROVIDER_TO_LLM[props.globalProvider]
           ? PROVIDER_TO_LLM[props.globalProvider]
           : 'gemini'
+      ) as LLMProvider
+      // Initialize with the default model for the suggested provider
+      const defaultModel = getDefaultModel(suggestedProvider as keyof typeof PREDEFINED_MODELS) || ''
       localPreset.value = {
         ...base,
         type: 'llm-prompt',
         prompt: '',
         llmProvider: suggestedProvider,
-        llmModel: '',
+        llmModel: defaultModel,
       } as Preset
+      // Sync local selection state to the default model
+      initLLMModelState(suggestedProvider, defaultModel)
       break
     }
   }
@@ -793,6 +916,13 @@ function undoChanges() {
     presetConfig.value = { ...props.preset.customProviderConfig }
   } else {
     presetConfig.value = {}
+  }
+  // Restore LLM model selection state
+  if (props.preset.type === 'llm-prompt') {
+    initLLMModelState(
+      (props.preset as LLMPromptPreset).llmProvider,
+      (props.preset as LLMPromptPreset).llmModel
+    )
   }
 }
 
@@ -1017,13 +1147,17 @@ function savePreset() {
       )
       return
     }
-    if (!localPreset.value.llmModel) {
+    // Resolve the effective model from the local selection state
+    const effectiveModel = resolvedLLMModel.value
+    if (!effectiveModel) {
       showValidationError(
         t('validationError') || 'Validation Error',
         t('validationLLMModelRequired')
       )
       return
     }
+    // Persist the resolved model name (never 'custom') into the preset
+    localPreset.value.llmModel = effectiveModel
   }
 
   emit('update-preset', { ...localPreset.value })

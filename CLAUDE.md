@@ -231,10 +231,12 @@ Before publishing:
 
 **NEVER translate into multiple languages yourself.** Only work with English translations in `en.json` files.
 
-- ✅ **DO:** Modify or add keys in `src/core/utils/i18n.ts` for English only
-- ❌ **DON'T:** Add or modify translations in other language (fr, es, de, zh, ja, etc.)
+- ✅ **DO:** Modify or add keys in `src/core/utils/i18n.ts` for **English only** (`en` locale)
+- ❌ **DON'T:** Add or modify translations in other languages (fr, es, de, zh, ja, etc.)
+- ❌ **DON'T:** Copy the English value into other language keys as a placeholder — leave other languages completely untouched
+- ❌ **DON'T:** Add a key to other language objects even if TypeScript type-checking complains about missing keys — ignore those type errors, they are expected and will be resolved by the automated translation scripts
 
-**Reason:** The project owner has automated scripts to handle translations across all languages. Manual translations would be overwritten and create conflicts.
+**Reason:** The project owner has automated scripts to handle translations across all languages. Adding English text to non-English keys creates noise and makes it impossible to know which keys still need to be translated.
 
 **Exception:** Only translate if explicitly requested by the user with clear instructions.
 

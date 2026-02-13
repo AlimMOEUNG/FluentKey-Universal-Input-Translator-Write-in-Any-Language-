@@ -46,5 +46,8 @@
       "all_frames": false
     }
   ],
-  "web_accessible_resources": []
+  "web_accessible_resources": [],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; frame-src https://tally.so;"
+  }
 }

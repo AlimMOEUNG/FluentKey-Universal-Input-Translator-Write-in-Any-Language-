@@ -3,10 +3,19 @@
  * Simpler approach: manual storage management with proper async initialization
  */
 
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import type { TranslationSettings } from './useSettings'
-import type { Preset, TranslationPreset, TransformationPreset, CustomTransformPreset, LLMPromptPreset, PresetsSettings } from '@/types/common'
+import type {
+  Preset,
+  TranslationPreset,
+  TransformationPreset,
+  CustomTransformPreset,
+  LLMPromptPreset,
+  PresetsSettings,
+} from '@/types/common'
 import { normalizeShortcut } from '@/core/utils/keyboardUtils'
+import { getDefaultModel } from '@/config/predefinedModels'
+import { usePro } from '@/composables/usePro'
 
 /**
  * Generate a UUID v4
@@ -32,14 +41,19 @@ function generateUUID(): string {
  * - Preset 1 → Ctrl+Alt+T
  * - Preset 2 → Ctrl+Alt+2
  * - Preset 3 → Ctrl+Alt+3
- * - Preset 4 → Ctrl+Alt+4
+ * - Preset 9 → Ctrl+Alt+9
+ * - Preset 10+ → '' (empty — Pro user must assign a shortcut manually)
  */
 function generateDefaultShortcut(index: number): string {
   if (index === 1) {
     return 'Ctrl+Alt+T'
   }
-  // For index 2 and above, use Ctrl+Alt+2, Ctrl+Alt+3, etc.
-  return `Ctrl+Alt+${index}`
+  // Single-digit range only (shortcut validator requires [A-Z0-9] single char)
+  if (index >= 2 && index <= 9) {
+    return `Ctrl+Alt+${index}`
+  }
+  // For Pro users with more than 9 presets, no auto-generated shortcut
+  return ''
 }
 
 /**
@@ -75,7 +89,8 @@ function createDefaultPreset(
       type: 'llm-prompt',
       prompt: '',
       llmProvider: 'gemini',
-      llmModel: '',
+      // Use the default model for the initial provider so the field is never blank
+      llmModel: getDefaultModel('gemini'),
     } as LLMPromptPreset
   } else {
     return {
@@ -134,7 +149,10 @@ async function saveToStorage() {
  */
 function migratePresetToTyped(preset: any): Preset {
   // If preset already has type field, it's already migrated
-  if ('type' in preset && ['translation', 'transformation', 'custom-transform', 'llm-prompt'].includes(preset.type)) {
+  if (
+    'type' in preset &&
+    ['translation', 'transformation', 'custom-transform', 'llm-prompt'].includes(preset.type)
+  ) {
     return preset as Preset
   }
 
@@ -165,10 +183,7 @@ function isValidPreset(preset: any): preset is Preset {
   // Type-specific validation
   if (preset.type === 'translation') {
     // Translation presets require sourceLang and targetLang
-    return (
-      typeof preset.sourceLang === 'string' &&
-      typeof preset.targetLang === 'string'
-    )
+    return typeof preset.sourceLang === 'string' && typeof preset.targetLang === 'string'
   } else if (preset.type === 'transformation') {
     // Transformation presets require transformationStyle
     return typeof preset.transformationStyle === 'string'
@@ -239,7 +254,10 @@ async function loadFromStorage() {
 
         // Backfill pinnedPresetId if missing (migration for existing users)
         let needsSave = result.presetsSettings.presets.some((p: any) => !('type' in p))
-        if (presetsSettings.value.pinnedPresetId === undefined || presetsSettings.value.pinnedPresetId === null) {
+        if (
+          presetsSettings.value.pinnedPresetId === undefined ||
+          presetsSettings.value.pinnedPresetId === null
+        ) {
           presetsSettings.value.pinnedPresetId = presetsSettings.value.presets[0].id
           needsSave = true
           console.log('[usePresetsSettings] Backfilled pinnedPresetId')
@@ -335,43 +353,47 @@ watch(
   { deep: true }
 )
 
-// Maximum number of presets allowed
-const MAX_PRESETS = 10
-
 /**
  * Composable to manage translation presets
  */
 export function usePresetsSettings() {
+  const { getMaxPresets, isUnlimited } = usePro()
+
+  // Reactive max presets — updates automatically when pro status changes
+  const maxPresets = computed(() => getMaxPresets())
+
   /**
-   * Check if maximum presets limit is reached
+   * Check if maximum presets limit is reached for the current user tier.
    */
   function canAddPreset(): boolean {
-    return presetsSettings.value.presets.length < MAX_PRESETS
+    const max = maxPresets.value
+    if (!isFinite(max)) return true
+    return presetsSettings.value.presets.length < max
   }
 
   /**
-   * Find the next available preset number for keyboard shortcut.
-   * Tests numbers in circular order: preferred, preferred+1, ..., 10, 1, 2, ..., preferred-1.
-   * Uses normalizeShortcut for comparison to catch all equivalent formats.
+   * Find the next available preset number for auto-generated keyboard shortcut.
+   * Searches linearly from preferredNumber upward.
+   * Returns the number immediately when generateDefaultShortcut returns '' (index >= 10),
+   * meaning the user must set a shortcut manually for that preset.
    */
   function findAvailablePresetNumber(preferredNumber: number): number {
-    // Normalize existing shortcuts once for consistent comparison
     const existingNormalized = presetsSettings.value.presets.map((p) =>
       normalizeShortcut(p.keyboardShortcut)
     )
 
-    // Test numbers in circular order using modulo
-    for (let i = 0; i < MAX_PRESETS; i++) {
-      const num = ((preferredNumber - 1 + i) % MAX_PRESETS) + 1
-      // Generate the candidate shortcut the same way as createDefaultPreset
-      const candidate = normalizeShortcut(generateDefaultShortcut(num))
-
+    // Search up to 100 positions ahead to find a free slot
+    const searchLimit = preferredNumber + 100
+    for (let num = preferredNumber; num <= searchLimit; num++) {
+      const shortcut = generateDefaultShortcut(num)
+      // No default shortcut for this index (Pro, index >= 10) — always available
+      if (!shortcut) return num
+      const candidate = normalizeShortcut(shortcut)
       if (!existingNormalized.includes(candidate)) {
         return num
       }
     }
 
-    // Fallback (should never happen if MAX_PRESETS=10)
     console.warn(
       '[findAvailablePresetNumber] No available slot found, using preferred:',
       preferredNumber
@@ -382,7 +404,9 @@ export function usePresetsSettings() {
   /**
    * Add a new preset with default values
    */
-  function addPreset(type: 'translation' | 'transformation' | 'custom-transform' | 'llm-prompt' = 'translation'): Preset | null {
+  function addPreset(
+    type: 'translation' | 'transformation' | 'custom-transform' | 'llm-prompt' = 'translation'
+  ): Preset | null {
     if (!canAddPreset()) {
       console.warn('[usePresetsSettings] Maximum presets limit reached')
       return null
@@ -441,7 +465,10 @@ export function usePresetsSettings() {
     // If deleted preset was pinned, transfer pin to the first remaining preset
     if (presetsSettings.value.pinnedPresetId === id) {
       presetsSettings.value.pinnedPresetId = presetsSettings.value.presets[0].id
-      console.log('[usePresetsSettings] Pinned preset deleted, transferred pin to:', presetsSettings.value.pinnedPresetId)
+      console.log(
+        '[usePresetsSettings] Pinned preset deleted, transferred pin to:',
+        presetsSettings.value.pinnedPresetId
+      )
     }
 
     console.log('[usePresetsSettings] Deleted preset:', id)
@@ -566,6 +593,7 @@ export function usePresetsSettings() {
     validateShortcutUniqueness,
     generateDefaultShortcut,
     canAddPreset,
-    maxPresets: MAX_PRESETS,
+    maxPresets,
+    isUnlimited,
   }
 }

@@ -1,6 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div class="space-y-2">
+  <!-- Relative container so the upgrade overlay can be positioned absolutely.
+       min-h-[420px] is applied when the prompt is open to give the iframe room. -->
+  <div class="space-y-2 relative" :class="{ 'min-h-[420px]': showUpgradePrompt }">
     <!-- Preset tab bar with add button -->
     <PresetTabs
       :presets="presetsSettings.presets as TranslationPreset[]"
@@ -17,9 +19,17 @@
       :can-delete="presetsSettings.presets.length > 1"
       :global-provider="presetsSettings.provider"
       :is-pinned="presetsSettings.pinnedPresetId === activePreset.id"
+      :preset-index="activePresetIndex"
       @update-preset="updatePreset"
       @delete-preset="deletePreset"
       @set-pinned="setPinnedPreset"
+    />
+
+    <!-- Pro/Beta upgrade prompt (shown when free-tier limit is reached) -->
+    <ProUpgradePrompt
+      v-if="showUpgradePrompt"
+      @close="showUpgradePrompt = false"
+      @activated="showUpgradePrompt = false"
     />
 
     <!-- Info dialog (replaces native alert) -->
@@ -43,6 +53,7 @@ import { useI18nWrapper } from '@/composables/useI18nWrapper'
 import PresetTabs from '@/components/PresetTabs.vue'
 import PresetEditor from '@/components/PresetEditor.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import ProUpgradePrompt from '@/components/ProUpgradePrompt.vue'
 import type { Preset, TranslationPreset } from '@/types/common'
 
 const { t } = useI18nWrapper()
@@ -56,11 +67,18 @@ const {
   getActivePreset,
   setPinnedPreset,
   canAddPreset,
-  maxPresets,
 } = usePresetsSettings()
 
 // Derived active preset from the current activePresetId
 const activePreset = computed(() => getActivePreset())
+
+// Index of the active preset in the presets array (needed by PresetEditor for lock check)
+const activePresetIndex = computed(() =>
+  presetsSettings.value.presets.findIndex((p) => p.id === presetsSettings.value.activePresetId)
+)
+
+// Controls visibility of the Pro/Beta upgrade overlay
+const showUpgradePrompt = ref(false)
 
 // Info dialog state (replaces native alert calls)
 const infoDialog = reactive({
@@ -87,12 +105,13 @@ function selectPreset(id: string) {
 
 function addPreset() {
   if (!canAddPreset()) {
-    showInfoDialog('Preset Limit Reached', `Maximum limit of ${maxPresets} presets reached`)
+    // Show the upgrade prompt instead of a plain info dialog
+    showUpgradePrompt.value = true
     return
   }
   const newPreset = addPresetHelper()
   if (!newPreset) {
-    showInfoDialog('Preset Limit Reached', `Maximum limit of ${maxPresets} presets reached`)
+    showUpgradePrompt.value = true
   }
 }
 

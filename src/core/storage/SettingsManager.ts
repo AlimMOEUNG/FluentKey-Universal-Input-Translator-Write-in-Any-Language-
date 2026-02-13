@@ -12,6 +12,10 @@ import type {
   SelectionModifier,
 } from '@/types/common'
 
+// Keep these in sync with src/composables/usePro.ts
+const FREE_MAX_PRESETS = 5
+const BETA_CUTOFF_DATE = new Date('2026-03-15').getTime()
+
 export interface Settings {
   sourceLang: string // ISO 639-1 code or 'auto'
   targetLang: string // ISO 639-1 code
@@ -34,6 +38,9 @@ function generateUUID(): string {
 }
 
 export class SettingsManager {
+  // Pro/beta status — loaded from chrome.storage.sync alongside presets
+  private proStatus: string = 'free'
+
   // Legacy settings (for backward compatibility during migration)
   private settings: Settings = {
     sourceLang: 'auto',
@@ -69,7 +76,12 @@ export class SettingsManager {
    */
   async load(): Promise<void> {
     try {
-      const result = await chrome.storage.sync.get(['settings', 'presetsSettings'])
+      const result = await chrome.storage.sync.get(['settings', 'presetsSettings', 'proStatus'])
+
+      // Load pro status for locked-preset filtering in the content script
+      if (result.proStatus && ['free', 'beta_unlocked', 'pro_paid'].includes(result.proStatus)) {
+        this.proStatus = result.proStatus
+      }
 
       // If new format exists, use it
       if (result.presetsSettings) {
@@ -115,6 +127,25 @@ export class SettingsManager {
     } catch (error) {
       console.error('[SettingsManager] Failed to load settings:', error)
     }
+  }
+
+  /**
+   * Returns true when the current user has unlimited preset access.
+   * Mirrors the logic in src/composables/usePro.ts — keep in sync.
+   */
+  private isUnlimitedAccess(): boolean {
+    return (
+      (this.proStatus === 'beta_unlocked' && Date.now() < BETA_CUTOFF_DATE) ||
+      this.proStatus === 'pro_paid'
+    )
+  }
+
+  /**
+   * Returns true if the preset at the given index should be considered locked.
+   * Locked presets are kept in storage but their keyboard shortcuts must not fire.
+   */
+  isPresetLocked(index: number): boolean {
+    return !this.isUnlimitedAccess() && index >= FREE_MAX_PRESETS
   }
 
   /**

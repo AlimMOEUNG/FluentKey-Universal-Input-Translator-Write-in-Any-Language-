@@ -74,7 +74,8 @@ const enTranslations = {
 
   // Keyboard Shortcut
   keyboardShortcut: 'Keyboard Shortcut',
-  keyboardShortcutDescription: 'Press the desired keyboard combination (e.g., Ctrl+Alt+T, Ctrl+Alt+2)',
+  keyboardShortcutDescription:
+    'Press the desired keyboard combination (e.g., Ctrl+Alt+T, Ctrl+Alt+2)',
 
   // Presets
   presetName: 'Preset Name',
@@ -85,7 +86,8 @@ const enTranslations = {
   presetDeleteMessage: 'Are you sure you want to delete "{name}"? This action cannot be undone.',
   presetDeleteConfirm: 'Are you sure you want to delete "{name}"?',
   shortcutInvalidFormat: 'Invalid shortcut format. Must be modifier+key (e.g., Alt+T, Ctrl+1)',
-  shortcutModifierOnly: 'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
+  shortcutModifierOnly:
+    'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
   shortcutDuplicate: 'Shortcut already used by "{name}"',
   shortcutConflictTitle: 'Keyboard Shortcut Conflict',
   shortcutTooManyKeys: 'Too many keys. Maximum 2 keys after modifiers (e.g., Alt+T+1)',
@@ -179,6 +181,24 @@ const enTranslations = {
   optionsCancelButton: 'Cancel',
   optionsMaxReached: 'Maximum of {max} transformations reached',
   optionsEmptyName: 'Name is required',
+
+  // Pro / Beta upgrade prompt
+  proUpgradeTitle: 'Unlock Unlimited Presets',
+  proUpgradeLimitReached: "You've reached the {max}-preset limit.",
+  proBetaTitle: 'Free Beta Access',
+  proBetaDescription: 'Submit your email on the form to receive a free beta code.',
+  proBetaGetCode: 'Get beta code',
+  proBetaCodePlaceholder: 'Enter beta code',
+  proBetaActivate: 'Activate',
+  proBetaErrorInvalid: 'Invalid code. Please check and try again.',
+  proBetaErrorExpired: 'Beta period has ended. Upgrade to Pro for unlimited presets.',
+  proBetaSuccess: 'Beta access activated! Unlimited presets unlocked.',
+  proBetaActivating: 'Activating...',
+  proUpgradeButton: 'Upgrade to Pro',
+  proUpgradeComingSoon: '(coming soon)',
+  proClose: 'Close',
+  presetLockedTooltip: 'Locked — upgrade to Pro to edit this preset',
+  presetLockedMessage: 'This preset is locked. Upgrade to Pro to access it.',
 } as const
 
 export type TranslationKey = keyof typeof enTranslations
@@ -234,7 +254,8 @@ const frTranslations: TranslationMap = {
   languagesLabel: 'Languages',
   shortcutInvalidFormat:
     'Format de raccourci invalide. Doit avoir un modificateur (ex: Alt+T, Alt, Ctrl+1)',
-  shortcutModifierOnly: 'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
+  shortcutModifierOnly:
+    'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
   shortcutDuplicate: 'Raccourci déjà utilisé par "{name}"',
   shortcutConflictTitle: 'Keyboard Shortcut Conflict',
   shortcutTooManyKeys: 'Trop de touches. Maximum 2 touches après les modificateurs (ex: Alt+T+1)',
@@ -308,6 +329,22 @@ const frTranslations: TranslationMap = {
   selectionModifierHelp:
     'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
   selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
+  proUpgradeTitle: 'Unlock Unlimited Presets',
+  proUpgradeLimitReached: "You've reached the {max}-preset limit.",
+  proBetaTitle: 'Free Beta Access',
+  proBetaDescription: 'Submit your email on the form to receive a free beta code.',
+  proBetaGetCode: 'Get beta code',
+  proBetaCodePlaceholder: 'Enter beta code',
+  proBetaActivate: 'Activate',
+  proBetaErrorInvalid: 'Invalid code. Please check and try again.',
+  proBetaErrorExpired: 'Beta period has ended. Upgrade to Pro for unlimited presets.',
+  proBetaSuccess: 'Beta access activated! Unlimited presets unlocked.',
+  proBetaActivating: 'Activating...',
+  proUpgradeButton: 'Upgrade to Pro — €9 lifetime',
+  proUpgradeComingSoon: '(coming soon)',
+  proClose: 'Close',
+  presetLockedTooltip: 'Locked — upgrade to Pro to edit this preset',
+  presetLockedMessage: 'This preset is locked. Upgrade to Pro to access it.',
 }
 
 const esTranslations: TranslationMap = {
@@ -361,7 +398,8 @@ const esTranslations: TranslationMap = {
   languagesLabel: 'Languages',
   shortcutInvalidFormat:
     'Formato de atajo inválido. Debe tener un modificador (ej: Alt+T, Alt, Ctrl+1)',
-  shortcutModifierOnly: 'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
+  shortcutModifierOnly:
+    'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
   shortcutDuplicate: 'Atajo ya utilizado por "{name}"',
   shortcutConflictTitle: 'Keyboard Shortcut Conflict',
   shortcutTooManyKeys:
@@ -435,6 +473,22 @@ const esTranslations: TranslationMap = {
   selectionModifierHelp:
     'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
   selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
+  proUpgradeTitle: 'Unlock Unlimited Presets',
+  proUpgradeLimitReached: "You've reached the {max}-preset limit.",
+  proBetaTitle: 'Free Beta Access',
+  proBetaDescription: 'Submit your email on the form to receive a free beta code.',
+  proBetaGetCode: 'Get beta code',
+  proBetaCodePlaceholder: 'Enter beta code',
+  proBetaActivate: 'Activate',
+  proBetaErrorInvalid: 'Invalid code. Please check and try again.',
+  proBetaErrorExpired: 'Beta period has ended. Upgrade to Pro for unlimited presets.',
+  proBetaSuccess: 'Beta access activated! Unlimited presets unlocked.',
+  proBetaActivating: 'Activating...',
+  proUpgradeButton: 'Upgrade to Pro — €9 lifetime',
+  proUpgradeComingSoon: '(coming soon)',
+  proClose: 'Close',
+  presetLockedTooltip: 'Locked — upgrade to Pro to edit this preset',
+  presetLockedMessage: 'This preset is locked. Upgrade to Pro to access it.',
 }
 
 const deTranslations: TranslationMap = {
@@ -488,7 +542,8 @@ const deTranslations: TranslationMap = {
   languagesLabel: 'Languages',
   shortcutInvalidFormat:
     'Ungültiges Tastenkombinationsformat. Muss einen Modifikator haben (z.B. Alt+T, Alt, Ctrl+1)',
-  shortcutModifierOnly: 'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
+  shortcutModifierOnly:
+    'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
   shortcutDuplicate: 'Tastenkombination wird bereits von "{name}" verwendet',
   shortcutConflictTitle: 'Keyboard Shortcut Conflict',
   shortcutTooManyKeys: 'Zu viele Tasten. Maximal 2 Tasten nach Modifikatoren (z.B. Alt+T+1)',
@@ -562,6 +617,22 @@ const deTranslations: TranslationMap = {
   selectionModifierHelp:
     'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
   selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
+  proUpgradeTitle: 'Unlock Unlimited Presets',
+  proUpgradeLimitReached: "You've reached the {max}-preset limit.",
+  proBetaTitle: 'Free Beta Access',
+  proBetaDescription: 'Submit your email on the form to receive a free beta code.',
+  proBetaGetCode: 'Get beta code',
+  proBetaCodePlaceholder: 'Enter beta code',
+  proBetaActivate: 'Activate',
+  proBetaErrorInvalid: 'Invalid code. Please check and try again.',
+  proBetaErrorExpired: 'Beta period has ended. Upgrade to Pro for unlimited presets.',
+  proBetaSuccess: 'Beta access activated! Unlimited presets unlocked.',
+  proBetaActivating: 'Activating...',
+  proUpgradeButton: 'Upgrade to Pro — €9 lifetime',
+  proUpgradeComingSoon: '(coming soon)',
+  proClose: 'Close',
+  presetLockedTooltip: 'Locked — upgrade to Pro to edit this preset',
+  presetLockedMessage: 'This preset is locked. Upgrade to Pro to access it.',
 }
 
 const zhTranslations: TranslationMap = {
@@ -612,7 +683,8 @@ const zhTranslations: TranslationMap = {
   presetDeleteConfirm: '确定要删除 "{name}" 吗？',
   languagesLabel: 'Languages',
   shortcutInvalidFormat: '快捷键格式无效。必须包含修饰键（例如：Alt+T, Alt, Ctrl+1）',
-  shortcutModifierOnly: 'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
+  shortcutModifierOnly:
+    'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
   shortcutDuplicate: '快捷键已被 "{name}" 使用',
   shortcutConflictTitle: 'Keyboard Shortcut Conflict',
   shortcutTooManyKeys: '按键过多。修饰键后最多 2 个按键（例如：Alt+T+1）',
@@ -684,6 +756,22 @@ const zhTranslations: TranslationMap = {
   selectionModifierHelp:
     'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
   selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
+  proUpgradeTitle: 'Unlock Unlimited Presets',
+  proUpgradeLimitReached: "You've reached the {max}-preset limit.",
+  proBetaTitle: 'Free Beta Access',
+  proBetaDescription: 'Submit your email on the form to receive a free beta code.',
+  proBetaGetCode: 'Get beta code',
+  proBetaCodePlaceholder: 'Enter beta code',
+  proBetaActivate: 'Activate',
+  proBetaErrorInvalid: 'Invalid code. Please check and try again.',
+  proBetaErrorExpired: 'Beta period has ended. Upgrade to Pro for unlimited presets.',
+  proBetaSuccess: 'Beta access activated! Unlimited presets unlocked.',
+  proBetaActivating: 'Activating...',
+  proUpgradeButton: 'Upgrade to Pro — €9 lifetime',
+  proUpgradeComingSoon: '(coming soon)',
+  proClose: 'Close',
+  presetLockedTooltip: 'Locked — upgrade to Pro to edit this preset',
+  presetLockedMessage: 'This preset is locked. Upgrade to Pro to access it.',
 }
 
 const jaTranslations: TranslationMap = {
@@ -736,7 +824,8 @@ const jaTranslations: TranslationMap = {
   languagesLabel: 'Languages',
   shortcutInvalidFormat:
     'ショートカット形式が無効です。修飾キーが必要です（例：Alt+T, Alt, Ctrl+1）',
-  shortcutModifierOnly: 'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
+  shortcutModifierOnly:
+    'Modifier-only shortcuts (Alt, Ctrl, etc.) are not allowed to prevent conflicts',
   shortcutDuplicate: 'ショートカットは既に "{name}" で使用されています',
   shortcutConflictTitle: 'Keyboard Shortcut Conflict',
   shortcutTooManyKeys: 'キーが多すぎます。修飾キーの後に最大2つのキー（例：Alt+T+1）',
@@ -809,6 +898,22 @@ const jaTranslations: TranslationMap = {
   selectionModifierHelp:
     'Hold Modifier+Arrow keys in any focused input to select text word by word. Great for quickly selecting words before translating with a keyboard shortcut!',
   selectionModifierExample: '{modifier}+← / {modifier}+→ selects word by word',
+  proUpgradeTitle: 'Unlock Unlimited Presets',
+  proUpgradeLimitReached: "You've reached the {max}-preset limit.",
+  proBetaTitle: 'Free Beta Access',
+  proBetaDescription: 'Submit your email on the form to receive a free beta code.',
+  proBetaGetCode: 'Get beta code',
+  proBetaCodePlaceholder: 'Enter beta code',
+  proBetaActivate: 'Activate',
+  proBetaErrorInvalid: 'Invalid code. Please check and try again.',
+  proBetaErrorExpired: 'Beta period has ended. Upgrade to Pro for unlimited presets.',
+  proBetaSuccess: 'Beta access activated! Unlimited presets unlocked.',
+  proBetaActivating: 'Activating...',
+  proUpgradeButton: 'Upgrade to Pro — €9 lifetime',
+  proUpgradeComingSoon: '(coming soon)',
+  proClose: 'Close',
+  presetLockedTooltip: 'Locked — upgrade to Pro to edit this preset',
+  presetLockedMessage: 'This preset is locked. Upgrade to Pro to access it.',
 }
 
 const translations: Record<SupportedLocale, TranslationMap> = {

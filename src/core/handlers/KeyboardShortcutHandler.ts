@@ -86,7 +86,15 @@ export class KeyboardShortcutHandler {
     this.shortcutMap.clear()
     const presets = this.settings.getPresets()
 
-    for (const preset of presets) {
+    for (let i = 0; i < presets.length; i++) {
+      const preset = presets[i]
+
+      // Skip locked presets — they are kept in storage but must not fire shortcuts
+      if (this.settings.isPresetLocked(i)) {
+        console.log(`[KeyboardShortcut] Skipped (locked): ${preset.name} at index ${i}`)
+        continue
+      }
+
       const normalized = normalizeShortcut(preset.keyboardShortcut)
       this.shortcutMap.set(normalized, preset)
 

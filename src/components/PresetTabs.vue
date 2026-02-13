@@ -4,12 +4,14 @@
       <!-- Left side: Preset tabs -->
       <div class="preset-tabs-left">
         <button
-          v-for="preset in presets"
+          v-for="(preset, index) in presets"
           :key="preset.id"
           @click="$emit('select-preset', preset.id)"
-          :class="['tab-button', { active: preset.id === activePresetId }]"
-          :title="`${preset.name}: ${preset.keyboardShortcut}`"
+          :class="['tab-button', { active: preset.id === activePresetId, locked: isPresetLocked(index) }]"
+          :title="isPresetLocked(index) ? t('presetLockedTooltip') : `${preset.name}: ${preset.keyboardShortcut}`"
         >
+          <!-- Lock icon for locked presets (beyond free limit) -->
+          <Lock v-if="isPresetLocked(index)" :size="11" class="lock-icon" />
           <span class="tab-name">{{ preset.name }}</span>
         </button>
 
@@ -23,11 +25,13 @@
 </template>
 
 <script setup lang="ts">
-import { Plus } from 'lucide-vue-next'
+import { Plus, Lock } from 'lucide-vue-next'
 import type { TranslationPreset } from '@/types/common'
 import { useI18nWrapper } from '@/composables/useI18nWrapper'
+import { usePro } from '@/composables/usePro'
 
 const { t } = useI18nWrapper()
+const { isPresetLocked } = usePro()
 
 interface Props {
   presets: TranslationPreset[]
@@ -128,6 +132,34 @@ defineEmits<{
   background-color: theme('colors.blue.500');
   border-color: theme('colors.blue.500');
   box-shadow: 0 2px 6px rgba(59, 130, 246, 0.5);
+}
+
+/* Locked preset tab — grayed out, not interactive */
+.tab-button.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.tab-button.locked:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: theme('colors.white');
+  border-color: theme('colors.gray.300');
+  color: theme('colors.gray.700');
+}
+
+:root[data-theme='dark'] .tab-button.locked:hover {
+  background-color: theme('colors.gray.800');
+  border-color: theme('colors.gray.600');
+  color: theme('colors.gray.300');
+  box-shadow: none;
+}
+
+/* Lock icon color */
+.lock-icon {
+  flex-shrink: 0;
+  color: theme('colors.amber.500');
 }
 
 .add-button {
