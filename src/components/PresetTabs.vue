@@ -33,7 +33,7 @@
               :value="preset.id"
               :disabled="isPresetLocked(index)"
             >
-              {{ isPresetLocked(index) ? `🔒 ${preset.name}` : preset.name }}
+              {{ isPresetLocked(index) ? `🔒 ${preset.name}` : preset.name }}{{ preset.keyboardShortcut ? ` (${preset.keyboardShortcut})` : '' }}
             </option>
           </select>
         </template>
