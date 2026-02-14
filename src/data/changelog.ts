@@ -4,19 +4,21 @@
  * Uses i18n keys so text is translatable via the automated pipeline.
  */
 
+import type { TranslationKey } from '../core/utils/i18n'
+
 export interface ChangelogEntry {
   version: string
   date: string // YYYY-MM-DD
   changes: {
     type: 'feature' | 'improvement' | 'fix'
-    key: string // i18n key
+    key: TranslationKey // i18n key
   }[]
 }
 
 export interface FeatureSummary {
-  categoryKey: string // i18n key for category title
+  categoryKey: TranslationKey // i18n key for category title
   features: {
-    key: string // i18n key for feature description
+    key: TranslationKey // i18n key for feature description
     version: string
   }[]
 }

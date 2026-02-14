@@ -20,7 +20,7 @@
             <div>
               <h1 class="text-2xl font-bold">{{ t('whatsNewTitle') }}</h1>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ t('whatsNewCurrentVersion').replace('{version}', currentVersion) }}
+                {{ t('whatsNewCurrentVersion', { params: { version: currentVersion } }) }}
               </p>
             </div>
           </div>
