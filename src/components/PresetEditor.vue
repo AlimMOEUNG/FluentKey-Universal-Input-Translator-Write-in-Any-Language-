@@ -275,10 +275,13 @@
       <!-- LLM Prompt Panel -->
       <template v-else-if="localPreset.type === 'llm-prompt'">
         <div class="flex flex-col gap-1">
-          <!-- Label inline with expand button right next to it -->
+          <!-- Label inline with info icon and expand button -->
           <div class="flex items-center gap-1">
             <span class="text-[10px] font-semibold text-gray-700 dark:text-gray-300">
               {{ t('llmPromptLabel') }}
+            </span>
+            <span :title="t('llmPromptHint')" class="cursor-help leading-none">
+              <Info :size="12" class="text-gray-400 dark:text-gray-500" />
             </span>
             <button
               type="button"
@@ -289,16 +292,13 @@
               <Maximize2 :size="10" />
             </button>
           </div>
-          <!-- Full-width textarea + hint -->
+          <!-- Full-width textarea -->
           <textarea
             v-model="localPreset.prompt"
-            :placeholder="t('llmPromptPlaceholder')"
+            :placeholder="t('llmPromptHint')"
             rows="3"
             class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
           />
-          <p class="text-[10px] text-gray-500 dark:text-gray-400">
-            {{ t('llmPromptHint') }}
-          </p>
         </div>
         <div class="flex items-center gap-2">
           <label class="text-[10px] font-semibold text-gray-700 dark:text-gray-300 w-24 shrink-0">
