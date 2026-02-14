@@ -4,6 +4,7 @@
  */
 
 import { useStorageState } from './useStorageState'
+import { PROVIDER_BASE_URLS } from '@/config/providers'
 
 export type TranslationProvider =
   | 'google'
@@ -66,7 +67,7 @@ const DEFAULT_SETTINGS: TranslationSettings = {
   sourceLang: 'auto',
   targetLang: 'en',
   provider: 'google',
-  keyboardShortcut: 'Ctrl+Alt+T',
+  keyboardShortcut: 'Alt+T',
 }
 
 const DEFAULT_PROVIDER_CONFIGS: ProviderConfigs = {
@@ -75,25 +76,25 @@ const DEFAULT_PROVIDER_CONFIGS: ProviderConfigs = {
   },
   gemini: {
     apiKey: '',
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.0-flash',
   },
   chatgpt: {
     apiKey: '',
-    baseUrl: 'https://api.openai.com/v1',
+    baseUrl: PROVIDER_BASE_URLS.chatgpt,
     model: 'gpt-4o-mini',
   },
   groq: {
     apiKey: '',
-    baseUrl: 'https://api.groq.com/openai/v1',
+    baseUrl: PROVIDER_BASE_URLS.groq,
     model: 'llama-3.3-70b-versatile',
   },
   ollama: {
-    baseUrl: 'http://localhost:11434/v1',
+    baseUrl: PROVIDER_BASE_URLS.ollama,
     model: 'llama3.2',
   },
   openrouter: {
     apiKey: '',
-    baseUrl: 'https://openrouter.ai/api/v1',
+    baseUrl: PROVIDER_BASE_URLS.openrouter,
     model: 'meta-llama/llama-3.3-70b-instruct',
   },
   custom: {
@@ -119,16 +120,14 @@ export function useSettings() {
   })
 
   // Load provider configs from Chrome storage local (API keys)
-  const { value: providerConfigs } = useStorageState<ProviderConfigs>(
-    'providerKeys',
-    DEFAULT_PROVIDER_CONFIGS,
-    {
+  const { value: providerConfigs, isLoading: providerConfigsLoading } =
+    useStorageState<ProviderConfigs>('providerKeys', DEFAULT_PROVIDER_CONFIGS, {
       storageArea: 'local', // API keys stored locally for security
-    }
-  )
+    })
 
   return {
     settings,
     providerConfigs,
+    providerConfigsLoading,
   }
 }

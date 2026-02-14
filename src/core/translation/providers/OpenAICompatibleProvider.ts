@@ -10,6 +10,7 @@
  */
 
 import { BaseTranslationProvider, TranslationOptions } from './BaseTranslationProvider'
+import { PROVIDER_BASE_URLS } from '@/config/providers'
 
 export type OpenAIProviderType = 'chatgpt' | 'groq' | 'ollama' | 'openrouter' | 'custom'
 
@@ -18,15 +19,6 @@ export interface OpenAIConfig {
   baseUrl: string
   apiKey?: string // Optional for Ollama
   model: string
-}
-
-// Default endpoints for each provider type
-const DEFAULT_ENDPOINTS: Record<OpenAIProviderType, string> = {
-  chatgpt: 'https://api.openai.com/v1',
-  groq: 'https://api.groq.com/openai/v1',
-  ollama: 'http://localhost:11434/v1',
-  openrouter: 'https://openrouter.ai/api/v1',
-  custom: '', // User-provided
 }
 
 export class OpenAICompatibleProvider extends BaseTranslationProvider {
@@ -183,8 +175,10 @@ export class OpenAICompatibleProvider extends BaseTranslationProvider {
 }
 
 /**
- * Get default endpoint for a provider type
+ * Get default endpoint for a provider type.
+ * Delegates to PROVIDER_BASE_URLS (single source of truth for all provider URLs).
  */
 export function getDefaultEndpoint(providerType: OpenAIProviderType): string {
-  return DEFAULT_ENDPOINTS[providerType]
+  if (providerType === 'custom') return ''
+  return PROVIDER_BASE_URLS[providerType]
 }

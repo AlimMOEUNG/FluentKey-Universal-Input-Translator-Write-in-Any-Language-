@@ -1,11 +1,11 @@
-import type { LLMProvider, ProviderKeys } from '@/types/common'
+import type { LLMProvider } from '@/types/common'
+import type { ProviderConfigs } from '@/composables/useSettings'
+import { extractApiError } from '@/utils/providerValidation'
+import { PROVIDER_BASE_URLS } from '@/config/providers'
 
 const SYSTEM_PROMPT =
   'You are a text processor. Respond ONLY with the processed output. ' +
   'No explanations, no additional text, no markdown formatting.'
-
-// Gemini exposes an OpenAI-compatible endpoint at this base URL
-const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/openai'
 
 interface ResolvedConfig {
   baseUrl: string
@@ -18,35 +18,35 @@ interface ResolvedConfig {
  */
 async function resolveConfig(provider: LLMProvider): Promise<ResolvedConfig> {
   const { providerKeys } = await chrome.storage.local.get('providerKeys')
-  const keys = (providerKeys ?? {}) as ProviderKeys
+  const keys = (providerKeys ?? {}) as ProviderConfigs
 
   switch (provider) {
     case 'gemini':
-      return { baseUrl: GEMINI_BASE_URL, apiKey: keys.geminiConfig?.apiKey ?? null }
+      return { baseUrl: PROVIDER_BASE_URLS.geminiOpenAI, apiKey: keys.gemini?.apiKey ?? null }
     case 'chatgpt':
       return {
-        baseUrl: keys.chatgptConfig?.baseUrl ?? 'https://api.openai.com/v1',
-        apiKey: keys.chatgptConfig?.apiKey ?? null,
+        baseUrl: keys.chatgpt?.baseUrl || PROVIDER_BASE_URLS.chatgpt,
+        apiKey: keys.chatgpt?.apiKey ?? null,
       }
     case 'groq':
       return {
-        baseUrl: keys.groqConfig?.baseUrl ?? 'https://api.groq.com/openai/v1',
-        apiKey: keys.groqConfig?.apiKey ?? null,
+        baseUrl: keys.groq?.baseUrl || PROVIDER_BASE_URLS.groq,
+        apiKey: keys.groq?.apiKey ?? null,
       }
     case 'ollama':
       return {
-        baseUrl: keys.ollamaConfig?.baseUrl ?? 'http://localhost:11434/v1',
+        baseUrl: keys.ollama?.baseUrl || PROVIDER_BASE_URLS.ollama,
         apiKey: null,
       }
     case 'openrouter':
       return {
-        baseUrl: keys.openrouterConfig?.baseUrl ?? 'https://openrouter.ai/api/v1',
-        apiKey: keys.openrouterConfig?.apiKey ?? null,
+        baseUrl: keys.openrouter?.baseUrl || PROVIDER_BASE_URLS.openrouter,
+        apiKey: keys.openrouter?.apiKey ?? null,
       }
     case 'custom':
       return {
-        baseUrl: keys.customConfig?.baseUrl ?? '',
-        apiKey: keys.customConfig?.apiKey ?? null,
+        baseUrl: keys.custom?.baseUrl ?? '',
+        apiKey: keys.custom?.apiKey ?? null,
       }
   }
 }
@@ -100,7 +100,9 @@ export class LLMPromptExecutor {
     })
 
     if (!response.success) {
-      throw new Error(response.error || 'LLM request failed')
+      // Extract the real API error message from the response body (e.g. "API key not valid")
+      const msg = extractApiError(response.data, response.error || 'LLM request failed')
+      throw new Error(msg)
     }
 
     const content = response.data?.choices?.[0]?.message?.content

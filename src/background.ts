@@ -22,7 +22,8 @@ type BackgroundMessage =
 
 type BackgroundResponse =
   | { success: true; data?: Record<string, unknown> | string }
-  | { success: false; error: string }
+  // data is included on error so callers can extract the API error body (e.g. { error: { message } })
+  | { success: false; error: string; data?: Record<string, unknown> | string }
 
 // Context menu item ID for the pinned preset action
 const CONTEXT_MENU_ID = 'translate-pinned-preset'
@@ -199,9 +200,11 @@ async function handleProxyFetch(message: {
     }
 
     if (!response.ok) {
+      // Include the parsed body so callers can surface the actual API error message
       return {
         success: false,
         error: `HTTP ${response.status}: ${response.statusText}`,
+        data,
       }
     }
 

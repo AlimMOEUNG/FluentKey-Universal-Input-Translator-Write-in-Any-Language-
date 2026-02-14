@@ -14,6 +14,9 @@ export interface DraftPresetState {
   llmModelSelection: string
   // Free-text model name when selection='custom'
   llmCustomModelInput: string
+  // Credential drafts for llm-prompt mode (not yet flushed to providerConfigs)
+  llmApiKeyDraft?: string
+  llmBaseUrlDraft?: string
   // Preview text (transformation type)
   customExampleText: string
   // Unix timestamp when draft was saved

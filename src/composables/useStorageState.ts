@@ -100,13 +100,13 @@ export function useStorageState<T>(
   // Start listening for external storage changes
   browserAPI.storage.onChanged.addListener(handleStorageChange)
 
-  // Watch for local changes and save automatically
+  // Watch for local changes and save automatically (deep: true to catch nested property mutations)
   watch(value, (newValue) => {
     // Only save after initial load is complete to avoid saving default value
     if (!isLoading.value) {
       saveToStorage(newValue)
     }
-  })
+  }, { deep: true })
 
   // Cleanup: remove listener on unmount
   onUnmounted(() => {

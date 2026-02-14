@@ -351,17 +351,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineComponent, h } from 'vue'
+import { ref, computed, watch, defineComponent, h } from 'vue'
 import { Info } from 'lucide-vue-next'
 import { useI18nWrapper } from '@/composables/useI18nWrapper'
 import { useSettings } from '@/composables/useSettings'
 import { usePresetsSettings } from '@/composables/usePresetsSettings'
-import { PREDEFINED_MODELS, isCustomModel, getEffectiveModel } from '@/config/predefinedModels'
+import { PREDEFINED_MODELS, isCustomModel } from '@/config/predefinedModels'
 import { AVAILABLE_PROVIDERS } from '@/config/providers'
+import { validateProviderCredentials } from '@/utils/providerValidation'
 import type { SelectionModifier } from '@/types/common'
 
 const { t } = useI18nWrapper()
-const { providerConfigs } = useSettings()
+const { providerConfigs, providerConfigsLoading } = useSettings()
 const { presetsSettings } = usePresetsSettings()
 
 // Available modifier keys for word selection shortcut
@@ -470,69 +471,33 @@ const ValidationMessage = defineComponent({
 })
 
 // --- Provider validation ---
+// Delegates to the shared validateProviderCredentials utility (PROXY_FETCH under the hood)
 
 async function validateProviderConfig(provider: string) {
   validationStatus.value[provider] = 'loading'
   validationMessage.value[provider] = ''
 
   try {
-    let response
-
-    switch (provider) {
-      case 'deepl':
-        if (!providerConfigs.value.deepl.apiKey) return
-        response = await chrome.runtime.sendMessage({
-          type: 'VALIDATE_DEEPL_KEY',
-          apiKey: providerConfigs.value.deepl.apiKey,
-        })
-        break
-
-      case 'gemini':
-        if (!providerConfigs.value.gemini.apiKey) return
-        response = await chrome.runtime.sendMessage({
-          type: 'VALIDATE_GEMINI_KEY',
-          apiKey: providerConfigs.value.gemini.apiKey,
-          model: getEffectiveModel(
-            providerConfigs.value.gemini.model,
-            providerConfigs.value.gemini.customModel
-          ),
-        })
-        break
-
-      case 'chatgpt':
-      case 'groq':
-      case 'ollama':
-      case 'openrouter':
-      case 'custom': {
-        const config = providerConfigs.value[provider as keyof typeof providerConfigs.value] as {
-          model: string
-          customModel?: string
-          apiKey?: string
-          baseUrl?: string
-        }
-        const effectiveModel =
-          provider === 'custom' ? config.model : getEffectiveModel(config.model, config.customModel)
-        response = await chrome.runtime.sendMessage({
-          type: 'VALIDATE_OPENAI_COMPATIBLE',
-          config: { providerType: provider, ...config, model: effectiveModel },
-        })
-        break
-      }
-
-      default:
-        throw new Error(`Unknown provider: ${provider}`)
+    const cfg = providerConfigs.value[provider as keyof typeof providerConfigs.value] as {
+      apiKey?: string
+      baseUrl?: string
     }
+    const result = await validateProviderCredentials(
+      provider,
+      cfg?.apiKey ?? '',
+      cfg?.baseUrl
+    )
 
-    if (response.success) {
+    if (result.success) {
       validationStatus.value[provider] = 'success'
-      validationMessage.value[provider] = `✓ ${t('validationSuccess')}`
+      validationMessage.value[provider] = `✓ ${t('apiKeyValid')}`
     } else {
       validationStatus.value[provider] = 'error'
-      validationMessage.value[provider] = `✗ ${response.error}`
+      validationMessage.value[provider] = `✗ ${result.error}`
     }
-  } catch {
+  } catch (err) {
     validationStatus.value[provider] = 'error'
-    validationMessage.value[provider] = `✗ ${t('validationFailed')}`
+    validationMessage.value[provider] = `✗ ${err instanceof Error ? err.message : t('apiKeyRequired')}`
   }
 }
 
@@ -667,11 +632,15 @@ function checkProviderConfiguration() {
 
 // --- Lifecycle ---
 
-onMounted(() => {
-  checkProviderConfiguration()
-  // Pre-load Ollama models if the provider is already configured
-  if (presetsSettings.value.provider === 'ollama' && providerConfigs.value.ollama.baseUrl) {
-    fetchOllamaModels()
+// Run checkProviderConfiguration() only after providerConfigs has loaded from storage.
+// onMounted fires before the async storage read completes, so checking there would
+// always see empty defaults and incorrectly show "API key required".
+watch(providerConfigsLoading, (loading) => {
+  if (!loading) {
+    checkProviderConfiguration()
+    if (presetsSettings.value.provider === 'ollama' && providerConfigs.value.ollama.baseUrl) {
+      fetchOllamaModels()
+    }
   }
-})
+}, { immediate: true })
 </script>

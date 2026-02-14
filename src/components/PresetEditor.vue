@@ -11,17 +11,20 @@
       <template v-if="hasUnsavedChanges">
         <button
           @click="undoChanges"
-          class="px-2 py-1.5 text-xs rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors flex items-center gap-1"
+          :disabled="isSaving"
+          class="px-2 py-1.5 text-xs rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
           :title="t('undoChanges')"
         >
           <RotateCcw :size="12" />
         </button>
         <button
           @click="savePreset"
-          class="px-2 py-1.5 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1"
+          :disabled="isSaving"
+          class="px-2 py-1.5 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
           :title="t('saveChanges')"
         >
-          <Check :size="12" />
+          <Check v-if="!isSaving" :size="12" />
+          <span v-else class="text-[10px]">...</span>
         </button>
       </template>
     </div>
@@ -311,6 +314,33 @@
             </option>
           </select>
         </div>
+
+        <!-- Base URL (only for 'custom' provider — other LLM providers have a fixed known URL) -->
+        <div v-if="localPreset.type === 'llm-prompt' && (localPreset as LLMPromptPreset).llmProvider === 'custom'" class="flex items-center gap-2">
+          <label class="text-[10px] font-semibold text-gray-700 dark:text-gray-300 w-24 shrink-0">
+            Base URL
+          </label>
+          <input
+            v-model="llmBaseUrlDraft"
+            type="text"
+            placeholder="Base URL (e.g., http://localhost:1234/v1)"
+            class="flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- API Key (if the selected LLM provider requires it — reads/writes global providerConfigs) -->
+        <div v-if="llmCurrentProviderConfig?.requiresApiKey" class="flex items-center gap-2">
+          <label class="text-[10px] font-semibold text-gray-700 dark:text-gray-300 w-24 shrink-0">
+            API Key
+          </label>
+          <input
+            v-model="llmApiKeyDraft"
+            type="password"
+            :placeholder="t('apiKeyPlaceholder')"
+            class="flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+
         <div class="flex items-start gap-2">
           <label
             class="text-[10px] font-semibold text-gray-700 dark:text-gray-300 w-24 shrink-0 pt-1.5"
@@ -397,15 +427,17 @@
       <div class="flex gap-2">
         <button
           @click="undoChanges"
-          class="px-2 py-1 text-xs rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          :disabled="isSaving"
+          class="px-2 py-1 text-xs rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {{ t('undo') }}
         </button>
         <button
           @click="savePreset"
-          class="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          :disabled="isSaving"
+          class="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {{ t('saveChanges') }}
+          {{ isSaving ? '...' : t('saveChanges') }}
         </button>
       </div>
     </div>
@@ -505,6 +537,7 @@ import { Check, RotateCcw, Info, Lock, Maximize2, X } from 'lucide-vue-next'
 import { useI18nWrapper } from '@/composables/useI18nWrapper'
 import { useDraftPreset, type DraftPresetState } from '@/composables/useDraftPreset'
 import { usePro } from '@/composables/usePro'
+import { useSettings, type ProviderConfigs } from '@/composables/useSettings'
 import {
   buildShortcutFromEvent,
   normalizeShortcut,
@@ -522,7 +555,7 @@ import {
   applyCustomCharMap,
 } from '@/core/transformation/TransformationEngine'
 import { getAllCustomTransforms } from '@/services/customTransformService'
-import { AVAILABLE_PROVIDERS, getLLMProviders } from '@/config/providers'
+import { AVAILABLE_PROVIDERS, getLLMProviders, PROVIDER_BASE_URLS } from '@/config/providers'
 import {
   PREDEFINED_MODELS,
   isCustomModel,
@@ -530,10 +563,12 @@ import {
   getDefaultModel,
   type ModelOption,
 } from '@/config/predefinedModels'
+import { validateProviderCredentials } from '@/utils/providerValidation'
 import ConfirmDialog from './ConfirmDialog.vue'
 import LanguageSelector from './LanguageSelector.vue'
 
 const { t } = useI18nWrapper()
+const { providerConfigs } = useSettings()
 const { loadDraft, saveDraft, clearDraft } = useDraftPreset()
 
 // Debounce timer for draft auto-save
@@ -597,6 +632,8 @@ const shortcutError = ref('')
 const showDeleteDialog = ref(false)
 const showValidationDialog = ref(false)
 const showPromptModal = ref(false)
+// True while async credential validation + save is in progress
+const isSaving = ref(false)
 const validationDialogTitle = ref('')
 const validationDialogMessage = ref('')
 
@@ -642,6 +679,20 @@ function initLLMModelState(provider: LLMProvider, storedModel: string) {
 }
 
 /**
+ * Initialise the local API key / base URL drafts from global providerConfigs.
+ * Called whenever the active llm-prompt preset or its provider changes.
+ */
+function initLLMCredentialDrafts(provider: LLMProvider) {
+  const cfg = providerConfigs.value[provider as keyof ProviderConfigs] as {
+    apiKey?: string
+    baseUrl?: string
+  }
+  llmApiKeyDraft.value = cfg?.apiKey ?? ''
+  llmBaseUrlDraft.value = cfg?.baseUrl ?? ''
+  // No need to set originals — they are computed from providerConfigs directly
+}
+
+/**
  * Reset LLM model state to the provider default when the user selects a different provider.
  * Called via @change on the provider <select>.
  */
@@ -652,6 +703,8 @@ function onLLMProviderChange() {
   const defaultModel = models.find((m) => !m.isCustom)?.value || ''
   llmModelSelection.value = defaultModel
   llmCustomModelInput.value = ''
+  // Reload credential drafts for the newly selected provider
+  initLLMCredentialDrafts(provider)
 }
 
 // ─── Draft persistence ────────────────────────────────────────────
@@ -671,6 +724,9 @@ function scheduleDraftSave() {
       presetConfig: { ...presetConfig.value },
       llmModelSelection: llmModelSelection.value,
       llmCustomModelInput: llmCustomModelInput.value,
+      // Persist credential drafts so they survive a popup close/reopen
+      llmApiKeyDraft: llmApiKeyDraft.value,
+      llmBaseUrlDraft: llmBaseUrlDraft.value,
       customExampleText: customExampleText.value,
       savedAt: Date.now(),
     }
@@ -697,6 +753,10 @@ function applyDraft(draft: DraftPresetState) {
   if (draft.localPreset.type === 'llm-prompt') {
     llmModelSelection.value = draft.llmModelSelection || ''
     llmCustomModelInput.value = draft.llmCustomModelInput || ''
+    // Restore credential drafts — originals stay pointing to current providerConfigs
+    // so the dirty check correctly marks the preset as having unsaved changes
+    if (draft.llmApiKeyDraft !== undefined) llmApiKeyDraft.value = draft.llmApiKeyDraft
+    if (draft.llmBaseUrlDraft !== undefined) llmBaseUrlDraft.value = draft.llmBaseUrlDraft
   }
   if (
     draft.localPreset.type === 'transformation' ||
@@ -758,10 +818,9 @@ onMounted(async () => {
   }
   // Initialize LLM model selection state (baseline)
   if (localPreset.value.type === 'llm-prompt') {
-    initLLMModelState(
-      (localPreset.value as LLMPromptPreset).llmProvider,
-      (localPreset.value as LLMPromptPreset).llmModel
-    )
+    const llmPreset = localPreset.value as LLMPromptPreset
+    initLLMModelState(llmPreset.llmProvider, llmPreset.llmModel)
+    initLLMCredentialDrafts(llmPreset.llmProvider)
   }
   // Override baseline with persisted draft if one exists for this preset
   await restoreDraftIfValid()
@@ -816,6 +875,36 @@ const llmAvailableModels = computed((): ModelOption[] => {
 
 // True when the current LLM provider has at least one non-custom predefined model (show dropdown)
 const llmHasPredefinedModels = computed(() => llmAvailableModels.value.some((m) => !m.isCustom))
+
+// Provider config metadata (requiresApiKey, requiresBaseUrl, defaultBaseUrl) for the selected LLM provider
+// Reuses the same getProviderConfig() used by translation mode — single source of truth
+const llmCurrentProviderConfig = computed(() => {
+  if (localPreset.value.type !== 'llm-prompt') return null
+  const provider = (localPreset.value as LLMPromptPreset).llmProvider
+  if (!provider) return null
+  return getProviderConfig(provider as TranslationProvider)
+})
+
+// Local drafts for the global provider credentials (api key, base url).
+// Written to providerConfigs only on save — so the save/undo buttons appear as expected.
+const llmApiKeyDraft = ref('')
+const llmBaseUrlDraft = ref('')
+
+// Computed "originals" — always reflect the value currently saved in providerConfigs.
+// Using computed (instead of manually-set refs) avoids the race condition where
+// initLLMCredentialDrafts runs before the async storage load completes.
+const llmApiKeyOriginal = computed(() => {
+  if (localPreset.value.type !== 'llm-prompt') return ''
+  const provider = (localPreset.value as LLMPromptPreset).llmProvider
+  const cfg = providerConfigs.value[provider as keyof ProviderConfigs] as { apiKey?: string }
+  return cfg?.apiKey ?? ''
+})
+const llmBaseUrlOriginal = computed(() => {
+  if (localPreset.value.type !== 'llm-prompt') return ''
+  const provider = (localPreset.value as LLMPromptPreset).llmProvider
+  const cfg = providerConfigs.value[provider as keyof ProviderConfigs] as { baseUrl?: string }
+  return cfg?.baseUrl ?? ''
+})
 
 // The resolved model name based on the current selection state
 const resolvedLLMModel = computed(() =>
@@ -872,7 +961,10 @@ const hasUnsavedChanges = computed(() => {
       localPreset.value.llmProvider !== props.preset.llmProvider ||
       // Compare the resolved model (not the raw selection) against the saved value
       resolvedLLMModel.value !== props.preset.llmModel ||
-      localPreset.value.keyboardShortcut !== props.preset.keyboardShortcut
+      localPreset.value.keyboardShortcut !== props.preset.keyboardShortcut ||
+      // Credential drafts are dirty if they differ from the originals captured at init/undo
+      llmApiKeyDraft.value !== llmApiKeyOriginal.value ||
+      llmBaseUrlDraft.value !== llmBaseUrlOriginal.value
     )
   }
   return true
@@ -886,6 +978,9 @@ watch(presetConfig, scheduleDraftSave, { deep: true })
 watch(llmModelSelection, scheduleDraftSave)
 watch(llmCustomModelInput, scheduleDraftSave)
 watch(customExampleText, scheduleDraftSave)
+// Credential drafts need explicit watchers — they are refs not tied to localPreset
+watch(llmApiKeyDraft, scheduleDraftSave)
+watch(llmBaseUrlDraft, scheduleDraftSave)
 
 // Sync local state when parent switches the active preset tab
 watch(
@@ -902,12 +997,11 @@ watch(
     } else {
       presetConfig.value = {}
     }
-    // Sync LLM model selection state
+    // Sync LLM model selection state and credential drafts
     if (newPreset.type === 'llm-prompt') {
-      initLLMModelState(
-        (newPreset as LLMPromptPreset).llmProvider,
-        (newPreset as LLMPromptPreset).llmModel
-      )
+      const llmPreset = newPreset as LLMPromptPreset
+      initLLMModelState(llmPreset.llmProvider, llmPreset.llmModel)
+      initLLMCredentialDrafts(llmPreset.llmProvider)
     } else {
       llmModelSelection.value = ''
       llmCustomModelInput.value = ''
@@ -945,19 +1039,19 @@ function getProviderConfig(provider: TranslationProvider) {
   switch (provider) {
     case 'chatgpt':
       config.requiresBaseUrl = true
-      config.defaultBaseUrl = 'https://api.openai.com/v1'
+      config.defaultBaseUrl = PROVIDER_BASE_URLS.chatgpt
       break
     case 'groq':
       config.requiresBaseUrl = true
-      config.defaultBaseUrl = 'https://api.groq.com/openai/v1'
+      config.defaultBaseUrl = PROVIDER_BASE_URLS.groq
       break
     case 'ollama':
       config.requiresBaseUrl = true
-      config.defaultBaseUrl = 'http://localhost:11434/v1'
+      config.defaultBaseUrl = PROVIDER_BASE_URLS.ollama
       break
     case 'openrouter':
       config.requiresBaseUrl = true
-      config.defaultBaseUrl = 'https://openrouter.ai/api/v1'
+      config.defaultBaseUrl = PROVIDER_BASE_URLS.openrouter
       break
     case 'custom':
       config.requiresBaseUrl = true
@@ -1041,9 +1135,15 @@ function handleModeChange(
           ? PROVIDER_TO_LLM[props.globalProvider]
           : 'gemini'
       ) as LLMProvider
-      // Initialize with the default model for the suggested provider
+      // Use the model already configured globally for this provider (covers 'custom' which has
+      // no predefined list), then fall back to the first predefined model as a last resort
+      const globalCfg = providerConfigs.value[
+        suggestedProvider as keyof ProviderConfigs
+      ] as { model?: string } | undefined
       const defaultModel =
-        getDefaultModel(suggestedProvider as keyof typeof PREDEFINED_MODELS) || ''
+        globalCfg?.model ||
+        getDefaultModel(suggestedProvider as keyof typeof PREDEFINED_MODELS) ||
+        ''
       localPreset.value = {
         ...base,
         type: 'llm-prompt',
@@ -1053,6 +1153,8 @@ function handleModeChange(
       } as Preset
       // Sync local selection state to the default model
       initLLMModelState(suggestedProvider, defaultModel)
+      // Initialise credential drafts for the suggested provider
+      initLLMCredentialDrafts(suggestedProvider)
       break
     }
   }
@@ -1084,12 +1186,14 @@ function undoChanges() {
   } else {
     presetConfig.value = {}
   }
-  // Restore LLM model selection state
+  // Restore LLM model selection state and credential drafts
   if (props.preset.type === 'llm-prompt') {
     initLLMModelState(
       (props.preset as LLMPromptPreset).llmProvider,
       (props.preset as LLMPromptPreset).llmModel
     )
+    // Reset drafts to the last-saved values (re-reads from global providerConfigs)
+    initLLMCredentialDrafts((props.preset as LLMPromptPreset).llmProvider)
   }
   // Remove persisted draft so it does not restore on next popup open
   memoryCachedDraft.value = null
@@ -1223,8 +1327,35 @@ function showValidationError(title: string, message: string) {
   showValidationDialog.value = true
 }
 
+/**
+ * Run a live credential check via PROXY_FETCH.
+ * Sets isSaving while in-flight. Shows an error dialog and returns false on failure.
+ * Returns true when the credentials are valid (or validation is skipped for the provider).
+ */
+async function validateCredentials(
+  provider: string,
+  apiKey: string,
+  baseUrl?: string
+): Promise<boolean> {
+  isSaving.value = true
+  try {
+    const result = await validateProviderCredentials(provider, apiKey, baseUrl)
+    if (!result.success) {
+      showValidationError(
+        t('validationError') || 'Validation Error',
+        `✗ ${result.error || t('apiKeyRequired')}`
+      )
+      return false
+    }
+    return true
+  } finally {
+    isSaving.value = false
+  }
+}
+
 /** Type-specific validation then emit the updated preset */
-function savePreset() {
+async function savePreset() {
+  if (isSaving.value) return
   if (!validateShortcut()) return
 
   if (localPreset.value.type === 'transformation') {
@@ -1292,6 +1423,21 @@ function savePreset() {
         return
       }
 
+      // Validate credentials if they changed from the saved state
+      const savedConfig =
+        props.preset.type === 'translation' ? props.preset.customProviderConfig : undefined
+      const credentialsChanged =
+        presetConfig.value.apiKey !== savedConfig?.apiKey ||
+        presetConfig.value.baseUrl !== savedConfig?.baseUrl
+      if (credentialsChanged) {
+        const ok = await validateCredentials(
+          localPreset.value.customProvider,
+          presetConfig.value.apiKey ?? '',
+          presetConfig.value.baseUrl
+        )
+        if (!ok) return
+      }
+
       // Copy presetConfig to localPreset.customProviderConfig before saving
       localPreset.value.customProviderConfig = { ...presetConfig.value }
     }
@@ -1329,6 +1475,32 @@ function savePreset() {
     }
     // Persist the resolved model name (never 'custom') into the preset
     localPreset.value.llmModel = effectiveModel
+
+    // Validate credentials if they changed from the last-saved values
+    const credentialsChanged =
+      llmApiKeyDraft.value !== llmApiKeyOriginal.value ||
+      llmBaseUrlDraft.value !== llmBaseUrlOriginal.value
+    if (credentialsChanged) {
+      const ok = await validateCredentials(
+        localPreset.value.llmProvider,
+        llmApiKeyDraft.value,
+        llmBaseUrlDraft.value || undefined
+      )
+      if (!ok) return
+    }
+
+    // Flush credential drafts to global providerConfigs on save
+    const provider = localPreset.value.llmProvider
+    const cfg = providerConfigs.value[provider as keyof ProviderConfigs] as {
+      apiKey?: string
+      baseUrl?: string
+    }
+    if (cfg) {
+      if ('apiKey' in cfg) cfg.apiKey = llmApiKeyDraft.value
+      if ('baseUrl' in cfg) cfg.baseUrl = llmBaseUrlDraft.value
+    }
+    // No need to update originals manually — they are computed from providerConfigs,
+    // so once we write to providerConfigs above, hasUnsavedChanges resets automatically
   }
 
   emit('update-preset', { ...localPreset.value })

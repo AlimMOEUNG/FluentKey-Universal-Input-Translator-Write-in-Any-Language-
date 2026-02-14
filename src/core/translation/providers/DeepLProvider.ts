@@ -8,15 +8,16 @@
  */
 
 import { BaseTranslationProvider, TranslationOptions } from './BaseTranslationProvider'
+import { PROVIDER_BASE_URLS } from '@/config/providers'
 
 interface DeepLTranslationsResponse {
   translations: Array<{ text: string }>
 }
 
-// DeepL API endpoints
+// DeepL translate endpoints — base URLs come from the central PROVIDER_BASE_URLS config
 const DEEPL_ENDPOINTS = {
-  free: 'https://api-free.deepl.com/v2/translate',
-  pro: 'https://api.deepl.com/v2/translate',
+  free: `${PROVIDER_BASE_URLS.deeplFree}/translate`,
+  pro: `${PROVIDER_BASE_URLS.deeplPro}/translate`,
 }
 
 export class DeepLProvider extends BaseTranslationProvider {

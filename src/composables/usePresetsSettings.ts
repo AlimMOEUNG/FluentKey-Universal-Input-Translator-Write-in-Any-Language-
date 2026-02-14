@@ -14,7 +14,12 @@ import type {
   PresetsSettings,
 } from '@/types/common'
 import { normalizeShortcut } from '@/core/utils/keyboardUtils'
-import { getDefaultModel } from '@/config/predefinedModels'
+import {
+  getDefaultModel,
+  PREDEFINED_MODELS,
+  type PredefinedModelProvider,
+} from '@/config/predefinedModels'
+import { isLLMProvider, getLLMProviders } from '@/config/providers'
 import { usePro } from '@/composables/usePro'
 import { translate as t } from '@/core/utils/i18n'
 import { createOnboardingPresetsSettings } from '@/config/defaultPresets'
@@ -48,7 +53,7 @@ function generateUUID(): string {
  */
 function generateDefaultShortcut(index: number): string {
   if (index === 1) {
-    return 'Ctrl+Alt+T'
+    return 'Alt+T'
   }
   // Single-digit range only (shortcut validator requires [A-Z0-9] single char)
   if (index >= 2 && index <= 9) {
@@ -59,11 +64,14 @@ function generateDefaultShortcut(index: number): string {
 }
 
 /**
- * Create a default preset with specified index and type
+ * Create a default preset with specified index and type.
+ * For llm-prompt, globalProvider is used as the default LLM provider if it is LLM-compatible,
+ * otherwise falls back to the first available LLM provider.
  */
 function createDefaultPreset(
   index: number,
-  type: 'translation' | 'transformation' | 'custom-transform' | 'llm-prompt' = 'translation'
+  type: 'translation' | 'transformation' | 'custom-transform' | 'llm-prompt' = 'translation',
+  globalProvider?: string
 ): Preset {
   const basePreset = {
     id: generateUUID(),
@@ -86,13 +94,21 @@ function createDefaultPreset(
       customTransformId: '',
     } as CustomTransformPreset
   } else if (type === 'llm-prompt') {
+    // Use the global provider if it is LLM-compatible, otherwise pick the first LLM provider
+    const fallbackProvider = getLLMProviders()[0]?.value ?? 'gemini'
+    const defaultLLMProvider =
+      globalProvider && isLLMProvider(globalProvider) ? globalProvider : fallbackProvider
     return {
       ...basePreset,
       type: 'llm-prompt',
       prompt: '',
-      llmProvider: 'gemini',
-      // Use the default model for the initial provider so the field is never blank
-      llmModel: getDefaultModel('gemini'),
+      llmProvider: defaultLLMProvider,
+      // Use the default model for the resolved provider so the field is never blank.
+      // 'custom' provider has no predefined models, so fall back to empty string.
+      llmModel:
+        defaultLLMProvider in PREDEFINED_MODELS
+          ? getDefaultModel(defaultLLMProvider as PredefinedModelProvider)
+          : '',
     } as LLMPromptPreset
   } else {
     return {
@@ -256,7 +272,7 @@ async function loadFromStorage() {
 
         // Backfill pinnedPresetId if missing (migration for existing users)
         let needsSave = result.presetsSettings.presets.some(
-          (p: unknown) => !(typeof p === 'object' && p !== null && 'type' in p),
+          (p: unknown) => !(typeof p === 'object' && p !== null && 'type' in p)
         )
         if (
           presetsSettings.value.pinnedPresetId === undefined ||
@@ -418,7 +434,8 @@ export function usePresetsSettings() {
 
     const preferredIndex = presetsSettings.value.presets.length + 1
     const availableNumber = findAvailablePresetNumber(preferredIndex)
-    const newPreset = createDefaultPreset(availableNumber, type)
+    // Pass the current global provider so llm-prompt presets default to it if LLM-compatible
+    const newPreset = createDefaultPreset(availableNumber, type, presetsSettings.value.provider)
 
     presetsSettings.value.presets.push(newPreset)
     presetsSettings.value.activePresetId = newPreset.id

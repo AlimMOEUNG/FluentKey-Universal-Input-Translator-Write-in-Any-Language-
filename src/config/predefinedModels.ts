@@ -11,11 +11,13 @@ export interface ModelOption {
 
 export const PREDEFINED_MODELS = {
   gemini: [
-    { value: 'gemini-2.0-flash-exp', label: 'Gemini 2.0 Flash' },
-    { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
-    { value: 'gemini-1.5-flash-8b', label: 'Gemini 1.5 Flash-8B' },
-    { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro' },
-    { value: 'gemini-pro', label: 'Gemini Pro (Legacy)' },
+    { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
+    { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+    { value: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash-Lite' },
+    { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
+    { value: 'gemini-2.0-flash-001', label: 'Gemini 2.0 Flash 001' },
+    { value: 'gemini-2.0-flash-lite', label: 'Gemini 2.0 Flash-Lite' },
+    { value: 'gemini-2.0-flash-lite-001', label: 'Gemini 2.0 Flash-Lite 001' },
     { value: 'custom', label: 'Custom Model', isCustom: true },
   ] as ModelOption[],
 
@@ -51,8 +53,9 @@ export const PREDEFINED_MODELS = {
     { value: 'anthropic/claude-3-haiku', label: 'Claude 3 Haiku' },
     { value: 'openai/gpt-4o', label: 'OpenAI GPT-4o' },
     { value: 'openai/gpt-4o-mini', label: 'OpenAI GPT-4o Mini' },
-    { value: 'google/gemini-2.0-flash-exp', label: 'Google Gemini 2.0 Flash' },
-    { value: 'google/gemini-pro-1.5', label: 'Google Gemini 1.5 Pro' },
+    { value: 'google/gemini-2.5-pro', label: 'Google Gemini 2.5 Pro' },
+    { value: 'google/gemini-2.5-flash', label: 'Google Gemini 2.5 Flash' },
+    { value: 'google/gemini-2.0-flash', label: 'Google Gemini 2.0 Flash' },
     { value: 'meta-llama/llama-3.1-70b-instruct', label: 'Meta Llama 3.1 70B' },
     { value: 'mistralai/mixtral-8x7b-instruct', label: 'Mixtral 8x7B' },
     { value: 'custom', label: 'Custom Model', isCustom: true },

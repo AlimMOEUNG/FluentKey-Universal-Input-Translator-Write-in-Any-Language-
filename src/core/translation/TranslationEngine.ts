@@ -87,7 +87,7 @@ export class TranslationEngine {
 
       case 'deepl': {
         const { providerKeys } = await chrome.storage.local.get('providerKeys')
-        const apiKey = providerKeys?.deeplApiKey
+        const apiKey = providerKeys?.deepl?.apiKey
         if (!apiKey) {
           throw new Error(
             'DeepL API key is required. Please configure it in the extension settings.'
@@ -98,14 +98,14 @@ export class TranslationEngine {
 
       case 'gemini': {
         const { providerKeys } = await chrome.storage.local.get('providerKeys')
-        const geminiConfig = providerKeys?.geminiConfig
+        const geminiConfig = providerKeys?.gemini
         if (!geminiConfig?.apiKey) {
           throw new Error(
             'Gemini API key is required. Please configure it in the extension settings.'
           )
         }
         const effectiveModel = getEffectiveModel(
-          geminiConfig.model || 'gemini-1.5-flash',
+          geminiConfig.model || 'gemini-2.0-flash',
           geminiConfig.customModel
         )
         return new GeminiProvider(geminiConfig.apiKey, effectiveModel)
@@ -117,8 +117,8 @@ export class TranslationEngine {
       case 'openrouter':
       case 'custom': {
         const { providerKeys } = await chrome.storage.local.get('providerKeys')
-        const configKey = `${providerType}Config`
-        const config = providerKeys?.[configKey]
+        // Storage uses flat ProviderConfigs keys (chatgpt, groq, etc.) — no "Config" suffix
+        const config = providerKeys?.[providerType]
 
         if (!config) {
           throw new Error(

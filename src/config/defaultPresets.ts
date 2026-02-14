@@ -33,7 +33,7 @@ function generateUUID(): string {
  * - Preset 10+ → '' (Pro users assign manually)
  */
 function generateDefaultShortcut(index: number): string {
-  if (index === 1) return 'Ctrl+Alt+T'
+  if (index === 1) return 'Alt+T'
   if (index >= 2 && index <= 9) return `Ctrl+Alt+${index}`
   return ''
 }

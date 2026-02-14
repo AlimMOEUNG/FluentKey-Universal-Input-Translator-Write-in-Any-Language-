@@ -8,6 +8,7 @@
  */
 
 import { BaseTranslationProvider, TranslationOptions } from './BaseTranslationProvider'
+import { PROVIDER_BASE_URLS } from '@/config/providers'
 
 interface GeminiCandidatesResponse {
   candidates?: Array<{
@@ -15,8 +16,8 @@ interface GeminiCandidatesResponse {
   }>
 }
 
-// Gemini REST API endpoint
-const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models'
+// Gemini native REST API (generateContent) — uses v1beta/models, NOT v1
+const GEMINI_API_BASE = PROVIDER_BASE_URLS.geminiNative
 
 export class GeminiProvider extends BaseTranslationProvider {
   readonly name = 'Google Gemini'
@@ -25,7 +26,7 @@ export class GeminiProvider extends BaseTranslationProvider {
   private apiKey: string
   private model: string
 
-  constructor(apiKey: string, model: string = 'gemini-1.5-flash') {
+  constructor(apiKey: string, model: string = 'gemini-2.0-flash') {
     super()
     this.apiKey = apiKey
     this.model = model
