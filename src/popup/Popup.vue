@@ -1,8 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div
+    ref="wrapperRef"
     class="w-full max-w-[400px] min-w-[360px] flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-all duration-200 ease-in-out"
-    style="height: fit-content; min-height: fit-content"
+    style="height: fit-content; min-height: fit-content; max-height: 600px; overflow: hidden"
   >
     <!-- Header: title + language selector + theme toggle -->
     <PopupHeader />
@@ -16,13 +17,13 @@
       <PresetsTab v-else />
     </div>
 
-    <!-- Cross-promo banner (all Subtiltee extensions) -->
-    <AllExtensionsBanner />
+    <!-- Cross-promo banner: hidden when popup would overflow and trigger a browser scrollbar -->
+    <AllExtensionsBanner v-if="showBanner" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { usePopupState } from '@/composables/usePopupState'
 import PopupHeader from '@/components/PopupHeader.vue'
 import MainNavTabs from '@/components/MainNavTabs.vue'
@@ -33,6 +34,32 @@ import { isMajorOrMinorRelease, hasMajorOrMinorDiff } from '@/utils/version-util
 
 // currentView drives which tab content is rendered
 const { currentView } = usePopupState()
+
+// Hide the cross-promo banner when the popup is tall enough to trigger
+// a browser-level scrollbar. The threshold is set just below Chrome's
+// practical scroll point (~600px). The hysteresis (+BANNER_HEIGHT) prevents
+// oscillation: the banner only reappears once enough space is freed.
+const POPUP_MAX_HEIGHT = 590 // px — hide banner above this total height
+const BANNER_HEIGHT = 52 // px — estimated rendered height of AllExtensionsBanner
+
+const wrapperRef = ref<HTMLElement | null>(null)
+const showBanner = ref(true)
+let resizeObserver: ResizeObserver | null = null
+
+onMounted(() => {
+  if (!wrapperRef.value) return
+  resizeObserver = new ResizeObserver(([entry]) => {
+    const h = entry.contentRect.height
+    if (showBanner.value && h > POPUP_MAX_HEIGHT) {
+      // Content alone already fills the popup — remove the banner
+      showBanner.value = false
+    } else if (!showBanner.value && h + BANNER_HEIGHT <= POPUP_MAX_HEIGHT) {
+      // Content shrank enough for the banner to fit again — restore it
+      showBanner.value = true
+    }
+  })
+  resizeObserver.observe(wrapperRef.value)
+})
 
 // Check whether the extension was updated since the last popup open.
 // If a significant update (major or minor) is detected, open the What's New page
@@ -65,6 +92,10 @@ async function checkForUpdate(): Promise<void> {
     // Non-critical — silently ignore errors
   }
 }
+
+onUnmounted(() => {
+  resizeObserver?.disconnect()
+})
 
 onMounted(() => {
   checkForUpdate()
