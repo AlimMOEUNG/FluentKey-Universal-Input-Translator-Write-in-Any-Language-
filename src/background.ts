@@ -182,12 +182,18 @@ async function handleProxyFetch(message: {
   headers?: Record<string, string>
   body?: string
 }): Promise<BackgroundResponse> {
+  // Abort the request if the LLM takes longer than 30 seconds
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 30_000)
+
   try {
     const response = await fetch(message.url, {
       method: message.method || 'GET',
       headers: message.headers || {},
       body: message.body,
+      signal: controller.signal,
     })
+    clearTimeout(timeoutId)
 
     // Parse response based on content type
     const contentType = response.headers.get('content-type')

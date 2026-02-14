@@ -240,6 +240,14 @@ export class KeyboardShortcutHandler {
     preset: Preset,
     context: 'selection' | 'content' | 'page'
   ): Promise<void> {
+    // Declared outside try/catch so both blocks share the same references.
+    // Variables set inside the try are read in the catch (restore on error).
+    let pendingShown = false
+    let selectionPrefix = ''
+    let selectionSuffix = ''
+    // Full field content before any pending write — restored in catch if LLM fails/times out.
+    let originalFieldSnapshot = ''
+
     try {
       let resultText: string
 
@@ -261,13 +269,101 @@ export class KeyboardShortcutHandler {
           `[KeyboardShortcut] Text transformed using custom "${transform.name}" (${text.length} → ${resultText.length} chars)`
         )
       } else if (preset.type === 'llm-prompt') {
-        // Execute prompt template against LLM provider
-        resultText = await LLMPromptExecutor.execute(
-          preset.prompt,
-          text,
-          preset.llmProvider,
-          preset.llmModel
-        )
+        // ── Configurable pending-indicator thresholds ──────────────────────────
+        // Only show the indicator if the LLM takes longer than PENDING_THRESHOLD_MS.
+        // Fast responses (< threshold) go straight from original text to result.
+        const PENDING_THRESHOLD_MS = 500 // ms before showing the indicator
+        const UPDATE_INTERVAL_MS = 1000 // ms between elapsed-counter refreshes
+
+        let pendingTimer: ReturnType<typeof setTimeout> | null = null
+        let updateInterval: ReturnType<typeof setInterval> | null = null
+        let elapsedSeconds = 0
+
+        // Tracks the last in-flight writePending promise.
+        // Awaited in the finally block to prevent race conditions: if the interval
+        // fires a write just as the LLM responds, the final replace must wait for
+        // that write to complete before calling setTextValue, otherwise both calls
+        // run concurrently and the pending text gets appended to instead of replaced.
+        let pendingWritePromise: Promise<void> = Promise.resolve()
+
+        // Guards against writes that start after cancellation is requested.
+        // The interval callback fires synchronously but writePending is async —
+        // this flag prevents a write that slipped through from executing.
+        let cancelled = false
+
+        // Snapshot the full field content so the indicator can be appended after it.
+        // Captured here before any DOM modification.
+        const originalFullText = inputElement ? InputHandler.getTextValue(inputElement) : ''
+
+        // Also store it at try-block scope for restoration on error/timeout
+        originalFieldSnapshot = originalFullText
+
+        // For 'selection' context: capture the exact character offsets of the selection
+        // while it is still active (before any pending write clears it).
+        // Uses native selectionStart/End for input/textarea and a Range measurement for
+        // contenteditable — both are position-based and immune to duplicate-text ambiguity.
+        if (context === 'selection' && inputElement) {
+          const offsets = InputHandler.getSelectionOffsets(inputElement)
+          if (offsets) {
+            selectionPrefix = originalFullText.slice(0, offsets.start)
+            selectionSuffix = originalFullText.slice(offsets.end)
+          }
+        }
+
+        // Builds the full field content with the indicator inserted at the right position.
+        // 'content' context: indicator appended after the whole original text.
+        // 'selection' context: indicator inserted after the selected text, prefix/suffix preserved.
+        const buildPendingContent = (indicator: string): string => {
+          if (context === 'selection') {
+            return selectionPrefix + text + '\n\n' + indicator + selectionSuffix
+          }
+          return originalFullText + '\n\n' + indicator
+        }
+
+        // Writes the pending indicator into the field (full replace preserving surrounding text).
+        const writePending = async (indicator: string): Promise<void> => {
+          if (!inputElement || cancelled) return
+          await InputHandler.setTextValue(inputElement, buildPendingContent(indicator))
+        }
+
+        // Only arm the timer when there is an actual input element to write into.
+        // For 'page' context (no inputElement) there is nothing to update.
+        if (inputElement) {
+          pendingTimer = setTimeout(async () => {
+            pendingShown = true
+            elapsedSeconds = 0
+            pendingWritePromise = writePending('⏳ Generating...')
+            await pendingWritePromise
+
+            // Refresh the elapsed counter periodically so the user sees progress
+            updateInterval = setInterval(() => {
+              elapsedSeconds += UPDATE_INTERVAL_MS / 1000
+              // Track every new write so finally can await the last one
+              pendingWritePromise = writePending(`⏳ Generating... (${elapsedSeconds}s)`)
+            }, UPDATE_INTERVAL_MS)
+          }, PENDING_THRESHOLD_MS)
+        }
+
+        try {
+          // Execute prompt template against LLM provider
+          resultText = await LLMPromptExecutor.execute(
+            preset.prompt,
+            text,
+            preset.llmProvider,
+            preset.llmModel
+          )
+        } finally {
+          // Stop future writes immediately
+          cancelled = true
+          if (pendingTimer) clearTimeout(pendingTimer)
+          if (updateInterval) clearInterval(updateInterval)
+          // Wait for any in-flight writePending to complete before the final replace.
+          // Without this await, the last interval write and the final setTextValue
+          // run concurrently: both call selectAll + insertText and the pending text
+          // ends up appended to the result instead of being replaced.
+          await pendingWritePromise
+        }
+
         console.log(
           `[KeyboardShortcut] LLM prompt executed via ${preset.llmProvider}/${preset.llmModel} (${text.length} → ${resultText.length} chars)`
         )
@@ -294,10 +390,15 @@ export class KeyboardShortcutHandler {
         }
       }
 
-      // Apply result based on context
+      // Apply result based on context.
+      // When pendingShown is true the original selection range is gone (pending writes replaced
+      // the whole field). Use setTextValue and reconstruct the full field content:
+      // for 'selection' context, re-inject prefix/suffix around the result so text outside
+      // the original selection is preserved.
       if (context === 'selection' && inputElement) {
-        // Replace selection in input
-        const success = await InputHandler.replaceSelectedText(inputElement, resultText)
+        const success = pendingShown
+          ? await InputHandler.setTextValue(inputElement, selectionPrefix + resultText + selectionSuffix)
+          : await InputHandler.replaceSelectedText(inputElement, resultText)
         if (!success) {
           throw new Error('Failed to replace selected text in input')
         }
@@ -313,13 +414,29 @@ export class KeyboardShortcutHandler {
       }
     } catch (error) {
       console.error('[KeyboardShortcut] Processing failed:', error)
+
+      // If the pending indicator was shown, the field contains the indicator text.
+      // Restore the original content so the user doesn't lose their work.
+      if (pendingShown && inputElement && originalFieldSnapshot) {
+        await InputHandler.setTextValue(inputElement, originalFieldSnapshot)
+      }
+
       const operation =
         preset.type === 'transformation' || preset.type === 'custom-transform'
           ? 'Transformation'
           : preset.type === 'llm-prompt'
             ? 'LLM Prompt'
             : 'Translation'
-      alert(`${operation} failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+
+      const isTimeout =
+        error instanceof Error &&
+        (error.name === 'AbortError' || error.message.toLowerCase().includes('aborted'))
+
+      const message = isTimeout
+        ? `${operation} timed out after 30 seconds. Your text has been restored.`
+        : `${operation} failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+
+      alert(message)
     }
   }
 

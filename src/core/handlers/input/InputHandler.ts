@@ -102,6 +102,50 @@ export class InputHandler {
   }
 
   /**
+   * Returns the start and end character offsets of the current selection within the element's
+   * plain-text content, or null if there is no active selection.
+   *
+   * For input/textarea: uses the native selectionStart/selectionEnd properties.
+   * For contenteditable: builds a Range from the element start to the selection start,
+   * then calls toString() to count characters — consistent with how textContent is read.
+   *
+   * Must be called while the selection is still active (before any programmatic DOM writes).
+   */
+  static getSelectionOffsets(element: HTMLElement): { start: number; end: number } | null {
+    const inputType = this.getInputType(element)
+
+    switch (inputType) {
+      case 'input':
+      case 'textarea': {
+        const inputEl = element as HTMLInputElement | HTMLTextAreaElement
+        if (inputEl.selectionStart !== null && inputEl.selectionEnd !== null) {
+          return { start: inputEl.selectionStart, end: inputEl.selectionEnd }
+        }
+        return null
+      }
+
+      case 'contenteditable': {
+        const selection = window.getSelection()
+        if (!selection || selection.rangeCount === 0) return null
+        const range = selection.getRangeAt(0)
+        if (range.collapsed) return null
+
+        // Measure how many characters precede the selection start inside the element
+        const preRange = document.createRange()
+        preRange.selectNodeContents(element)
+        preRange.setEnd(range.startContainer, range.startOffset)
+        const start = preRange.toString().length
+        const end = start + range.toString().length
+
+        return { start, end }
+      }
+
+      default:
+        return null
+    }
+  }
+
+  /**
    * Check if there's a selection in the input
    */
   static hasSelection(element: HTMLElement): boolean {
