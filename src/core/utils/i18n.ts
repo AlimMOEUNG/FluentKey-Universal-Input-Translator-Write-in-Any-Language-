@@ -64,6 +64,11 @@ const enTranslations = {
   baseUrlRequired: 'Base URL required',
   ollamaHint: 'Click ↻ to load your installed Ollama models',
 
+  // API Runtime Error Messages
+  errorApiQuotaExceeded:
+    'Your API key quota has been exceeded. Please check your API key quota.',
+  errorApiKeyUnauthorized: 'Invalid or unauthorized API key. Please check your settings.',
+
   // Languages
   languagesLabel: 'Languages',
   sourceLanguage: 'Source Language',

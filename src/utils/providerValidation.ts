@@ -5,6 +5,7 @@
  */
 
 import { PROVIDER_BASE_URLS } from '@/config/providers'
+import { translate } from '@/core/utils/i18n'
 
 export interface ValidationResult {
   success: boolean
@@ -26,6 +27,7 @@ interface ProxyErrorResponse {
  *   Gemini (OpenAI-compat mode):           { error: { message: "..." } }
  *   DeepL:                                 { message: "..." }
  *   Ollama:                                { error: "..." }  (plain string)
+ *   Some APIs wrap response in an array:   [{ error: { message: "..." } }]
  *
  * Falls back to the raw HTTP status string when the body is unrecognised.
  */
@@ -33,10 +35,15 @@ export function extractApiError(
   data: Record<string, unknown> | string | undefined,
   httpFallback: string
 ): string {
-  if (!data || typeof data === 'string') return httpFallback
+  // Normalize: some APIs wrap the error object in an array
+  const normalized: unknown = Array.isArray(data) ? data[0] : data
+
+  if (!normalized || typeof normalized === 'string') return httpFallback
+
+  const obj = normalized as Record<string, unknown>
 
   // OpenAI / Gemini / Groq / OpenRouter: { error: { message: "..." } }
-  const nestedMsg = (data as Record<string, unknown>)?.error
+  const nestedMsg = obj.error
   if (nestedMsg && typeof nestedMsg === 'object') {
     const msg = (nestedMsg as Record<string, unknown>).message
     if (typeof msg === 'string' && msg) return msg
@@ -46,10 +53,45 @@ export function extractApiError(
   if (typeof nestedMsg === 'string' && nestedMsg) return nestedMsg
 
   // DeepL: { message: "..." }
-  const topMsg = (data as Record<string, unknown>).message
+  const topMsg = obj.message
   if (typeof topMsg === 'string' && topMsg) return topMsg
 
   return httpFallback
+}
+
+/**
+ * Map a raw API error message to a concise, user-friendly message.
+ * Covers the most common failure cases: quota/rate-limit, auth, network.
+ */
+export function toFriendlyApiError(rawMsg: string): string {
+  const lower = rawMsg.toLowerCase()
+
+  // HTTP 429 / quota exhausted / rate limit
+  if (
+    lower.includes('429') ||
+    lower.includes('quota') ||
+    lower.includes('resource_exhausted') ||
+    lower.includes('rate limit') ||
+    lower.includes('rate_limit') ||
+    lower.includes('too many requests')
+  ) {
+    return translate('errorApiQuotaExceeded')
+  }
+
+  // Authentication / authorization
+  if (
+    lower.includes('401') ||
+    lower.includes('403') ||
+    lower.includes('invalid api key') ||
+    lower.includes('api_key_invalid') ||
+    lower.includes('unauthenticated') ||
+    lower.includes('unauthorized') ||
+    lower.includes('permission denied')
+  ) {
+    return translate('errorApiKeyUnauthorized')
+  }
+
+  return rawMsg
 }
 
 /**
@@ -98,7 +140,9 @@ export async function validateProviderCredentials(
     case 'deepl': {
       if (!apiKey) return { success: false, error: 'API key required' }
       // Free keys end with ':fx' and use the free API subdomain
-      const deepLBase = apiKey.endsWith(':fx') ? PROVIDER_BASE_URLS.deeplFree : PROVIDER_BASE_URLS.deeplPro
+      const deepLBase = apiKey.endsWith(':fx')
+        ? PROVIDER_BASE_URLS.deeplFree
+        : PROVIDER_BASE_URLS.deeplPro
       return proxyFetch(`${deepLBase}/usage`, 'GET', {
         Authorization: `DeepL-Auth-Key ${apiKey}`,
       })
@@ -116,7 +160,10 @@ export async function validateProviderCredentials(
     case 'ollama':
     case 'openrouter':
     case 'custom': {
-      const defaultUrl = provider !== 'custom' ? PROVIDER_BASE_URLS[provider as keyof typeof PROVIDER_BASE_URLS] as string : ''
+      const defaultUrl =
+        provider !== 'custom'
+          ? (PROVIDER_BASE_URLS[provider as keyof typeof PROVIDER_BASE_URLS] as string)
+          : ''
       const effectiveBase = (baseUrl || defaultUrl || '').replace(/\/+$/, '')
       if (!effectiveBase) return { success: false, error: 'Base URL required' }
       const headers: Record<string, string> = {}

@@ -1,6 +1,6 @@
 import type { LLMProvider } from '@/types/common'
 import type { ProviderConfigs } from '@/composables/useSettings'
-import { extractApiError } from '@/utils/providerValidation'
+import { extractApiError, toFriendlyApiError } from '@/utils/providerValidation'
 import { PROVIDER_BASE_URLS } from '@/config/providers'
 
 const SYSTEM_PROMPT =
@@ -100,9 +100,9 @@ export class LLMPromptExecutor {
     })
 
     if (!response.success) {
-      // Extract the real API error message from the response body (e.g. "API key not valid")
-      const msg = extractApiError(response.data, response.error || 'LLM request failed')
-      throw new Error(msg)
+      // Extract the real API error message from the response body, then map to a friendly string
+      const raw = extractApiError(response.data, response.error || 'LLM request failed')
+      throw new Error(toFriendlyApiError(raw))
     }
 
     const content = response.data?.choices?.[0]?.message?.content
