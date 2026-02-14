@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div
-    class="px-3 pt-3 pb-3 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800"
+    class="px-3 pt-2 pb-2 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800"
   >
     <div
       class="main-nav-container p-1 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center relative"
@@ -52,8 +52,8 @@ const { t } = useI18nWrapper()
 
 .main-nav-tab {
   flex: 1;
-  padding: 0.5rem 0;
-  font-size: 0.85rem;
+  padding: 0.3rem 0;
+  font-size: 0.8rem;
   font-weight: 700;
   text-align: center;
   border-radius: 0.5rem;

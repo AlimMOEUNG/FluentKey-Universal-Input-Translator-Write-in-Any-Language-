@@ -111,7 +111,7 @@ onUnmounted(() => {
 
 <style scoped>
 .preset-tabs-container {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .tabs-header {
@@ -119,7 +119,7 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
   border-bottom: 2px solid theme('colors.gray.200');
 }
 
@@ -141,8 +141,8 @@ onUnmounted(() => {
 }
 
 .tab-button {
-  padding: 0.4rem 0.3rem;
-  font-size: 0.75rem;
+  padding: 0.25rem 0.3rem;
+  font-size: 0.72rem;
   font-weight: 600;
   border-radius: 0.5rem;
   border: 1.5px solid theme('colors.gray.300');
@@ -230,7 +230,7 @@ onUnmounted(() => {
   background-color: theme('colors.emerald.50');
   color: theme('colors.emerald.600');
   border-color: theme('colors.emerald.300');
-  padding: 0.4rem 0.5rem;
+  padding: 0.25rem 0.4rem;
   flex: 0 0 auto;
 }
 
