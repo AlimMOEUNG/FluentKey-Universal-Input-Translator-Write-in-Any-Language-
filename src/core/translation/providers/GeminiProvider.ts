@@ -1,23 +1,14 @@
 /**
  * GeminiProvider - Google Gemini API translator
  *
- * Uses Google AI Studio API (Gemini models)
- * - Requires API key
+ * Uses the OpenAI-compatible Gemini endpoint (v1beta/openai).
+ * - Requires API key (Bearer token via Authorization header)
  * - High quality LLM-based translation
  * - Configurable model selection
  */
 
 import { BaseTranslationProvider, TranslationOptions } from './BaseTranslationProvider'
 import { PROVIDER_BASE_URLS } from '@/config/providers'
-
-interface GeminiCandidatesResponse {
-  candidates?: Array<{
-    content?: { parts?: Array<{ text?: string }> }
-  }>
-}
-
-// Gemini native REST API (generateContent) — uses v1beta/models, NOT v1
-const GEMINI_API_BASE = PROVIDER_BASE_URLS.geminiNative
 
 export class GeminiProvider extends BaseTranslationProvider {
   readonly name = 'Google Gemini'
@@ -33,38 +24,30 @@ export class GeminiProvider extends BaseTranslationProvider {
   }
 
   /**
-   * Get the full Gemini API endpoint URL
+   * Make a request to the Gemini OpenAI-compatible endpoint via PROXY_FETCH (CORS bypass).
    */
-  private getEndpointUrl(): string {
-    return `${GEMINI_API_BASE}/${this.model}:generateContent?key=${this.apiKey}`
-  }
-
-  /**
-   * Make a Gemini API request via PROXY_FETCH
-   */
-  private async makeGeminiRequest(
-    prompt: string
+  private async makeRequest(
+    messages: Array<{ role: string; content: string }>
   ): Promise<{ success: boolean; data?: Record<string, unknown>; error?: string }> {
-    // Send request via background script (CORS bypass)
+    const url = `${PROVIDER_BASE_URLS.gemini}/chat/completions`
+
     return await chrome.runtime.sendMessage({
       type: 'PROXY_FETCH',
-      url: this.getEndpointUrl(),
+      url,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.apiKey}`,
       },
       body: JSON.stringify({
-        contents: [
-          {
-            parts: [{ text: prompt }],
-          },
-        ],
+        model: this.model,
+        messages,
       }),
     })
   }
 
   /**
-   * Translate text using Gemini API (via background script for CORS bypass)
+   * Translate text using the Gemini OpenAI-compatible API.
    */
   async translateText(text: string, options: TranslationOptions): Promise<string> {
     if (!this.isValidText(text)) {
@@ -78,13 +61,11 @@ export class GeminiProvider extends BaseTranslationProvider {
     const { targetLanguage } = options
 
     try {
-      // Build prompt for translation
-      const prompt = `Translate the following text to ${targetLanguage}. If the text is already in ${targetLanguage}, return it unchanged. Return ONLY the translation or original text without any explanations, notes, or additional text.\n\nText: "${text}"`
+      const userMessage = `Translate the following text to ${targetLanguage}. If the text is already in ${targetLanguage}, return it unchanged. Return ONLY the translation or original text without any explanations, notes, or additional text.\n\nText: "${text}"`
 
-      const response = await this.makeGeminiRequest(prompt)
+      const response = await this.makeRequest([{ role: 'user', content: userMessage }])
 
       if (!response.success) {
-        // Parse specific error codes
         let errorMessage = response.error || 'Translation failed'
 
         if (
@@ -105,8 +86,9 @@ export class GeminiProvider extends BaseTranslationProvider {
         throw new Error(errorMessage)
       }
 
-      // Extract translation from response
-      const translation = (response.data as GeminiCandidatesResponse)?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+      // Extract translation from OpenAI-compatible response format
+      const translation = (response.data as { choices?: Array<{ message?: { content?: string } }> })
+        ?.choices?.[0]?.message?.content?.trim()
 
       if (!translation) {
         throw new Error('Empty response from Gemini API')
@@ -120,7 +102,7 @@ export class GeminiProvider extends BaseTranslationProvider {
   }
 
   /**
-   * Validate Gemini API key
+   * Validate Gemini API key via a lightweight test request.
    */
   async validate(): Promise<{ valid: boolean; error?: string }> {
     if (!this.apiKey) {
@@ -128,19 +110,18 @@ export class GeminiProvider extends BaseTranslationProvider {
     }
 
     try {
-      const response = await this.makeGeminiRequest('Test')
+      const response = await this.makeRequest([{ role: 'user', content: 'Test' }])
 
       if (response.success) {
         return { valid: true }
-      } else {
-        let errorMessage = response.error || 'Invalid API key'
-
-        if (errorMessage.includes('API key') || errorMessage.includes('401')) {
-          errorMessage = 'Invalid API key'
-        }
-
-        return { valid: false, error: errorMessage }
       }
+
+      let errorMessage = response.error || 'Invalid API key'
+      if (errorMessage.includes('API key') || errorMessage.includes('401')) {
+        errorMessage = 'Invalid API key'
+      }
+
+      return { valid: false, error: errorMessage }
     } catch {
       return { valid: false, error: 'Validation failed' }
     }

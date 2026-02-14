@@ -106,7 +106,7 @@ export async function validateProviderCredentials(
 
     case 'gemini': {
       if (!apiKey) return { success: false, error: 'API key required' }
-      return proxyFetch(`${PROVIDER_BASE_URLS.geminiOpenAI}/models`, 'GET', {
+      return proxyFetch(`${PROVIDER_BASE_URLS.gemini}/models`, 'GET', {
         Authorization: `Bearer ${apiKey}`,
       })
     }

@@ -22,7 +22,7 @@ async function resolveConfig(provider: LLMProvider): Promise<ResolvedConfig> {
 
   switch (provider) {
     case 'gemini':
-      return { baseUrl: PROVIDER_BASE_URLS.geminiOpenAI, apiKey: keys.gemini?.apiKey ?? null }
+      return { baseUrl: PROVIDER_BASE_URLS.gemini, apiKey: keys.gemini?.apiKey ?? null }
     case 'chatgpt':
       return {
         baseUrl: keys.chatgpt?.baseUrl || PROVIDER_BASE_URLS.chatgpt,

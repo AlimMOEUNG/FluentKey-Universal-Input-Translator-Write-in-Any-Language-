@@ -7,10 +7,7 @@
  * Single source of truth for all provider base URLs.
  * Import from here — never hardcode these strings anywhere else in the codebase.
  *
- * Gemini note: two distinct endpoints exist —
- *   geminiOpenAI  → OpenAI-compatible API  (used for LLM-prompt mode + credential validation)
- *   geminiNative  → native generateContent REST API (used by the translation provider)
- *   Both use v1beta, NOT v1.
+ * Gemini uses the OpenAI-compatible endpoint exclusively (v1beta, NOT v1).
  */
 export const PROVIDER_BASE_URLS = {
   // OpenAI-compatible providers
@@ -18,9 +15,8 @@ export const PROVIDER_BASE_URLS = {
   groq: 'https://api.groq.com/openai/v1',
   ollama: 'http://localhost:11434/v1',
   openrouter: 'https://openrouter.ai/api/v1',
-  // Gemini
-  geminiOpenAI: 'https://generativelanguage.googleapis.com/v1beta/openai',
-  geminiNative: 'https://generativelanguage.googleapis.com/v1beta/models',
+  // Gemini — OpenAI-compatible endpoint
+  gemini: 'https://generativelanguage.googleapis.com/v1beta/openai',
   // DeepL
   deeplFree: 'https://api-free.deepl.com/v2',
   deeplPro: 'https://api.deepl.com/v2',
