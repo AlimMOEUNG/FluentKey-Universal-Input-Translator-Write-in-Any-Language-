@@ -18,7 +18,7 @@ const path = require('path');
 const ROOT_DIR = path.join(__dirname, '..');
 
 // Configuration
-const BROWSERS = ['chrome', 'firefox'];
+const BROWSERS = ['chrome', 'firefox', 'edge'];
 
 // ANSI Colors
 const COLORS = {

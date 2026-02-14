@@ -15,9 +15,10 @@ function copyManifest(targetBrowser: string, outDir: string) {
       }
 
       // Copy the appropriate manifest based on target browser
+      // Edge uses the same manifest as Chrome
       const manifestSource = targetBrowser === 'firefox'
         ? resolve(__dirname, 'manifests/manifest.firefox.json')
-        : targetBrowser === 'chrome'
+        : targetBrowser === 'chrome' || targetBrowser === 'edge'
         ? resolve(__dirname, 'manifests/manifest.chrome.json')
         : resolve(__dirname, 'manifest.json') // fallback to root manifest
 
@@ -31,6 +32,8 @@ function copyManifest(targetBrowser: string, outDir: string) {
       // Copy browser-specific public files (icons, _locales)
       const publicSource = targetBrowser === 'firefox'
         ? resolve(__dirname, 'public_firefox')
+        : targetBrowser === 'edge'
+        ? resolve(__dirname, 'public_edge')
         : targetBrowser === 'chrome'
         ? resolve(__dirname, 'public_chrome')
         : resolve(__dirname, 'public')
@@ -74,7 +77,12 @@ function bundleContentScript(mode: string, outDir: string) {
 export default defineConfig(({ mode }) => {
   // Determine target browser and output directory from environment variables
   const targetBrowser = process.env.TARGET_BROWSER || 'chrome'
-  const outDir = process.env.OUT_DIR || (targetBrowser === 'firefox' ? 'dist-firefox' : targetBrowser === 'chrome' ? 'dist-chrome' : 'dist')
+  const outDir = process.env.OUT_DIR || (
+    targetBrowser === 'firefox' ? 'dist-firefox'
+    : targetBrowser === 'edge' ? 'dist-edge'
+    : targetBrowser === 'chrome' ? 'dist-chrome'
+    : 'dist'
+  )
 
   console.log(`🔨 Building for ${targetBrowser} → ${outDir}`)
 
