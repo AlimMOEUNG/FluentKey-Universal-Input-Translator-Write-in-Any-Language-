@@ -141,6 +141,16 @@
                 "
                 class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
+              <!-- CTA subscription — only shown when the API key field is visible -->
+              <a
+                v-if="currentProviderConfig.requiresApiKey"
+                href="https://tally.so/r/9qDkWK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block text-[10px] text-blue-500 dark:text-blue-400 hover:underline cursor-pointer"
+              >
+                {{ t('apiKeySubscriptionCta') }}
+              </a>
 
               <!-- Model Dropdown (for LLM providers with predefined models) -->
               <select
@@ -329,16 +339,27 @@
         </div>
 
         <!-- API Key (if the selected LLM provider requires it — reads/writes global providerConfigs) -->
-        <div v-if="llmCurrentProviderConfig?.requiresApiKey" class="flex items-center gap-2">
-          <label class="text-[10px] font-semibold text-gray-700 dark:text-gray-300 w-24 shrink-0">
-            API Key
-          </label>
-          <input
-            v-model="llmApiKeyDraft"
-            type="password"
-            :placeholder="t('apiKeyPlaceholder')"
-            class="flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
+        <div v-if="llmCurrentProviderConfig?.requiresApiKey" class="flex flex-col gap-0.5">
+          <div class="flex items-center gap-2">
+            <label class="text-[10px] font-semibold text-gray-700 dark:text-gray-300 w-24 shrink-0">
+              API Key
+            </label>
+            <input
+              v-model="llmApiKeyDraft"
+              type="password"
+              :placeholder="t('apiKeyPlaceholder')"
+              class="flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+          <!-- CTA subscription link shown below the API key field -->
+          <a
+            href="https://tally.so/r/9qDkWK"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block text-[10px] text-blue-500 dark:text-blue-400 hover:underline cursor-pointer ml-[6.5rem]"
+          >
+            {{ t('apiKeySubscriptionCta') }}
+          </a>
         </div>
 
         <div class="flex items-start gap-2">

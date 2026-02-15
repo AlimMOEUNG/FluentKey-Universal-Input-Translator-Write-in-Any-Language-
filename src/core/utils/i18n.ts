@@ -36,6 +36,7 @@ const enTranslations = {
   apiKeyValidCached: 'API key configured',
   apiKeyRequired: 'API key required',
   apiKeyPlaceholder: 'Enter API key',
+  apiKeySubscriptionCta: 'Get a ready-to-use solution →',
 
   // API Key Labels
   apiKeyLabelDeepL: 'DeepL API Key',
@@ -463,7 +464,8 @@ const frTranslations: TranslationMap = {
   presetLockedTooltip: 'Verrouillé. Passez à la version Pro pour modifier ce preset',
   presetLockedMessage: 'Ce preset est verrouillé. Passez à la version Pro pour y accéder.',
   expandPrompt: "Expandre l'éditeur de texte",
-  errorApiQuotaExceeded: 'Votre quota de clé API a été dépassé. Veuillez vérifier votre quota de clé API.',
+  errorApiQuotaExceeded:
+    'Votre quota de clé API a été dépassé. Veuillez vérifier votre quota de clé API.',
   errorApiKeyUnauthorized: 'Clé API invalide ou non autorisée. Veuillez vérifier vos paramètres.',
   whatsNewTitle: 'Quoi de neuf',
   whatsNewCurrentVersion: 'Version {version}',
@@ -477,12 +479,15 @@ const frTranslations: TranslationMap = {
   whatsNewRoadmapItem2: 'Partage de presets et import/export',
   whatsNewRoadmapItem3: 'Traduction par lots pour des pages entières',
   whatsNewRoadmapItem4: 'Plan Pro : clés API gérées, aucune configuration requise',
-  whatsNewRoadmapDisclaimer: 'Ce sont des idées, pas des engagements. Leur réalisation dépend entièrement de vos demandes. Dites-moi ce qui compte pour vous.',
+  whatsNewRoadmapDisclaimer:
+    'Ce sont des idées, pas des engagements. Leur réalisation dépend entièrement de vos demandes. Dites-moi ce qui compte pour vous.',
   whatsNewRoadmapCtaLabel: 'Partagez vos idées ou signalez un bug',
   updateModalTitle: "Power Input s'est amélioré !",
   updateModalFirstUse: "C'est votre première utilisation depuis la mise à jour.",
-  updateModalPurpose: 'Cette page vous tient informé des nouvelles fonctionnalités, améliorations et corrections de bugs. Ci-dessous, vous trouverez toutes les mises à jour organisées par version.',
-  updateModalReassurance: "Ne vous inquiétez pas ! Cette page s'est ouverte automatiquement pour la mise à jour. L'extension fonctionne toujours normalement. Cliquez simplement à nouveau sur l'icône de l'extension pour l'utiliser comme d'habitude.",
+  updateModalPurpose:
+    'Cette page vous tient informé des nouvelles fonctionnalités, améliorations et corrections de bugs. Ci-dessous, vous trouverez toutes les mises à jour organisées par version.',
+  updateModalReassurance:
+    "Ne vous inquiétez pas ! Cette page s'est ouverte automatiquement pour la mise à jour. L'extension fonctionne toujours normalement. Cliquez simplement à nouveau sur l'icône de l'extension pour l'utiliser comme d'habitude.",
   updateModalGotIt: 'Compris. Montrez-moi les nouveautés',
   freemiumTitle: 'Gratuit et ouvert à tous',
   freemiumBadge: 'Freemium',
@@ -490,9 +495,11 @@ const frTranslations: TranslationMap = {
   freemiumPoint2: 'Tous les fournisseurs LLM disponibles (DeepL, Gemini, OpenAI…)',
   freemiumPoint3: 'Transformations de texte personnalisées dans les Options',
   freemiumPoint4: 'Toutes les options de personnalisation (langues, raccourcis, menu contextuel…)',
-  freemiumLimitText: 'Une limite souple : le nombre de presets est limité pour les utilisateurs gratuits. Les utilisateurs intensifs peuvent en débloquer plus (illimité) via un code bêta et un plan Pro arrive.',
+  freemiumLimitText:
+    'Une limite souple : le nombre de presets est limité pour les utilisateurs gratuits. Les utilisateurs intensifs peuvent en débloquer plus (illimité) via un code bêta et un plan Pro arrive.',
   surveyTitle: "Aidez-nous à façonner l'avenir de Power Input",
-  surveyDescription: 'Seriez-vous intéressé par un abonnement mensuel qui gère les clés API pour vous ? Sans configuration, ça marche tout simplement.',
+  surveyDescription:
+    'Seriez-vous intéressé par un abonnement mensuel qui gère les clés API pour vous ? Sans configuration, ça marche tout simplement.',
   tickerWhatsNew: 'Quoi de neuf',
   tickerRateUs: 'Notez-nous',
   tickerFeedback: 'Bug/Idée ?',
@@ -500,15 +507,20 @@ const frTranslations: TranslationMap = {
   allExtensionsBannerDesc: 'Traducteurs pour WhatsApp, Discord, Reddit et plus',
   allExtensionsBannerCta: 'Voir toutes les extensions',
   allExtensionsPromoTitle: "Plus d'extensions par notre équipe géniale",
-  allExtensionsPromoDesc: 'Traducteurs pour WhatsApp, Discord, Reddit et téléchargeur de sous-titres',
-  changelogV100TranslationPresets: 'Presets de traduction avec langues source et cible configurables',
+  allExtensionsPromoDesc:
+    'Traducteurs pour WhatsApp, Discord, Reddit et téléchargeur de sous-titres',
+  changelogV100TranslationPresets:
+    'Presets de traduction avec langues source et cible configurables',
   changelogV100Providers: 'Support pour DeepL, Gemini, OpenAI, Groq, OpenRouter et plus',
   changelogV100LlmPrompt: 'Mode preset LLM Prompt pour des transformations IA personnalisées',
   changelogV100Unicode: 'Transformateurs de texte Unicode amusants (gras, italique, cursif…)',
-  changelogV100ContextMenu: 'Menu contextuel au clic droit pour un accès rapide aux presets épinglés',
+  changelogV100ContextMenu:
+    'Menu contextuel au clic droit pour un accès rapide aux presets épinglés',
   changelogV100Shortcuts: 'Raccourcis clavier par preset (ex: Alt+T)',
-  changelogV100WordSelection: 'Modificateur de sélection mot par mot (Modificateur + touches fléchées)',
-  changelogV100CustomTransform: 'Générateur de transformation de texte personnalisée dans les Options',
+  changelogV100WordSelection:
+    'Modificateur de sélection mot par mot (Modificateur + touches fléchées)',
+  changelogV100CustomTransform:
+    'Générateur de transformation de texte personnalisée dans les Options',
   changelogV100DarkMode: 'Mode sombre avec auto-détection du système',
   changelogV100I18n: 'Interface multilingue (EN / FR / ES / DE / ZH / JA)',
   featureCategoryTranslation: 'Traduction',
@@ -523,8 +535,10 @@ const frTranslations: TranslationMap = {
   featureAutoDetect: 'Détection automatique de la langue',
   featureMultiPreset: 'Presets multiples avec noms et raccourcis dédiés',
   featurePinContextMenu: 'Épingler un preset au menu contextuel du clic droit',
-  featureKeyboardShortcutPerPreset: 'Raccourci clavier par preset (modificateur + séquence de touches)',
-  featureWordSelectionModifier: 'Modificateur de sélection de mots (Modificateur + touches fléchées)',
+  featureKeyboardShortcutPerPreset:
+    'Raccourci clavier par preset (modificateur + séquence de touches)',
+  featureWordSelectionModifier:
+    'Modificateur de sélection de mots (Modificateur + touches fléchées)',
   featureDraftAutoSave: 'Sauvegarde automatique des brouillons pour ne jamais rien perdre',
   featureLlmPromptMode: "Mode LLM Prompt avec l'espace réservé {{input}}",
   featureUnicodeEffects: 'Effets de texte Unicode (gras, italique, fraktur, cursif…)',
@@ -536,7 +550,6 @@ const frTranslations: TranslationMap = {
   themeAuto: 'Auto (système)',
   themeLight: 'Mode clair',
   themeDark: 'Mode sombre',
-
 }
 
 const esTranslations: TranslationMap = {
@@ -687,7 +700,8 @@ const esTranslations: TranslationMap = {
   presetLockedTooltip: 'Bloqueado. Actualice a Pro para editar este preset',
   presetLockedMessage: 'Este preset está bloqueado. Actualice a Pro para acceder a él.',
   expandPrompt: 'Ampliar editor de indicaciones',
-  errorApiQuotaExceeded: 'Se ha excedido el cupo de su clave API. Por favor, compruebe su cupo de clave API.',
+  errorApiQuotaExceeded:
+    'Se ha excedido el cupo de su clave API. Por favor, compruebe su cupo de clave API.',
   errorApiKeyUnauthorized: 'Clave API inválida o no autorizada. Por favor, compruebe sus ajustes.',
   whatsNewTitle: 'Novedades',
   whatsNewCurrentVersion: 'Versión {version}',
@@ -701,12 +715,15 @@ const esTranslations: TranslationMap = {
   whatsNewRoadmapItem2: 'Uso compartido de ajustes preestablecidos e importación/exportación',
   whatsNewRoadmapItem3: 'Traducción por lotes para páginas completas',
   whatsNewRoadmapItem4: 'Plan Pro: claves API gestionadas, sin necesidad de configuración',
-  whatsNewRoadmapDisclaimer: 'Estas son ideas, no compromisos. Su lanzamiento depende totalmente de lo que pidas. Así que dime qué te importa.',
+  whatsNewRoadmapDisclaimer:
+    'Estas son ideas, no compromisos. Su lanzamiento depende totalmente de lo que pidas. Así que dime qué te importa.',
   whatsNewRoadmapCtaLabel: 'Comparte tus ideas o informa de un error',
   updateModalTitle: '¡Power Input acaba de mejorar!',
   updateModalFirstUse: 'Este es su primer uso desde la actualización.',
-  updateModalPurpose: 'Esta página le mantiene informado de las nuevas funciones, mejoras y correcciones de errores. A continuación, encontrará todas las actualizaciones organizadas por versión.',
-  updateModalReassurance: '¡No se preocupe! Esta página se abrió automáticamente por la actualización. La extensión sigue funcionando normalmente. Simplemente haga clic de nuevo en el icono de la extensión para usarla como de costumbre.',
+  updateModalPurpose:
+    'Esta página le mantiene informado de las nuevas funciones, mejoras y correcciones de errores. A continuación, encontrará todas las actualizaciones organizadas por versión.',
+  updateModalReassurance:
+    '¡No se preocupe! Esta página se abrió automáticamente por la actualización. La extensión sigue funcionando normalmente. Simplemente haga clic de nuevo en el icono de la extensión para usarla como de costumbre.',
   updateModalGotIt: 'Entendido. Muéstrame las novedades',
   freemiumTitle: 'Gratis y abierto para todos',
   freemiumBadge: 'Freemium',
@@ -714,9 +731,11 @@ const esTranslations: TranslationMap = {
   freemiumPoint2: 'Todos los proveedores de LLM disponibles (DeepL, Gemini, OpenAI…)',
   freemiumPoint3: 'Transformaciones de texto personalizadas en Opciones',
   freemiumPoint4: 'Todas las opciones de personalización (idiomas, atajos, menú contextual…)',
-  freemiumLimitText: 'Un límite suave: el número de ajustes preestablecidos está limitado para usuarios gratuitos. Los usuarios avanzados pueden desbloquear más (ilimitados) mediante un código beta y un plan Pro está en camino.',
+  freemiumLimitText:
+    'Un límite suave: el número de ajustes preestablecidos está limitado para usuarios gratuitos. Los usuarios avanzados pueden desbloquear más (ilimitados) mediante un código beta y un plan Pro está en camino.',
   surveyTitle: 'Ayúdanos a dar forma al futuro de Power Input',
-  surveyDescription: '¿Le interesaría una suscripción mensual que gestione las claves API por usted? Sin configuración, simplemente funciona.',
+  surveyDescription:
+    '¿Le interesaría una suscripción mensual que gestione las claves API por usted? Sin configuración, simplemente funciona.',
   tickerWhatsNew: 'Novedades',
   tickerRateUs: 'Califícanos',
   tickerFeedback: '¿Error/Función?',
@@ -725,14 +744,20 @@ const esTranslations: TranslationMap = {
   allExtensionsBannerCta: 'Ver todas las extensiones',
   allExtensionsPromoTitle: 'Más extensiones de nuestro increíble equipo',
   allExtensionsPromoDesc: 'Traductores para WhatsApp, Discord, Reddit y descargador de subtítulos',
-  changelogV100TranslationPresets: 'Ajustes preestablecidos de traducción con idiomas de origen y destino configurables',
+  changelogV100TranslationPresets:
+    'Ajustes preestablecidos de traducción con idiomas de origen y destino configurables',
   changelogV100Providers: 'Soporte para DeepL, Gemini, OpenAI, Groq, OpenRouter y más',
-  changelogV100LlmPrompt: 'Modo de ajuste preestablecido LLM Prompt para transformaciones de IA personalizadas',
-  changelogV100Unicode: 'Divertidos transformadores de texto Unicode (negrita, cursiva, manuscrita…)',
-  changelogV100ContextMenu: 'Menú contextual del botón derecho para acceso rápido a ajustes preestablecidos anclados',
+  changelogV100LlmPrompt:
+    'Modo de ajuste preestablecido LLM Prompt para transformaciones de IA personalizadas',
+  changelogV100Unicode:
+    'Divertidos transformadores de texto Unicode (negrita, cursiva, manuscrita…)',
+  changelogV100ContextMenu:
+    'Menú contextual del botón derecho para acceso rápido a ajustes preestablecidos anclados',
   changelogV100Shortcuts: 'Atajos de teclado por ajuste preestablecido (ej. Alt+T)',
-  changelogV100WordSelection: 'Modificador de selección palabra por palabra (Modificador + teclas de flecha)',
-  changelogV100CustomTransform: 'Constructor de transformaciones de texto personalizadas en Opciones',
+  changelogV100WordSelection:
+    'Modificador de selección palabra por palabra (Modificador + teclas de flecha)',
+  changelogV100CustomTransform:
+    'Constructor de transformaciones de texto personalizadas en Opciones',
   changelogV100DarkMode: 'Modo oscuro con autodetección del sistema',
   changelogV100I18n: 'Interfaz multilingüe (EN / FR / ES / DE / ZH / JA)',
   featureCategoryTranslation: 'Traducción',
@@ -747,8 +772,10 @@ const esTranslations: TranslationMap = {
   featureAutoDetect: 'Detección automática de idioma',
   featureMultiPreset: 'Múltiples ajustes preestablecidos con nombres y atajos dedicados',
   featurePinContextMenu: 'Anclar un ajuste preestablecido al menú contextual del botón derecho',
-  featureKeyboardShortcutPerPreset: 'Atajo de teclado por ajuste preestablecido (modificador + secuencia de teclas)',
-  featureWordSelectionModifier: 'Modificador de selección de palabras (Modificador + teclas de flecha)',
+  featureKeyboardShortcutPerPreset:
+    'Atajo de teclado por ajuste preestablecido (modificador + secuencia de teclas)',
+  featureWordSelectionModifier:
+    'Modificador de selección de palabras (Modificador + teclas de flecha)',
   featureDraftAutoSave: 'Autoguardado de borradores para que nunca pierdas los cambios',
   featureLlmPromptMode: 'Modo LLM Prompt con el marcador {{input}}',
   featureUnicodeEffects: 'Efectos de texto Unicode (negrita, cursiva, fraktur, manuscrita…)',
@@ -760,7 +787,6 @@ const esTranslations: TranslationMap = {
   themeAuto: 'Auto (sistema)',
   themeLight: 'Modo claro',
   themeDark: 'Modo oscuro',
-
 }
 
 const deTranslations: TranslationMap = {
@@ -912,8 +938,10 @@ const deTranslations: TranslationMap = {
   presetLockedTooltip: 'Gesperrt. Upgrade auf Pro, um dieses Preset zu bearbeiten',
   presetLockedMessage: 'Dieses Preset ist gesperrt. Upgrade auf Pro, um darauf zuzugreifen.',
   expandPrompt: 'Prompt-Editor erweitern',
-  errorApiQuotaExceeded: 'Ihr API-Schlüssel-Kontingent wurde überschritten. Bitte überprüfen Sie Ihr API-Schlüssel-Kontingent.',
-  errorApiKeyUnauthorized: 'Ungültiger oder unbefugter API-Schlüssel. Bitte überprüfen Sie Ihre Einstellungen.',
+  errorApiQuotaExceeded:
+    'Ihr API-Schlüssel-Kontingent wurde überschritten. Bitte überprüfen Sie Ihr API-Schlüssel-Kontingent.',
+  errorApiKeyUnauthorized:
+    'Ungültiger oder unbefugter API-Schlüssel. Bitte überprüfen Sie Ihre Einstellungen.',
   whatsNewTitle: "Was gibt's Neues",
   whatsNewCurrentVersion: 'Version {version}',
   whatsNewViewUpdates: 'Updates',
@@ -926,12 +954,15 @@ const deTranslations: TranslationMap = {
   whatsNewRoadmapItem2: 'Teilen von Voreinstellungen & Import/Export',
   whatsNewRoadmapItem3: 'Batch-Übersetzung für ganze Seiten',
   whatsNewRoadmapItem4: 'Pro-Plan: verwaltete API-Schlüssel, keine Einrichtung erforderlich',
-  whatsNewRoadmapDisclaimer: 'Dies sind Ideen, keine Zusagen. Ob sie umgesetzt werden, hängt ganz davon ab, was Sie sich wünschen. Sagen Sie mir also, was Ihnen wichtig ist.',
+  whatsNewRoadmapDisclaimer:
+    'Dies sind Ideen, keine Zusagen. Ob sie umgesetzt werden, hängt ganz davon ab, was Sie sich wünschen. Sagen Sie mir also, was Ihnen wichtig ist.',
   whatsNewRoadmapCtaLabel: 'Teilen Sie Ihre Ideen oder melden Sie einen Fehler',
   updateModalTitle: 'Power Input ist jetzt noch besser!',
   updateModalFirstUse: 'Dies ist Ihre erste Nutzung seit dem Update.',
-  updateModalPurpose: 'Diese Seite hält Sie über neue Funktionen, Verbesserungen und Fehlerbehebungen auf dem Laufenden. Unten finden Sie alle Updates nach Version geordnet.',
-  updateModalReassurance: 'Keine Sorge! Diese Seite wurde automatisch für das Update geöffnet. Die Erweiterung funktioniert weiterhin normal. Klicken Sie einfach erneut auf das Erweiterungssymbol, um sie wie gewohnt zu verwenden.',
+  updateModalPurpose:
+    'Diese Seite hält Sie über neue Funktionen, Verbesserungen und Fehlerbehebungen auf dem Laufenden. Unten finden Sie alle Updates nach Version geordnet.',
+  updateModalReassurance:
+    'Keine Sorge! Diese Seite wurde automatisch für das Update geöffnet. Die Erweiterung funktioniert weiterhin normal. Klicken Sie einfach erneut auf das Erweiterungssymbol, um sie wie gewohnt zu verwenden.',
   updateModalGotIt: 'Verstanden. Zeig mir, was neu ist',
   freemiumTitle: 'Kostenlos und offen für alle',
   freemiumBadge: 'Freemium',
@@ -939,9 +970,11 @@ const deTranslations: TranslationMap = {
   freemiumPoint2: 'Alle LLM-Anbieter verfügbar (DeepL, Gemini, OpenAI…)',
   freemiumPoint3: 'Benutzerdefinierte Texttransformationen in den Optionen',
   freemiumPoint4: 'Alle Anpassungsoptionen (Sprachen, Tastenkombinationen, Kontextmenü…)',
-  freemiumLimitText: 'Ein Soft-Limit: Die Anzahl der Voreinstellungen ist für kostenlose Nutzer begrenzt. Power-User können über einen Beta-Code mehr (unbegrenzt) freischalten, und ein Pro-Plan ist in Arbeit.',
+  freemiumLimitText:
+    'Ein Soft-Limit: Die Anzahl der Voreinstellungen ist für kostenlose Nutzer begrenzt. Power-User können über einen Beta-Code mehr (unbegrenzt) freischalten, und ein Pro-Plan ist in Arbeit.',
   surveyTitle: 'Helfen Sie uns, die Zukunft von Power Input zu gestalten',
-  surveyDescription: 'Hätten Sie Interesse an einem monatlichen Abonnement, das die API-Schlüssel für Sie verwaltet? Keine Einrichtung, funktioniert einfach.',
+  surveyDescription:
+    'Hätten Sie Interesse an einem monatlichen Abonnement, das die API-Schlüssel für Sie verwaltet? Keine Einrichtung, funktioniert einfach.',
   tickerWhatsNew: "Was gibt's Neues",
   tickerRateUs: 'Bewerten Sie uns',
   tickerFeedback: 'Fehler/Funktion?',
@@ -950,11 +983,14 @@ const deTranslations: TranslationMap = {
   allExtensionsBannerCta: 'Alle Erweiterungen sehen',
   allExtensionsPromoTitle: 'Weitere Erweiterungen von unserem tollen Team',
   allExtensionsPromoDesc: 'Übersetzer für WhatsApp, Discord, Reddit & Untertitel-Downloader',
-  changelogV100TranslationPresets: 'Übersetzungsvoreinstellungen mit konfigurierbaren Quell- und Zielsprachen',
+  changelogV100TranslationPresets:
+    'Übersetzungsvoreinstellungen mit konfigurierbaren Quell- und Zielsprachen',
   changelogV100Providers: 'Unterstützung für DeepL, Gemini, OpenAI, Groq, OpenRouter & mehr',
-  changelogV100LlmPrompt: 'LLM-Prompt-Voreinstellungsmodus für benutzerdefinierte KI-Transformationen',
+  changelogV100LlmPrompt:
+    'LLM-Prompt-Voreinstellungsmodus für benutzerdefinierte KI-Transformationen',
   changelogV100Unicode: 'Lustige Unicode-Texttransformatoren (fett, kursiv, Schreibschrift…)',
-  changelogV100ContextMenu: 'Rechtsklick-Kontextmenü für schnellen Zugriff auf angepinnte Voreinstellungen',
+  changelogV100ContextMenu:
+    'Rechtsklick-Kontextmenü für schnellen Zugriff auf angepinnte Voreinstellungen',
   changelogV100Shortcuts: 'Tastenkombinationen pro Voreinstellung (z.B. Alt+T)',
   changelogV100WordSelection: 'Wortweiser Auswahl-Modifikator (Modifikator + Pfeiltasten)',
   changelogV100CustomTransform: 'Benutzerdefinierter Texttransformations-Builder in den Optionen',
@@ -972,7 +1008,8 @@ const deTranslations: TranslationMap = {
   featureAutoDetect: 'Automatische Spracherkennung',
   featureMultiPreset: 'Mehrere Voreinstellungen mit Namen & dedizierten Tastenkombinationen',
   featurePinContextMenu: 'Voreinstellung an das Rechtsklick-Kontextmenü anpinnen',
-  featureKeyboardShortcutPerPreset: 'Tastenkombination pro Voreinstellung (Modifikator + Tastenfolge)',
+  featureKeyboardShortcutPerPreset:
+    'Tastenkombination pro Voreinstellung (Modifikator + Tastenfolge)',
   featureWordSelectionModifier: 'Wort-Auswahl-Modifikator (Modifikator + Pfeiltasten)',
   featureDraftAutoSave: 'Automatische Entwurfsspeicherung, damit Sie nie Änderungen verlieren',
   featureLlmPromptMode: 'LLM-Prompt-Modus mit {{input}}-Platzhalter',
@@ -985,7 +1022,6 @@ const deTranslations: TranslationMap = {
   themeAuto: 'Auto (System)',
   themeLight: 'Hellmodus',
   themeDark: 'Dunkelmodus',
-
 }
 
 const zhTranslations: TranslationMap = {
@@ -1144,12 +1180,15 @@ const zhTranslations: TranslationMap = {
   whatsNewRoadmapItem2: '预设共享及导入/导出',
   whatsNewRoadmapItem3: '整页批量翻译',
   whatsNewRoadmapItem4: 'Pro 计划：托管 API 密钥，无需设置，即开即用',
-  whatsNewRoadmapDisclaimer: '这些是初步想法，而非承诺。是否推出完全取决于大家的需求。所以，请告诉我你最看重什么。',
+  whatsNewRoadmapDisclaimer:
+    '这些是初步想法，而非承诺。是否推出完全取决于大家的需求。所以，请告诉我你最看重什么。',
   whatsNewRoadmapCtaLabel: '分享你的想法或报告错误',
   updateModalTitle: 'Power Input 变得更强大了！',
   updateModalFirstUse: '这是自更新以来的首次使用。',
-  updateModalPurpose: '此页面让您了解新功能、改进和错误修复。您可以在下方找到按版本组织的各次更新。',
-  updateModalReassurance: '别担心！此页面是由于更新自动打开的。扩展程序仍可正常工作。只需再次点击扩展程序图标，即可像往常一样使用。',
+  updateModalPurpose:
+    '此页面让您了解新功能、改进和错误修复。您可以在下方找到按版本组织的各次更新。',
+  updateModalReassurance:
+    '别担心！此页面是由于更新自动打开的。扩展程序仍可正常工作。只需再次点击扩展程序图标，即可像往常一样使用。',
   updateModalGotIt: '明白了，带我看新功能',
   freemiumTitle: '对所有人免费开放',
   freemiumBadge: '免费增值',
@@ -1157,7 +1196,8 @@ const zhTranslations: TranslationMap = {
   freemiumPoint2: '支持所有 LLM 提供商（DeepL, Gemini, OpenAI…）',
   freemiumPoint3: '在选项中自定义文本转换',
   freemiumPoint4: '所有自定义选项（语言、快捷键、右键菜单…）',
-  freemiumLimitText: '一个软限制：免费用户的预设数量有上限。高级用户可以通过测试码解锁更多（无限），Pro 计划也即将推出。',
+  freemiumLimitText:
+    '一个软限制：免费用户的预设数量有上限。高级用户可以通过测试码解锁更多（无限），Pro 计划也即将推出。',
   surveyTitle: '帮助我们塑造 Power Input 的未来',
   surveyDescription: '你是否会对每月自动处理 API 密钥的订阅服务感兴趣？无需设置，即插即用。',
   tickerWhatsNew: '新功能',
@@ -1203,7 +1243,6 @@ const zhTranslations: TranslationMap = {
   themeAuto: '自动（系统）',
   themeLight: '浅色模式',
   themeDark: '深色模式',
-
 }
 
 const jaTranslations: TranslationMap = {
@@ -1368,12 +1407,15 @@ const jaTranslations: TranslationMap = {
   whatsNewRoadmapItem2: 'プリセットの共有とインポート・エクスポート',
   whatsNewRoadmapItem3: 'ページ全体のバッチ翻訳',
   whatsNewRoadmapItem4: 'Proプラン：APIキーの管理不要、設定なしですぐに利用可能',
-  whatsNewRoadmapDisclaimer: 'これらはアイデアであり、確約ではありません。実現するかどうかは、皆様の要望次第です。あなたにとって何が重要か教えてください。',
+  whatsNewRoadmapDisclaimer:
+    'これらはアイデアであり、確約ではありません。実現するかどうかは、皆様の要望次第です。あなたにとって何が重要か教えてください。',
   whatsNewRoadmapCtaLabel: 'アイデアの共有やバグ報告',
   updateModalTitle: 'Power Input がさらに便利になりました！',
   updateModalFirstUse: 'アップデート後、初めての利用です。',
-  updateModalPurpose: 'このページでは、新機能、改善点、バグ修正に関する情報をお知らせします。以下に、バージョンごとの更新内容をまとめています。',
-  updateModalReassurance: 'ご安心ください！このページはアップデートのために自動的に開かれました。拡張機能は引き続き正常に動作します。通常通り使用するには、もう一度拡張機能アイコンをクリックしてください。',
+  updateModalPurpose:
+    'このページでは、新機能、改善点、バグ修正に関する情報をお知らせします。以下に、バージョンごとの更新内容をまとめています。',
+  updateModalReassurance:
+    'ご安心ください！このページはアップデートのために自動的に開かれました。拡張機能は引き続き正常に動作します。通常通り使用するには、もう一度拡張機能アイコンをクリックしてください。',
   updateModalGotIt: '了解しました。更新内容を見る',
   freemiumTitle: '誰でも無料で利用可能',
   freemiumBadge: 'フリーミアム',
@@ -1381,9 +1423,11 @@ const jaTranslations: TranslationMap = {
   freemiumPoint2: 'すべてのLLMプロバイダーを利用可能（DeepL, Gemini, OpenAI…）',
   freemiumPoint3: 'オプションでテキスト変換をカスタマイズ可能',
   freemiumPoint4: 'すべてのカスタマイズオプション（言語、ショートカット、右クリックメニュー…）',
-  freemiumLimitText: '唯一の制限：無料ユーザーはプリセットの数に上限があります。パワーユーザーはベータコードで無制限に解放でき、Proプランも準備中です。',
+  freemiumLimitText:
+    '唯一の制限：無料ユーザーはプリセットの数に上限があります。パワーユーザーはベータコードで無制限に解放でき、Proプランも準備中です。',
   surveyTitle: 'Power Input の未来を一緒に作りましょう',
-  surveyDescription: 'APIキーの管理を代行する月額サブスクリプションに興味はありますか？設定不要で、すぐに使えます。',
+  surveyDescription:
+    'APIキーの管理を代行する月額サブスクリプションに興味はありますか？設定不要で、すぐに使えます。',
   tickerWhatsNew: '更新情報',
   tickerRateUs: '評価する',
   tickerFeedback: 'バグ/要望？',
@@ -1427,7 +1471,6 @@ const jaTranslations: TranslationMap = {
   themeAuto: '自動（システム）',
   themeLight: 'ライトモード',
   themeDark: 'ダークモード',
-
 }
 
 const translations: Record<SupportedLocale, TranslationMap> = {

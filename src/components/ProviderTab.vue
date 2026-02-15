@@ -32,6 +32,7 @@
         :placeholder="t('apiKeyPlaceholder')"
         class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
+      <ApiKeyCta />
       <ValidationButton
         :disabled="!providerConfigs.deepl.apiKey"
         :status="validationStatus.deepl"
@@ -51,6 +52,7 @@
         :placeholder="t('apiKeyPlaceholder')"
         class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
+      <ApiKeyCta />
       <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
         {{ t('labelModel') }}
       </label>
@@ -88,6 +90,7 @@
         :placeholder="t('apiKeyPlaceholder')"
         class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
+      <ApiKeyCta />
       <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
         {{ t('labelModel') }}
       </label>
@@ -125,6 +128,7 @@
         :placeholder="t('apiKeyPlaceholder')"
         class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
+      <ApiKeyCta />
       <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
         {{ t('labelModel') }}
       </label>
@@ -240,6 +244,7 @@
         :placeholder="t('apiKeyPlaceholder')"
         class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
+      <ApiKeyCta />
       <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
         {{ t('labelModel') }}
       </label>
@@ -293,6 +298,7 @@
         :placeholder="t('placeholderOptional')"
         class="w-full px-2 py-1 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
+      <ApiKeyCta />
       <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300">
         {{ t('labelModel') }}
       </label>
@@ -420,6 +426,25 @@ const ollamaModelOptions = computed(() => {
 })
 
 // --- Inline sub-components to avoid extra files for simple UI patterns ---
+
+// Small CTA link displayed below every API key field — opens the subscription interest form
+const ApiKeyCta = defineComponent({
+  setup() {
+    const { t } = useI18nWrapper()
+    return () =>
+      h(
+        'a',
+        {
+          href: 'https://tally.so/r/9qDkWK',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          class:
+            'block text-[10px] text-blue-500 dark:text-blue-400 hover:underline cursor-pointer mt-0.5',
+        },
+        t('apiKeySubscriptionCta')
+      )
+  },
+})
 
 // Shared validate button used by every provider section
 const ValidationButton = defineComponent({
