@@ -115,11 +115,15 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
     // Write the onboarding presets synchronously before the popup can open,
     // so loadFromStorage() always hits Case 1 (existing data) on first open.
+    // Also store currentVersion so checkForUpdate() in Popup.vue does not
+    // mistake the first popup open for an update (unknown → 1.0.0).
     const defaultSettings = createOnboardingPresetsSettings()
+    const currentVersion = chrome.runtime.getManifest().version
     await chrome.storage.sync.set({
       presetsSettings: defaultSettings,
       themeMode: 'auto',
       locale: 'en',
+      currentVersion,
     })
 
     console.log('[Background] Onboarding presets written to storage')
