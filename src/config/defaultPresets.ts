@@ -10,6 +10,7 @@ import type {
   PresetsSettings,
 } from '@/types/common'
 import { getDefaultModel } from '@/config/predefinedModels'
+import { PROMPT_TEMPLATES } from '@/config/promptTemplates'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -71,26 +72,15 @@ export function createOnboardingPresetsSettings(): PresetsSettings {
 
   // Preset 3 — LinkedIn post enhancer, demonstrates the LLM Prompt mode.
   // Requires a provider API key; shown as a ready-to-use AI preset example.
+  // Prompt sourced from the centralized PROMPT_TEMPLATES to avoid duplication.
+  const linkedinTemplate = PROMPT_TEMPLATES.find((tpl) => tpl.id === 'linkedin-post')
   const linkedinPreset: LLMPromptPreset = {
     id: generateUUID(),
     name: 'LinkedIn Post Enhancer',
     keyboardShortcut: generateDefaultShortcut(3),
     createdAt: Date.now(),
     type: 'llm-prompt',
-    prompt: `You are an expert LinkedIn content creator. Transform the following text into an engaging, professional LinkedIn post.
-
-Requirements:
-- Start with a compelling hook that grabs attention in the first line
-- Use short paragraphs (1-3 sentences) for mobile readability
-- Add 3-5 relevant emojis placed naturally (not at the end of every line)
-- Close with a thought-provoking question or a clear call to action
-- Keep a professional yet authentic, human tone
-- Optimize for LinkedIn's algorithm (avoid external links in the post body)
-
-Text to transform:
-{{input}}
-
-Output only the final LinkedIn post, with no explanation or preamble.`,
+    prompt: linkedinTemplate?.prompt ?? '',
     llmProvider: 'gemini',
     llmModel: getDefaultModel('gemini'),
   }

@@ -525,7 +525,23 @@
           </div>
           <!-- Modal body — textarea stretches to fill remaining height -->
           <div class="p-3 flex flex-col gap-2 flex-1 overflow-hidden">
+            <!-- Template selector inside the expanded modal -->
+            <select
+              v-model="selectedTemplateId"
+              @change="onTemplateSelected"
+              class="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-500 dark:text-gray-400 shrink-0"
+            >
+              <option value="" disabled>{{ t('llmPromptTemplatesPlaceholder') }}</option>
+              <option
+                v-for="tpl in PROMPT_TEMPLATES"
+                :key="tpl.id"
+                :value="tpl.id"
+              >
+                {{ tpl.icon }} {{ tpl.name }}
+              </option>
+            </select>
             <textarea
+              ref="modalPromptTextarea"
               v-model="localPreset.prompt"
               :placeholder="t('llmPromptPlaceholder')"
               class="w-full flex-1 px-2 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
@@ -553,7 +569,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from 'vue'
+import { ref, watch, computed, onMounted, nextTick } from 'vue'
 import { Check, RotateCcw, Info, Lock, Maximize2, X } from 'lucide-vue-next'
 import { useI18nWrapper } from '@/composables/useI18nWrapper'
 import { useDraftPreset, type DraftPresetState } from '@/composables/useDraftPreset'
@@ -577,6 +593,7 @@ import {
 } from '@/core/transformation/TransformationEngine'
 import { getAllCustomTransforms } from '@/services/customTransformService'
 import { AVAILABLE_PROVIDERS, getLLMProviders, PROVIDER_BASE_URLS } from '@/config/providers'
+import { PROMPT_TEMPLATES } from '@/config/promptTemplates'
 import {
   PREDEFINED_MODELS,
   isCustomModel,
@@ -591,6 +608,13 @@ import LanguageSelector from './LanguageSelector.vue'
 const { t } = useI18nWrapper()
 const { providerConfigs } = useSettings()
 const { loadDraft, saveDraft, clearDraft } = useDraftPreset()
+
+// Ref to the textarea inside the expanded modal — used for native Ctrl+Z support
+const modalPromptTextarea = ref<HTMLTextAreaElement | null>(null)
+
+// Tracks the currently selected template id in the modal selector.
+// Reset to '' after each selection so the dropdown always shows the placeholder.
+const selectedTemplateId = ref('')
 
 // Debounce timer for draft auto-save
 let draftSaveTimer: ReturnType<typeof setTimeout> | null = null
@@ -726,6 +750,48 @@ function onLLMProviderChange() {
   llmCustomModelInput.value = ''
   // Reload credential drafts for the newly selected provider
   initLLMCredentialDrafts(provider)
+}
+
+/**
+ * Called when the user picks an item from the template dropdown.
+ * Applies the template then resets the selector back to the placeholder
+ * in the next tick so the dropdown always reads "— Browse templates —".
+ */
+function onTemplateSelected() {
+  const id = selectedTemplateId.value
+  applyPromptTemplate(id)
+  // Reset to placeholder after Vue processes the current render cycle
+  nextTick(() => {
+    selectedTemplateId.value = ''
+  })
+}
+
+/**
+ * Apply a pre-made prompt template to the modal textarea.
+ * Uses execCommand('insertText') so the browser registers the change in its
+ * native undo stack — Ctrl+Z will restore the previous prompt content.
+ * Vue's v-model syncs automatically via the 'input' event fired by execCommand.
+ */
+function applyPromptTemplate(templateId: string) {
+  if (!templateId || localPreset.value.type !== 'llm-prompt') return
+  const template = PROMPT_TEMPLATES.find((tpl) => tpl.id === templateId)
+  if (!template) return
+
+  const textarea = modalPromptTextarea.value
+  if (textarea) {
+    // Focus + select all so execCommand replaces the full content
+    textarea.focus()
+    textarea.select()
+    // execCommand is deprecated but universally supported and pushes to the undo stack
+    const success = document.execCommand('insertText', false, template.prompt)
+    if (!success) {
+      // Fallback for environments where execCommand is blocked (no undo support)
+      localPreset.value.prompt = template.prompt
+    }
+  } else {
+    // Modal textarea not mounted yet (should not happen) — direct assignment fallback
+    localPreset.value.prompt = template.prompt
+  }
 }
 
 // ─── Draft persistence ────────────────────────────────────────────

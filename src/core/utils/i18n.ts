@@ -151,6 +151,8 @@ const enTranslations = {
   llmPromptModelLabel: 'Model',
   llmPromptModelPlaceholder: 'Enter model name',
   expandPrompt: 'Expand prompt editor',
+  llmPromptTemplatesLabel: 'Use a template',
+  llmPromptTemplatesPlaceholder: '— Browse templates —',
 
   // Preset validation
   validationCustomTransformRequired: 'Please select a custom transformation',
